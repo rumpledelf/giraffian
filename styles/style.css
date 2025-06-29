@@ -1,0 +1,113 @@
+body {
+	font-size: 16px;
+	font-family: "Comic Relief", system-ui;
+	padding: 0px;
+	margin: 0px;
+}
+
+a {
+	color: #3a7ede;
+	text-decoration: none;
+}
+a:visited {
+	color: #a552ce;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+#header {
+}
+
+#menu {
+}
+
+.tile {
+	display: inline-block;
+	width: calc(32% - 48px);
+	margin: 24px;
+	margin-bottom: 32px;
+	@media (max-width: 800px) {
+	       width: calc(48% - 48px);
+        }
+	@media (max-width: 420px) {
+		width: 100%;
+	}	
+}
+.tile p, .smalltile p {
+	margin-top: 12px;
+}
+.tile h2, .smalltile h2 {
+	margin-bottom: 12px;
+}
+
+.smalltile {
+	display: inline-block;
+	text-align: center;
+	margin-bottom: 32px;
+	margin-left: 24px;
+	margin-right: 24px;
+	@media (max-width: 420px) {
+		display: block;
+	}
+}
+
+.center {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+#booknav {
+	padding: 16px;
+	margin-top: 32px;
+	margin-bottom: 32px;
+	border-top: 2px dashed #000;
+}
+.prev {
+	float: left;
+}
+.prev a {
+    display: block;
+    background-image: url(/images/yellowbuttonleft.png);
+    text-indent: -9999px;
+    width: 62px;
+    height: 26px;
+}
+.next {
+	float: right;
+}
+.next a {
+    display: block;
+    background-image: url(/images/yellowbuttonright.png);
+    text-indent: -9999px;
+    width: 62px;
+    height: 26px;
+}
+
+#wrapper {
+	max-width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-bottom: 32px;
+	padding-top: 24px;
+	padding-left: 24px;
+	padding-right: 24px;
+	@media (max-width: 800px) {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+}
+
+#footer {
+	text-align: center;
+	background-color: #bec6ce;
+	border-top: 2px solid #000;
+	padding: 16px;
+}
