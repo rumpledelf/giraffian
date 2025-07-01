@@ -1,6 +1,6 @@
 <?php include '/var/www/giraffian/includes/header.html'; ?>
 
-<h1>Pictures</h1>
+<h1 class="center">Pictures</h1>
 
 <div class="tile">
 <h2><a href="/kids/size">Size</a></h2>
