@@ -22,6 +22,10 @@ img {
 	height: auto;
 }
 
+h2 a, h2 a:visited {
+	color: #000;
+}
+
 #header {
 }
 
@@ -38,6 +42,13 @@ img {
 	text-align: center;
 }
 
+#colleft ul, #colright ul{
+	padding: 0;
+	margin: 0;
+}
+#colleft ul li, #colright ul li{
+	list-style-type: none;
+}
 .tile {
 	display: inline-block;
 	width: calc(32% - 48px);

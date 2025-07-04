@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<TITLE>Giraffian shapes and colours</TITLE>
+<link rel=stylesheet href="/giraffian.css" type="text/css">
+ 		<meta name="description" content="Shapes and colours learning game for young children.">
+ 		<meta name="keywords" content="kids, children, shapes, colours, colors, learning, circle, triangle, square, diamond, pentagon, hexagon, octagon, trapezium, parallelogram, red, blue, white, orange, purple, black, grey, gray">
+ 		<script language="javascript">
+ 			function setShape(shape){
+ 				document.images.canvas.src="big" + shape + ".png";
+ 				document.getElementById("WordShape").innerHTML = "&nbsp;" + shape;
+ 			}
+ 			function setColour(colour){
+ 				document.getElementById("WordColour").innerHTML = colour;
+ 				if (colour == "Green") colour = "lime";
+ 				else if (colour == "Grey") colour = "gray";
+ 				document.images.canvas.style.backgroundColor = colour;
+ 			}
+ 		</script>
+
+</HEAD>
+<BODY class="KidsBody">
+
+<!--#include virtual="/sidebar.html"-->
+
+<center>
+	<table width="90%" cellpadding="4">
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Triangle')">
+			<img src="triangle.gif" border="0"></a></td>
+<!--------------------------------------Center column-->
+		<td rowspan="10" align="middle" valign="top">
+				<font size="+2"><b>Shapes and colours</b></font><br>
+				<img src="bubbles.gif" border="0"><br>
+				Click the shapes and colors on the sides to play.<br>
+				<IMG src="bigCircle.png" name="canvas" width="400" height="400" border="0"> 			
+				<TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" style="font-weight: bold; font-size: 28pt">
+				<TR>
+ 					<TD align="right" width="50%" id="WordColour">White</TD>
+ 					<TD id="WordShape">&nbsp;Circle</TD> 												</TR>
+ 				</TABLE>
+		</td>
+<!----------------------------------End Center column-->
+			<td align="middle"><a href="javascript:setColour('Red')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: red"></a></td>
+ 		</tr>
+ 		<tr>
+ 			<td align="middle"><a href="javascript:setShape('Square')">
+			<img src="square.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Orange')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Orange"></a></td>
+		</tr>
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Diamond')">
+			<img src="diamond.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Pink')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Pink"></a></td>
+		</tr>
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Circle')">
+			<img src="circle.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Yellow')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Yellow"></a></td>
+		</tr>
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Oval')">
+			<img src="oval.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Green')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Lime"></a></td>
+		</tr>
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Pentagon')">
+			<img src="pentagon.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Aqua')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Aqua"></a></td>
+		</tr>
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Hexagon')">
+			<img src="hexagon.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Blue')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Blue"></a></td>
+
+		</tr>
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Octagon')">
+			<img src="octagon.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Purple')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Purple"></a></td>
+		</tr>
+		<tr>
+ 			<td align="middle"><a href="javascript:setShape('Trapezium')">
+			<img src="trapezium.gif" border="0"></a></td>
+			<td align="middle"><a href="javascript:setColour('Grey')">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: Gray"></a></td>
+		</tr>
+		<tr>
+			<td align="middle"><a href="javascript:setShape('Parallelogram');">
+			<img src="parallelogram.gif" border="0"></a></td> 									
+			<td align="middle"><a href="javascript:setColour('White');">
+			<img src="colour.png" width="60" height="40" border="2" style="background-color: White"></a></td>			</tr>
+</table>
+This page requires a javascript enabled browser.<br>
+There are a lot of images associated with this page, and it will load slowly until all the images are cached.<br>
+However, my toddler absolutely loves this page.
+</center>
+</td></tr></table></body></html>
