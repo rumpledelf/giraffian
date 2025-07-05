@@ -16,9 +16,9 @@ Click the cover pictures of the books to read them.
 </div>
 
 <div class="tile">
-<a href="/kids/colors"><img src="/images/colorscover.png"></a>
-<h2><a href="/kids/colors">Colors</a></h2>
-<p>Learn your colours!</p>
+<a href="/kids/books/ruggles/10-and-back"><img src="/images/1to10.png"></a>
+<h2><a href="/kids/books/ruggles/10-and-back">1 to 10 and back again</a></h2>
+<p>A learn-to-count online book by Tammy Ruggles.</p>
 </div>
 
 <div class="tile">
@@ -46,16 +46,9 @@ Click the cover pictures of the books to read them.
 </div>
 
 <div class="tile">
-<a href="/kids/books/ruggles/10-and-back"><img src="/images/1to10.png"></a>
-<h2><a href="/kids/books/ruggles/10-and-back">1 to 10 and back again</a></h2>
-<p>A learn-to-count online book by Tammy Ruggles.</p>
+<a href="/kids/colors"><img src="/images/colorscover.png"></a>
+<h2><a href="/kids/colors">Colors</a></h2>
+<p>Learn your colours!</p>
 </div>
-
-<div class="tile">
-<a href="/kids/books/perfectusarts/zo"><img src="/images/zcover.png"></a>
-<h2><a href="/kids/books/perfectusarts/zo">Z the three-eyed zebra</a></h2>
-<p>Z feels left out because everyone he knows has two eyes, and he has three! He decides to search around the world to see if he can find anyone with three eyes like him. What he finds is...a surprise!</p>
-</div>
-
 
 <?php include '/var/www/giraffian/includes/footer.html'; ?>

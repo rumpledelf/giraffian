@@ -1,0 +1,17 @@
+<?php include '/var/www/giraffian/includes/header.html'; ?>
+
+<p>&nbsp;</p>
+<h1 class="center">7 snails</h1>
+
+<p class="center"><img src="/images/books/7snails-scaled.jpg"></p>
+
+<p class="center">
+Seven snails slide along our step.
+</p>
+
+<div id="booknav">
+	<div class="prev"><a href="/kids/books/ruggles/10-and-back/8-lizards">Prev</a></div>
+	<div class="next"><a href="/kids/books/ruggles/10-and-back/6-snakes">Next</a></div>
+</div>
+
+<?php include '/var/www/giraffian/includes/footer.html'; ?>
