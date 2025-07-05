@@ -84,6 +84,10 @@ h2 a, h2 a:visited {
 	margin-left: auto;
 	margin-right: auto;
 }
+.right {
+	text-align: right;
+	margin-left: auto;
+}
 .handimgleft {
 	max-width: 50%;
 	margin-right: 24px;

@@ -9,7 +9,7 @@
 
 <div id="booknav">
 	<div class="prev"><a href="/kids/colors/grey">Prev</a></div>
-	<div class="next">&nbsp;</div>
+	<div class="next"><a href="/kids/books">Next</a></div>
 </div>
 
 <?php include '/var/www/giraffian/includes/footer.html'; ?>
