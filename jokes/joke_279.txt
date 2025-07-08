@@ -1,0 +1,2 @@
+PATIENT: Doctor, Doctor I'm going to die in 59 seconds.
+DOCTOR: Okay I'll be with you in a minute.

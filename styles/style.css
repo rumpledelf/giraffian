@@ -6,6 +6,15 @@ body {
 	background: #7bdee7 url(/images/clouds.png) repeat-x;
 }
 
+h1.indent {
+	padding-left: 60px;
+	position: relative;
+}
+h1.indent img {
+	position: absolute;
+	top: -2px;
+	left: 0px;
+}
 a {
 	color: #3a7ede;
 	text-decoration: none;
@@ -50,6 +59,11 @@ h2 a, h2 a:visited {
 }
 #colleft ul li, #colright ul li{
 	list-style-type: none;
+}
+.listitem {
+	padding: 16px;
+	margin: 16px 0;
+	border-top: 2px dashed #000;
 }
 .tile {
 	display: inline-block;

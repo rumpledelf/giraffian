@@ -1,0 +1,2 @@
+Person A: "Did you take a bath?"
+Person B: "Why, is one missing?"

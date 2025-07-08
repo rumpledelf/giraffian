@@ -1,0 +1,5 @@
+What's your name?
+My name is..........
+Can you spell it?
+(spells name out)
+No, I didn't say to spell your name I told you to spell "it" ... "I.T. it!"

@@ -1,0 +1,3 @@
+Child: "We're learning Absolutely Everybody at school and I know the whole song!"
+Mum: "That's great! Why don't you sing it for me?"
+Child: "I can't, I don't know any of the words."

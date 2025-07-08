@@ -1,0 +1,6 @@
+A: "Did you know there was a white dove at my school yesterday?"
+M: "No, I wasn't at your school yesterday"
+A: "It wasn't a galah."
+M: "No, you just said it was a dove"
+A: "It definitely wasn't a galah. It didn't look anything like a galah"
+M: ...
