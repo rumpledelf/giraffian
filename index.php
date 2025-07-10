@@ -24,6 +24,9 @@
 
 <h1 class="indent"><img src="/images/joke-icon.png">Jokes for little kids</h1>
 
+<p>Below are 5 random jokes. Refresh the page to see another 5 random jokes, or <a href="/jokes">see them all</a>.</p>
+
 <?php random5('/var/www/giraffian/jokes'); ?>
 <p class="center"><a href="/jokes" class="button coral">View all jokes</a></p>
+
 <?php include '/var/www/giraffian/includes/footer.html'; ?>

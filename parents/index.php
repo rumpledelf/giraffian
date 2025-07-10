@@ -1,0 +1,23 @@
+<?php include '/var/www/giraffian/includes/header.html'; ?>
+
+<h1 class="center">For Parents</h1>
+
+<div class="tile">
+<a href="/quotes"><img src="/images/talkingchild-sm.png"></a>
+<h2><a href="/quotes">Funny kid's quotes</a></h2>
+<p>A collection of funny things kids have said.</p>
+</div>
+
+<div class="tile">
+<a href="/badbabynames"><img style="height: 110px;" src="/images/books/baby.png"></a>
+<h2><a href="/badbabynames">Bad Baby Names</a></h2>
+<p>Some bad names people have given their children.</p>
+</div>
+
+<div class="tile">
+<a href="/comic"><img style="height: 110px;" src="/comic/images/weealot.png"</a>
+<h2><a href="/comic">Parenting comic</a></h2>
+<p>A pregnancy and parenting comic.</p>
+</div>
+
+<?php include '/var/www/giraffian/includes/footer.html'; ?>

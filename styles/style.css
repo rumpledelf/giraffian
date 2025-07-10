@@ -5,6 +5,11 @@ body {
 	margin: 0px;
 	background: #7bdee7 url(/images/clouds.png) repeat-x;
 }
+@media (max-width: 426px) {
+	h1 {
+		text-align: center;
+	}
+}
 
 h1.indent {
 	padding-left: 60px;
@@ -42,13 +47,13 @@ h2 a, h2 a:visited {
 	margin-top: 32px;
 	margin-bottom: 32px;
 }
-#menu ul li {
+#booknav ul li, #menu ul li {
   list-style-type: none;
   display: inline-block;
-  @media (max-width: 420px) {
+  @media (max-width: 426px) {
   }
 }
-#menu ul {
+#booknav ul, #menu ul {
 	padding: 0;
 	text-align: center;
 }
@@ -59,6 +64,15 @@ h2 a, h2 a:visited {
 }
 #colleft ul li, #colright ul li{
 	list-style-type: none;
+}
+.leftimage {
+	float: left;
+	margin-right: 10px;
+	@media (max-width: 426px) {
+		float: none;
+		display: block;
+		margin: 0 auto;
+	}
 }
 .listitem {
 	padding: 16px;
@@ -73,8 +87,10 @@ h2 a, h2 a:visited {
 	@media (max-width: 800px) {
 	       width: calc(48% - 48px);
         }
-	@media (max-width: 420px) {
+	@media (max-width: 426px) {
 		width: 100%;
+		margin: 24px 0;
+		text-align: center;
 	}	
 }
 .tile p, .smalltile p {
@@ -90,7 +106,7 @@ h2 a, h2 a:visited {
 	margin-bottom: 32px;
 	margin-left: 24px;
 	margin-right: 24px;
-	@media (max-width: 420px) {
+	@media (max-width: 426px) {
 		display: block;
 	}
 }
@@ -107,14 +123,14 @@ h2 a, h2 a:visited {
 .handimgleft {
 	max-width: 50%;
 	margin-right: 24px;
-	@media (max-width: 420px) {
+	@media (max-width: 426px) {
 		margin-right: 0;
 	}
 }
 .handimgright {
         max-width: 50%;
         margin-left: 24px;
-        @media (max-width: 420px) {
+        @media (max-width: 426px) {
                 margin-left: 0;
         }
 }
@@ -151,7 +167,7 @@ h2 a, h2 a:visited {
     height: 26px;
 }
 
-a.button {
+a.button, .button {
 	color: #000;
 	font-weight: bold;
         border: 2px solid black;
@@ -164,49 +180,49 @@ a.button:hover {
 	text-decoration: none;
 	color: #fff;
 }
-a.coral {
+.coral {
 	background-color: #ec8d6f;
 }
 a.coral:hover {
 	background-color: #e87550;
 }
-a.yellow {
+.yellow {
 	background-color: #f7e55f;
 }
 a.yellow:hover {
 	background-color: #f4da1e;
 }
-a.green {
+.green {
 	background-color: #589a56;
 }
 a.green:hover {
 	background-color: #4f8b4d;
 }
-a.aqua {
+.aqua {
 	background-color: #82dee6;
 }
 a.aqua:hover {
 	background-color: #46ceda;
 }
-a.blue {
+.blue {
 	background-color: #3a7ede;
 }
 a.blue:hover {
 	background-color: #246fd8;
 }
-a.darkpurple {
+.darkpurple {
 	background-color: #a259cb;
 }
 a.darkpurple:hover {
 	background-color: #9643c4;
 }
-a.purple {
+.purple {
 	background-color: #dcb0ed;
 }
 a.purple:hover {
 	background-color: #cd8ee5;
 }
-a.grey {
+.grey {
 	background-color: #bec6ce;
 }	
 a.grey:hover {
@@ -221,12 +237,15 @@ a.grey:hover {
 	border: 2px solid #000;
 	border-radius: 24px;
 	background-color: white;
-	@media (max-width: 920px) {
+	@media (max-width: 768px) {
 		padding: 16px;
-		border: none;
-		border-radius: none;
-		width: 100%;
+		max-width: 700px;
+	}
+	@media (max-width: 426px) {
+		max-width: 100%;
 		margin: 0;
+		border: none;
+		border-radius: 0;
 	}
 }
 
