@@ -1,3 +1,4 @@
+<?php define("TITLE","Jokes for little kids");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 <?php include '/var/www/giraffian/includes/pagination.php'; ?>
 

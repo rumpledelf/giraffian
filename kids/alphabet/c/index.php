@@ -1,3 +1,4 @@
+<?php define("TITLE","C is for cat");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

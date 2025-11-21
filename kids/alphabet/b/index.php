@@ -1,3 +1,4 @@
+<?php define("TITLE","B is for baby");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

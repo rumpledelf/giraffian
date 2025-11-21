@@ -1,3 +1,4 @@
+<?php define("TITLE","Emotions for kids");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>Emotions for kids</h1>
