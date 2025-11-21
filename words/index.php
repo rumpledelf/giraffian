@@ -4,8 +4,8 @@
 <h1 class="center">Words</h1>
 
 <div class="tile">
-<a href="/kids/jokes"><img src="/images/joke-icon.png"></a>
-<h2><a href="/kids/jokes">Jokes</a></h2>
+<a href="/jokes"><img src="/images/joke-icon.png"></a>
+<h2><a href="/jokes">Jokes</a></h2>
 <p>Silly jokes for little kids (but parents can tell them too)</p>
 </div>
 
