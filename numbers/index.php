@@ -1,3 +1,4 @@
+<?php define("TITLE","Numbers");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Numbers</h1>

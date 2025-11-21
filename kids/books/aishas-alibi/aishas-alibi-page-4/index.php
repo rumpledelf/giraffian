@@ -1,3 +1,4 @@
+<?php define("TITLE","Online book - Aisha's Alibi");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>

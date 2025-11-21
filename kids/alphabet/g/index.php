@@ -1,5 +1,5 @@
+<?php define("TITLE","G is for giraffe");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
-
 
 <p class="center"><img src="/images/books/giraffe.png"></p>
 

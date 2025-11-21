@@ -1,3 +1,4 @@
+<?php define("TITLE","N is for necklace");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

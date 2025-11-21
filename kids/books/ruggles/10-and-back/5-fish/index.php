@@ -1,3 +1,4 @@
+<?php define("TITLE","Online book - 10 and back");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>

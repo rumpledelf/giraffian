@@ -1,3 +1,4 @@
+<?php define("TITLE","Count on your fingers");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Count on your fingers</h1>

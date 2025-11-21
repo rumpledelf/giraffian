@@ -1,3 +1,4 @@
+<?php define("TITLE","D is for dog");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

@@ -1,3 +1,4 @@
+<?php define("TITLE","V is for vase");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

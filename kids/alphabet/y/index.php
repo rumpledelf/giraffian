@@ -1,3 +1,4 @@
+<?php define("TITLE","Y is for yacht");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

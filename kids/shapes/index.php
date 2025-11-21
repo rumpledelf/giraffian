@@ -1,3 +1,4 @@
+<?php define("TITLE","Shapes and colors");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Shapes and Colors</h1>

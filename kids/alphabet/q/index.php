@@ -1,3 +1,4 @@
+<?php define("TITLE","Q is for queen");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

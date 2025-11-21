@@ -1,3 +1,4 @@
+<?php define("TITLE","J is for jam or jelly");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

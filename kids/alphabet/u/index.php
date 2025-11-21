@@ -1,3 +1,4 @@
+<?php define("TITLE","U is for unicorn");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

@@ -1,3 +1,4 @@
+<?php define("TITLE","Words");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Words</h1>

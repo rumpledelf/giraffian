@@ -1,3 +1,4 @@
+<?php define("TITLE","O is for octopus");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

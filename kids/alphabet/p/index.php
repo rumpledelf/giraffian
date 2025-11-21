@@ -1,3 +1,4 @@
+<?php define("TITLE","P is for plant");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

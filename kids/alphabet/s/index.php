@@ -1,3 +1,4 @@
+<?php define("TITLE","S is for sheep");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

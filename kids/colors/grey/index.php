@@ -1,3 +1,4 @@
+<?php define("TITLE","Online book - colors");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p class="center"><img src="/images/books/10-grey.jpg"></p>

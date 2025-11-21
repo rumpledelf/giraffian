@@ -1,3 +1,4 @@
+<?php define("TITLE","I is for igloo");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

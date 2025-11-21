@@ -1,5 +1,5 @@
 <?php include '/var/www/giraffian/includes/header.php'; ?>
-
+<?php define("TITLE","X is for x-ray");?>
 
 <p class="center"><img src="/images/books/xray.png"></p>
 

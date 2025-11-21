@@ -1,3 +1,4 @@
+<?php define("TITLE","R is for rose");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

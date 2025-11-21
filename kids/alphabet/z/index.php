@@ -1,3 +1,4 @@
+<?php define("TITLE","Z is for zebra");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

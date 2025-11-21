@@ -1,3 +1,4 @@
+<?php define("TITLE","Online book - whose tail is this");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 <p>&nbsp;</p>
 <h1 class="center">Whose tail is this?</h1>

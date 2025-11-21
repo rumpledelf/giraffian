@@ -1,3 +1,4 @@
+<?php define("TITLE","Learn to tell the time on an analogue clock");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Learn to tell the time on an analogue clock</h1>

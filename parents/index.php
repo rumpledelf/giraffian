@@ -1,3 +1,4 @@
+<?php define("TITLE","For parents");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">For Parents</h1>

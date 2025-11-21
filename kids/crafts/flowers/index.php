@@ -1,3 +1,4 @@
+<?php define("TITLE","Printable kid's crafts - flowers");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - flowers</h1>

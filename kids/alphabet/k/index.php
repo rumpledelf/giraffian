@@ -1,3 +1,4 @@
+<?php define("TITLE","K is for kangaroo");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

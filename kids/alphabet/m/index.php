@@ -1,3 +1,4 @@
+<?php define("TITLE","M is for mouse");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 

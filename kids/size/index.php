@@ -1,3 +1,4 @@
+<?php define("TITLE","Sort by size");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Sort by size</h1>
