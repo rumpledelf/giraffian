@@ -1,4 +1,4 @@
-<?php $title = "Pregnancy comic | Morning sickness";?>
+<?php global $title = "Pregnancy comic | Morning sickness";?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Morning sickness</h1>

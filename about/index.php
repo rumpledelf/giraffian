@@ -1,4 +1,4 @@
-<?php $title = "About";?>
+<?php global $title = "About";?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>About</h1>
