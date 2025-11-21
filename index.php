@@ -1,4 +1,4 @@
-<?php global $title = "Home"; ?>
+<?php define("TITLE","Home");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 <?php include '/var/www/giraffian/includes/pagination.php'; ?>
 
