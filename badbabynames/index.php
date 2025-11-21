@@ -1,4 +1,4 @@
-<?php global $title = "Bad Baby Names";?>
+<?php define("TITLE","Bad Baby Names");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 <?php include '/var/www/giraffian/includes/pagination.php'; ?>
 

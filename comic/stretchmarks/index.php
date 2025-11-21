@@ -1,4 +1,4 @@
-<?php global $title = "Pregnancy comic | Stretchmarks";?>
+<?php define("TITLE","Pregnancy comic | Stretchmarks");?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Stretchmarks</h1>
