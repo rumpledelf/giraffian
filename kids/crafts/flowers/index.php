@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - flowers</h1>
 
@@ -96,4 +96,4 @@ These flowers can be printed out and used in various craft activities.  If you a
 <img src="yellowdaisy.png">
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

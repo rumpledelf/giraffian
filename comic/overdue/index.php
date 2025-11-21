@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Overdue</h1>
 
@@ -16,4 +16,4 @@ This is, after all, why they call it an <em>estimated</em> due date.
 	<div class="next">&nbsp;</div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

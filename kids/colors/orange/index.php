@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p class="center"><img src="/images/books/02-orange.jpg"></p>
 
@@ -12,4 +12,4 @@
 	<div class="next"><a href="/kids/colors/yellow">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

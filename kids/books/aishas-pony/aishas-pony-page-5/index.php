@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">Aisha's Pony (Page 5)</h1>
@@ -16,4 +16,4 @@ But she didn't like that colour either.
 	<div class="next"><a href="/kids/books/aishas-pony/aishas-pony-page-6">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

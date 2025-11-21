@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Pregnancy and parenting comic</h1>
 
@@ -13,4 +13,4 @@ You are reading the Giraffian pregnancy and parenting comic. It is a lighthearte
 	<div class="next"><a href="/comic/where-it-all-begins">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

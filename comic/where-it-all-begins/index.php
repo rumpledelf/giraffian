@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Where it all begins</h1>
 
@@ -13,4 +13,4 @@ This is where the journey begins - a positive pregnancy test. Whether you are tr
 	<div class="next"><a href="/comic/morning-sickness">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

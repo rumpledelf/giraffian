@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Online book - alphabet</h1>
 
@@ -16,4 +16,4 @@ Click on the yellow arrows to navigate.
 	<div class="next"><a href="/kids/alphabet/a">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

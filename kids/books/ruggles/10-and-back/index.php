@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">1 to 10 and back again</h1>
@@ -17,4 +17,4 @@ Click on the yellow arrows to navigate.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/1-caterpillar">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

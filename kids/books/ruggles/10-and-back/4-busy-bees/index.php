@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">4 busy bees</h1>
@@ -14,4 +14,4 @@ Four busy bees buzzing inside their hive.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/5-spiders">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

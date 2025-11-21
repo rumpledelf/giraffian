@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Pimples</h1>
 
@@ -16,4 +16,4 @@ While your face is busy breaking out (or if it isn't), you might find your moles
 	<div class="next"><a href="/comic/flatulence">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

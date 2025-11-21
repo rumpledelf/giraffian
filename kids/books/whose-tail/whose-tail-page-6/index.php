@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 <p>&nbsp;</p>
 <h1 class="center">It's a dinosaur's tail!</h1>
 <p>&nbsp;</p>
@@ -10,4 +10,4 @@
 	<div class="next"><a href="/kids/books/whose-tail/whose-tail-page-7">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

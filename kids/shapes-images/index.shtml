@@ -20,7 +20,7 @@
 </HEAD>
 <BODY class="KidsBody">
 
-<!--#include virtual="/sidebar.html"-->
+<!--#include virtual="/sidebar.php"-->
 
 <center>
 	<table width="90%" cellpadding="4">
@@ -102,4 +102,4 @@ This page requires a javascript enabled browser.<br>
 There are a lot of images associated with this page, and it will load slowly until all the images are cached.<br>
 However, my toddler absolutely loves this page.
 </center>
-</td></tr></table></body></html>
+</td></tr></table></body></php>

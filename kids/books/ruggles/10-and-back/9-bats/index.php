@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">9 bats</h1>
@@ -14,4 +14,4 @@ Nine bats fly around our light.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/8-lizards">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

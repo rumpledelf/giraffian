@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>Coloring images</h1>
 
@@ -139,4 +139,4 @@ Click on each picture to go to the black-and-white coloring-in version of the im
 <h2><a href="/images/coloringpdf/zebra.pdf">Zebra</a></h2>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

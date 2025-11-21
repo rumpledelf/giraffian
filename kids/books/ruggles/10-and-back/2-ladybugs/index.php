@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">2 ladybugs</h1>
@@ -14,4 +14,4 @@ Two ladybugs sitting pretty on a stump.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/3-wooly-worms">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

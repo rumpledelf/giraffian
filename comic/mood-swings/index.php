@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Mood swings</h1>
 
@@ -13,4 +13,4 @@ With the hormonal changes comes unpredictable moods. Suddenly those adverts on t
 	<div class="next"><a href="/comic/needing-pee-lot">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - alphabet flash cards</h1>
 
@@ -217,4 +217,4 @@ These aphbalet cards can be printed and used to make nursery art or alphabet fla
 </div>
 
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

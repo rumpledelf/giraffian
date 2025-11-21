@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Weight gain</h1>
 
@@ -16,4 +16,4 @@ The problem is, this early you probably don't want your co-workers to know, so y
 	<div class="next"><a href="/comic/ravenous-hunger">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

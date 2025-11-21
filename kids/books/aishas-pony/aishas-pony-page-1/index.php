@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">Aisha's Pony (Page 1)</h1>
@@ -16,4 +16,4 @@ On her birthday, her mum gave her a grey pony.
 	<div class="next"><a href="/kids/books/aishas-pony/aishas-pony-page-2">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

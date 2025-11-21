@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 <?php include '/var/www/giraffian/includes/pagination.php'; ?>
 
 <h1 class="indent"><img src="/images/joke-icon.png">Jokes for little kids</h1>
@@ -9,4 +9,4 @@
 	paginate('/var/www/giraffian/jokes',$param);
 ?>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

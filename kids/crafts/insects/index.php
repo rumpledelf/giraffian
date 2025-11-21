@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - insects</h1>
 
@@ -63,4 +63,4 @@ These dragonflies, butterflies, moths, beetles and ladybugs (ladybirds) can be p
 <img src="redbeetle.png">
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

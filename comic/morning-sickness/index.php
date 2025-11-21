@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Morning sickness</h1>
 
@@ -13,4 +13,4 @@ Morning sickness. I'm sure you've heard of this one. While they say it is usuall
 	<div class="next"><a href="/comic/weight-gain">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

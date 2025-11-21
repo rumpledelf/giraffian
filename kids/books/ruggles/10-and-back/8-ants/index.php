@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">8 ants</h1>
@@ -14,4 +14,4 @@ Eight ants marching to our picnic.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/9-butterflies">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

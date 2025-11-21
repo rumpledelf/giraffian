@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/fish_0.png"></p>
@@ -13,4 +13,4 @@ F is for fish
 	<div class="next"><a href="/kids/alphabet/g">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

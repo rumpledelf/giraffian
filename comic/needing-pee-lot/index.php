@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Needing to pee. A lot.</h1>
 
@@ -13,4 +13,4 @@ At some stage your bladder will contract to approximately the same size as a wal
 	<div class="next"><a href="/comic/advice-and-predictions">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

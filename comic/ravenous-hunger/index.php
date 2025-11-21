@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Ravenous hunger</h1>
 
@@ -13,4 +13,4 @@ Once you've got past the morning sickness (if you get past it), whether or not y
 	<div class="next"><a href="/comic/pimples">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

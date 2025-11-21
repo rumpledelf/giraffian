@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1>Emotions for kids</h1>
 
@@ -36,4 +36,4 @@ Some little pictures showing the facial expressions that go with the most common
 <img src="/kids/emotions-images/angry.png">
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

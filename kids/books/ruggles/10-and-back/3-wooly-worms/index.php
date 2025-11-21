@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">3 wooly worms</h1>
@@ -14,4 +14,4 @@ Three wooly worms wearing fuzzy coats.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/4-busy-bees">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

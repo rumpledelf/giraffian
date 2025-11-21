@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">10 fireflies</h1>
@@ -14,4 +14,4 @@ Ten fireflies flashing in our yard.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/9-bats">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Learn to tell the time on an analogue clock</h1>
 
@@ -96,5 +96,5 @@ else{
 <a href="/kids/clock">Another random time!</a> 
 </p>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>
 

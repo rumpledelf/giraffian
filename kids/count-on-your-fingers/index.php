@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Count on your fingers</h1>
 
@@ -43,4 +43,4 @@ Learn to count on your fingers. Click on a number to see what your hands look li
 <a class="handnav" href="javascript:setleft('9')"><img src="/kids/hands-images/nine.png"></a>
 <a class="handnav" href="javascript:setleft('10')"><img src="/kids/hands-images/ten.png"></a>
 </p>
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

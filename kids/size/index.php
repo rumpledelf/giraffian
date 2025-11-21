@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Sort by size</h1>
 <p class="center">
@@ -169,4 +169,4 @@ document.onmouseup=dodrop;
 <div class="center" id="fcaption">These flowers are in the wrong order. <img src="/images/cross-small.png"></div>
 <br />
 <p class="center"><small><em>You may need to turn your phone sideways to view this properly</em></small></p>
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.html'; ?>
+<?php include '/var/www/giraffian/includes/header.php'; ?>
 <?php include '/var/www/giraffian/includes/pagination.php'; ?>
 
 <h1>Giraffian kid's stuff</h1>
@@ -29,4 +29,4 @@
 <?php random5('/var/www/giraffian/jokes'); ?>
 <p class="center"><a href="/jokes" class="button coral">View all jokes</a></p>
 
-<?php include '/var/www/giraffian/includes/footer.html'; ?>
+<?php include '/var/www/giraffian/includes/footer.php'; ?>
