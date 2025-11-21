@@ -6,7 +6,7 @@
 		<!-- End Google Tag Manager -->
 		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0062762197282708" crossorigin="anonymous"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title><?php echo $sitename." | ".$title; ?>
+                <title><?php echo $sitename." | ".TITLE; ?></title>
                 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
