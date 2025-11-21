@@ -1,3 +1,4 @@
+<?php $title = "Pregnancy comic | Weight gain";?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Weight gain</h1>

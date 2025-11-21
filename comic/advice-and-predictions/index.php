@@ -1,3 +1,4 @@
+<?php $title = "Pregnancy comic | Advice and predictions";?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Advice and predictions</h1>

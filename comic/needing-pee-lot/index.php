@@ -1,3 +1,4 @@
+<?php $title = "Pregnancy comic | Needing to pee. A lot";?>
 <?php include '/var/www/giraffian/includes/header.php'; ?>
 
 <h1 class="center">Needing to pee. A lot.</h1>
