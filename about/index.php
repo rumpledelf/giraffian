@@ -1,5 +1,5 @@
 <?php define("TITLE","About");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>About</h1>
 <h3>General</h3>
@@ -14,4 +14,4 @@ No information about you is collected for any kind of nefarious purpose. I'm sur
 <p>
 If you want to use any of the images on this site, please ask before just taking them, and at the very least leave a link back to this site. I've seen my artwork used on other websites before and while it is flattering to some degree, please let me know first.
 </p>
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

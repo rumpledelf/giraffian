@@ -1,5 +1,5 @@
 <?php define("TITLE","Numbers");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Numbers</h1>
 
@@ -21,4 +21,4 @@
 <p>An online application that helps teach children how to read an analogue clock.</p>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

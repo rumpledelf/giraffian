@@ -1,5 +1,5 @@
 <?php define("TITLE","Shapes and colors");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Shapes and Colors</h1>
 
@@ -88,4 +88,4 @@
 <br />
 <br />
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

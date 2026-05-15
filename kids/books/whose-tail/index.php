@@ -1,5 +1,5 @@
 <?php define("TITLE","Online book - whose tail is this");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Online book - whose tail is this?</h1>
 
@@ -18,4 +18,4 @@ Click on the yellow arrows to navigate.
 ">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

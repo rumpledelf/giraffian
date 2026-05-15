@@ -1,5 +1,5 @@
 <?php define("TITLE","Online kid's books");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Online kid's books</h1>
 
@@ -52,4 +52,4 @@ Click the cover pictures of the books to read them.
 <p>Learn your colours!</p>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

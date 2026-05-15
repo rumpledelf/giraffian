@@ -1,5 +1,5 @@
 <?php define("TITLE","Online book - 10 and back");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">9 bats</h1>
@@ -15,4 +15,4 @@ Nine bats fly around our light.
 	<div class="next"><a href="/kids/books/ruggles/10-and-back/8-lizards">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

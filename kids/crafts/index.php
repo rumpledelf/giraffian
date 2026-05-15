@@ -1,5 +1,5 @@
 <?php define("TITLE","Printable crafts");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Printable crafts</h1>
 
@@ -37,4 +37,4 @@
 
 
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

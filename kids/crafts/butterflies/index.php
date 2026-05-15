@@ -1,5 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - butterflies");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - butterflies</h1>
 
@@ -83,4 +83,4 @@ These butterflies can be printed out and used in various craft activities. If yo
 
 
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

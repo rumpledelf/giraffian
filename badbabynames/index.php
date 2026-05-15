@@ -1,14 +1,14 @@
 <?php define("TITLE","Bad Baby Names");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
-<?php include '/var/www/giraffian/includes/pagination.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/pagination.php'; ?>
 
-<h1>Funny things kids say</h1>
+<h1>Bad Baby Names</h1>
 
 <p>Some people give their children terrible names. Here is a small collection of some of them.</p>
 <?php
-	$param = $_GET['page'];
+	$param = $_GET['page'] ?? 0;
 	if (!is_numeric($param)) $param = 0;
-	paginate('/var/www/giraffian/badbabynames',$param);
+	paginate($_SERVER['DOCUMENT_ROOT'] . '/badbabynames',$param);
 ?>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

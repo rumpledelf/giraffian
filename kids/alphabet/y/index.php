@@ -1,5 +1,5 @@
 <?php define("TITLE","Y is for yacht");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/yacht.png"></p>
@@ -14,4 +14,4 @@ Y is for yacht
 	<div class="next"><a href="/kids/alphabet/z">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

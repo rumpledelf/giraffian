@@ -1,4 +1,4 @@
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 <?php define("TITLE","X is for x-ray");?>
 
 <p class="center"><img src="/images/books/xray.png"></p>
@@ -13,4 +13,4 @@ X is for x-ray
 	<div class="next"><a href="/kids/alphabet/y">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php define("TITLE","Pregnancy comic | Stretchmarks");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Stretchmarks</h1>
 
@@ -14,4 +14,4 @@ Yes, those are stretchmarks. No, you're not imagining it, they weren't there yes
 	<div class="next"><a href="/comic/overdue">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

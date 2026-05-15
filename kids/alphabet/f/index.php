@@ -1,5 +1,5 @@
 <?php define("TITLE","F is for fish");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/fish_0.png"></p>
@@ -14,4 +14,4 @@ F is for fish
 	<div class="next"><a href="/kids/alphabet/g">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

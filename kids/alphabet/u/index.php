@@ -1,5 +1,5 @@
 <?php define("TITLE","U is for unicorn");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/unicorn.png"></p>
@@ -14,4 +14,4 @@ U is for unicorn
 	<div class="next"><a href="/kids/alphabet/v">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

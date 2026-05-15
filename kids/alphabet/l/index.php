@@ -1,5 +1,5 @@
 <?php define("TITLE","L is for lion");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/lion.png"></p>
@@ -14,4 +14,4 @@ L is for lion
 	<div class="next"><a href="/kids/alphabet/m">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

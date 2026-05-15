@@ -1,5 +1,5 @@
 <?php define("TITLE","Pregnancy comic | Advice and predictions");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Advice and predictions</h1>
 
@@ -14,4 +14,4 @@ Pregnancy gives strangers (and friends, aquaintances, relatives, co-workers) an 
 	<div class="next"><a href="/comic/stretchmarks">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

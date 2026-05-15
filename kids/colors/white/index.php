@@ -1,5 +1,5 @@
 <?php define("TITLE","Online book - colors");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p class="center"><img src="/images/books/09-white.jpg"></p>
 
@@ -13,4 +13,4 @@
 	<div class="next"><a href="/kids/colors/grey">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

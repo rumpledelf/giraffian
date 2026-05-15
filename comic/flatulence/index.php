@@ -1,5 +1,5 @@
 <?php define("TITLE","Pregnancy comic | Flatulence");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Flatulence</h1>
 
@@ -17,4 +17,4 @@ The reason you get flatulence in pregnancy is because of the relaxing effect of 
 	<div class="next"><a href="/comic/varicose-veins">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

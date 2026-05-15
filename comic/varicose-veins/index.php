@@ -1,5 +1,5 @@
 <?php define("TITLE","Pregnancy comic | Varicose veins");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Varicose veins</h1>
 
@@ -14,4 +14,4 @@ Just when you've gone out and bought a summer wardrobe of maternity skirts and s
 	<div class="next"><a href="/comic/mood-swings">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

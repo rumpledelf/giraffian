@@ -1,5 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - alphabet flash cards");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - alphabet flash cards</h1>
 
@@ -218,4 +218,4 @@ These aphbalet cards can be printed and used to make nursery art or alphabet fla
 </div>
 
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

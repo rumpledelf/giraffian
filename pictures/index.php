@@ -1,5 +1,5 @@
 <?php define("TITLE","Pictures");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Pictures</h1>
 
@@ -33,4 +33,4 @@
 <p>A shapes and colours game</p>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

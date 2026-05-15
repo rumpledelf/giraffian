@@ -1,5 +1,5 @@
 <?php define("TITLE","Pregnancy comic | Morning sickness");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Morning sickness</h1>
 
@@ -14,4 +14,4 @@ Morning sickness. I'm sure you've heard of this one. While they say it is usuall
 	<div class="next"><a href="/comic/weight-gain">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php define("TITLE","N is for necklace");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/necklace.png"></p>
@@ -14,4 +14,4 @@ N is for necklace
 	<div class="next"><a href="/kids/alphabet/o">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

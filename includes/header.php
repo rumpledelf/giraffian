@@ -1,12 +1,13 @@
-<?php include '/var/www/giraffian/includes/variables.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/variables.php'; ?>
 <!DOCTYPE html>
 	<head>
 		<!-- Google Tag Manager -->
 		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NXJ6DGQ8');</script>
 		<!-- End Google Tag Manager -->
 		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0062762197282708" crossorigin="anonymous"></script>
+		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title><?php echo $sitename." | ".TITLE; ?></title>
+                <title><?php echo $sitename . (defined('TITLE') ? " | " . TITLE : ""); ?></title>
                 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -25,7 +26,7 @@
 		<div id="wrapper">
 		<div id="header">
 			<div id="logo">
-				<a href="/"><img src="/images/gir-logo.png"></a>
+				<a href="/"><img src="/images/gir-logo.png" alt="Giraffian home"></a>
 			</div>
 			<p><small><em>kid's educational activities, a parenting webcomic and other fun things for children and parents alike.</em></small></p>
 			<div id="menu">

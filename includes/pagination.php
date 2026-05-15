@@ -6,44 +6,60 @@ function renderfile($filename) {
 	echo nl2br(file_get_contents($filename));
 	echo "</div>\n";
 }
+
 function getfiles($folder) {
 	$files = scandir($folder);
-        $total = count($files);
-        $items = array();
-        for($x = 0; $x <= $total; $x++):
-                if ($files[$x] != '.' && $files[$x] != '..' && $files[$x] != 'index.php') {
-                        $items[] = $files[$x];
-                }
-	endfor;
+	$items = array();
+
+	foreach ($files as $file) {
+		if ($file !== '.' && $file !== '..' && $file !== 'index.php') {
+			$items[] = $file;
+		}
+	}
+
 	return $items;
 }
+
 function random5($folder) {
 	$files = getfiles($folder);
+	$total = count($files);
 
-	// get 5 random items
+	if ($total === 0) {
+		return;
+	}
+
 	shuffle($files);
-	$rand_keys = array_rand($files, 5);
-	for ($x=0; $x < 5; $x++):
+	$limit = min(5, $total);
+
+	for ($x = 0; $x < $limit; $x++):
 		renderfile($folder.'/'.$files[$x]);
 	endfor;
-}		
+}
+
 function paginate($folder, $page) {
 	$files = getfiles($folder);
-	$total = count($files) - 1;
-	$first = 0;
-	$last = intdiv($total,20);
-	if ($page > $last) $page = $last;
-	$next = $page+1;
-	$prev = $page-1;
-	$start = $page*20;
-	if ($page >= $last) $end = $total;
-	else $end = ($page+1) * 20;
+	$total = count($files);
+
+	if ($total === 0) {
+		echo "No items to show.";
+		return;
+	}
+
+	$page = max(0, (int) $page);
+	$last = (int) floor(($total - 1) / 20);
+	if ($page > $last) {
+		$page = $last;
+	}
+
+	$next = $page + 1;
+	$prev = $page - 1;
+	$start = $page * 20;
+	$end = min($start + 20, $total);
 
 	echo "Showing ".($start+1)." to ".$end." of ".$total;
 
-	// write out here
 	for ($i=$start; $i<$end; $i++):
-		renderfile($files[$i]);
+		renderfile($folder.'/'.$files[$i]);
 	endfor;
 
 	echo "<div id=\"booknav\">\n<ul>\n";

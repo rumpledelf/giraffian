@@ -1,5 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - coloring images");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Coloring images</h1>
 
@@ -140,4 +140,4 @@ Click on each picture to go to the black-and-white coloring-in version of the im
 <h2><a href="/images/coloringpdf/zebra.pdf">Zebra</a></h2>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

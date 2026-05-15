@@ -5,4 +5,4 @@ Content on this site is &copy; <a href="/about">Giraffian</a> 2002-<?php echo da
 </div>
 <div class="grass"></div>
 </body>
-</php>
+</html>

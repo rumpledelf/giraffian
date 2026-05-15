@@ -1,5 +1,5 @@
 <?php define("TITLE","Emotions for kids");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Emotions for kids</h1>
 
@@ -37,4 +37,4 @@ Some little pictures showing the facial expressions that go with the most common
 <img src="/kids/emotions-images/angry.png">
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

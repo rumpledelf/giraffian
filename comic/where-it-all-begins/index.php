@@ -1,5 +1,5 @@
 <?php define("TITLE","Pregnancy comic | Where it all begins");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Where it all begins</h1>
 
@@ -14,4 +14,4 @@ This is where the journey begins - a positive pregnancy test. Whether you are tr
 	<div class="next"><a href="/comic/morning-sickness">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

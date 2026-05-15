@@ -1,5 +1,5 @@
 <?php define("TITLE","T is for turtle");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/turtle.png"></p>
@@ -14,4 +14,4 @@ T is for turtle
 	<div class="next"><a href="/kids/alphabet/u">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

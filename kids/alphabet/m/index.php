@@ -1,5 +1,5 @@
 <?php define("TITLE","M is for mouse");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/mouse.png"></p>
@@ -14,4 +14,4 @@ M is for mouse
 	<div class="next"><a href="/kids/alphabet/n">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

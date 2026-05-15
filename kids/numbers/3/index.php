@@ -1,5 +1,5 @@
 <?php define("TITLE","Online book - numbers");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p class="center"><img src="/images/books/apples.png"></p>
 
@@ -11,4 +11,4 @@
 	<div class="next"><a href="/kids/numbers/4">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php define("TITLE","A is for alligator");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/alligator.png"></p>
@@ -14,4 +14,4 @@ A is for alligator
 	<div class="next"><a href="/kids/alphabet/b">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

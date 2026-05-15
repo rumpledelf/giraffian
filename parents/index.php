@@ -1,5 +1,5 @@
 <?php define("TITLE","For parents");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">For Parents</h1>
 
@@ -16,9 +16,9 @@
 </div>
 
 <div class="tile">
-<a href="/comic"><img style="height: 110px;" src="/comic/images/weealot.png"</a>
+<a href="/comic"><img style="height: 110px;" src="/comic/images/weealot.png" alt="Parenting comic preview"></a>
 <h2><a href="/comic">Parenting comic</a></h2>
 <p>A pregnancy and parenting comic.</p>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php define("TITLE","B is for baby");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/baby.png"></p>
@@ -14,4 +14,4 @@ B is for baby
 	<div class="next"><a href="/kids/alphabet/c">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

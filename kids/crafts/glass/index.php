@@ -1,5 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - hearts, stars and moons");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - hearts, stars and moons</h1>
 
@@ -81,4 +81,4 @@ These hearts, stars and moons can be printed out and used in various craft activ
 </div>
 
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

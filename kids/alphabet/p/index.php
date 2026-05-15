@@ -1,5 +1,5 @@
 <?php define("TITLE","P is for plant");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/plant.png"></p>
@@ -14,4 +14,4 @@ P is for plant
 	<div class="next"><a href="/kids/alphabet/q">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

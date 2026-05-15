@@ -1,5 +1,5 @@
 <?php define("TITLE","R is for rose");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/rose.png"></p>
@@ -14,4 +14,4 @@ R is for rose
 	<div class="next"><a href="/kids/alphabet/s">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

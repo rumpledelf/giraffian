@@ -1,5 +1,5 @@
 <?php define("TITLE","Online book - Aisha's Pony");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">Aisha's Pony (Page 8)</h1>
@@ -20,4 +20,4 @@ And then it really started to rain.
 	<div class="next"><a href="/kids/books/aishas-pony/aishas-pony-page-9">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

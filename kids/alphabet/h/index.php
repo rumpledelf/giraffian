@@ -1,5 +1,5 @@
 <?php define("TITLE","H is for horse");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/horse.png"></p>
@@ -14,4 +14,4 @@ H is for horse
 	<div class="next"><a href="/kids/alphabet/i">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

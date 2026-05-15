@@ -1,5 +1,5 @@
 <?php define("TITLE","Learn to tell the time on an analogue clock");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Learn to tell the time on an analogue clock</h1>
 
@@ -97,5 +97,5 @@ else{
 <a href="/kids/clock">Another random time!</a> 
 </p>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 

@@ -1,11 +1,11 @@
 <?php define("TITLE","Home");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
-<?php include '/var/www/giraffian/includes/pagination.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/pagination.php'; ?>
 
 <h1>Giraffian kid's stuff</h1>
 
 <div class="tile">
-<a href="/comic"><img src="/comic/images/weealot.png"</a>
+<a href="/comic"><img src="/comic/images/weealot.png" alt="Parenting comic preview"></a>
 <h2><a href="/comic">Parenting comic</a></h2>
 <p>A pregnancy and parenting comic.</p>
 </div>
@@ -27,7 +27,7 @@
 
 <p>Below are 5 random jokes. Refresh the page to see another 5 random jokes, or <a href="/jokes">see them all</a>.</p>
 
-<?php random5('/var/www/giraffian/jokes'); ?>
+<?php random5($_SERVER['DOCUMENT_ROOT'] . '/jokes'); ?>
 <p class="center"><a href="/jokes" class="button coral">View all jokes</a></p>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

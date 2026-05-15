@@ -1,5 +1,5 @@
 <?php define("TITLE","Z is for zebra");?>
-<?php include '/var/www/giraffian/includes/header.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
 <p class="center"><img src="/images/books/zebra.png"></p>
@@ -14,4 +14,4 @@ Z is for zebra
 	<div class="next"><a href="/kids/books">Next</a></div>
 </div>
 
-<?php include '/var/www/giraffian/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
