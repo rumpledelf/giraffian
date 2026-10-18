@@ -29,4 +29,10 @@
   <p>Launch orbital vacuum shuttles around charming pixel art to slurp up matching color layers.</p>
 </div>
 
+<div class="tile">
+  <a href="/games/tapout"><img src="/images/thumb-tapout.svg" alt="Tap Out preview"></a>
+  <h2><a href="/games/tapout">Tap Out</a></h2>
+  <p>Tap blocks, cars, and corner pieces to zoom them out along unblocked corridors.</p>
+</div>
+
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
