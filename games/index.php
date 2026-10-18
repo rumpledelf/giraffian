@@ -32,7 +32,13 @@
 <div class="tile">
   <a href="/games/tapout"><img src="/images/thumb-tapout.svg" alt="Tap Out preview"></a>
   <h2><a href="/games/tapout">Tap Out</a></h2>
-  <p>Tap blocks, cars, and corner pieces to zoom them out along unblocked corridors.</p>
+  <p>Tap blocks and cars to zoom them out along unblocked corridors.</p>
+</div>
+
+<div class="tile">
+  <a href="/games/arrows"><img src="/images/thumb-arrows.svg" alt="Arrows preview"></a>
+  <h2><a href="/games/arrows">Arrows</a></h2>
+  <p>Untangle winding arrows by finding a clear route out for each path.</p>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

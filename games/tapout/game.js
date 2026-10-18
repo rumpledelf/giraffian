@@ -1,7 +1,7 @@
 /**
  * Tap Out - Main Game Engine
  * Features:
- * - 3 Piece Modes: Squares (1x1), Rectangles (1x2, 1x3 Cars/Planks), Corners (L-shapes & Polyominoes)
+ * - 2 Piece Modes: Squares (1x1), Cars & Planks (1x2, 1x3, 1x4)
  * - Configurable N x N grid (4x4, 6x6, 8x8, 10x10, 12x12)
  * - Solvable boards constructed by carving pieces in a legal exit order
  * - Unlimited Undo, Hint System, Procedural Web Audio API
@@ -10,8 +10,11 @@
 class TapOutGame {
   constructor() {
     this.audio = new window.TapOutAudio();
-    this.gridSize = parseInt(localStorage.getItem('tapout_grid_size') || '6', 10);
-    this.shapeMode = localStorage.getItem('tapout_shape_mode') || 'rectangles'; // 'squares' | 'rectangles' | 'corners'
+    const urlParams = new URLSearchParams(window.location.search);
+    this.gridSize = parseInt(urlParams.get('size') || localStorage.getItem('tapout_grid_size') || '6', 10);
+    const requestedMode = urlParams.get('mode') || localStorage.getItem('tapout_shape_mode') || 'rectangles';
+    this.shapeMode = requestedMode === 'squares' ? 'squares' : 'rectangles';
+    if (requestedMode === 'corners') localStorage.setItem('tapout_shape_mode', 'rectangles');
     this.level = parseInt(localStorage.getItem('tapout_level') || '1', 10);
     this.grid = []; // gridSize x gridSize, holds pieceId or null
     this.pieces = new Map(); // pieceId -> { id, cells: [{r, c}], dir: 'up'|'down'|'left'|'right', color: string }
@@ -136,16 +139,15 @@ class TapOutGame {
   /**
    * Procedural Puzzle Generator Supporting:
    * 1. 'squares': 1x1 tiles
-   * 2. 'rectangles': 1x1, 1x2, 1x3 cars / planks
-   * 3. 'corners': L-shapes, 1x2, 1x1 polyominoes
+   * 2. 'rectangles': 1x1, 1x2, 1x3, 1x4 cars / planks
    */
   generatePuzzle(size, mode) {
     const dirs = ['up', 'down', 'left', 'right'];
-    const shapeTemplates = this.getShapeTemplates(mode);
     const grid = Array.from({ length: size }, () => Array(size).fill(null));
     const remaining = Array.from({ length: size }, () => Array(size).fill(true));
     const pieces = new Map();
     let emptyCount = size * size;
+
     const shuffle = values => {
       const result = [...values];
       for (let i = result.length - 1; i > 0; i--) {
@@ -155,9 +157,27 @@ class TapOutGame {
       return result;
     };
 
+    const countParallelNeighbors = (cells, dir) => {
+      let count = 0;
+      const isHoriz = dir === 'left' || dir === 'right';
+      for (const pt of cells) {
+        const neighbors = isHoriz
+          ? [{ r: pt.r - 1, c: pt.c }, { r: pt.r + 1, c: pt.c }]
+          : [{ r: pt.r, c: pt.c - 1 }, { r: pt.r, c: pt.c + 1 }];
+        for (const n of neighbors) {
+          if (n.r >= 0 && n.r < size && n.c >= 0 && n.c < size && grid[n.r][n.c] !== null) {
+            const np = pieces.get(grid[n.r][n.c]);
+            if (np && np.dir === dir) count++;
+          }
+        }
+      }
+      return count;
+    };
+
     // Carve pieces from exposed edges of a full board. Each piece can leave
     // when it is carved, so the insertion order is also a complete solution.
-    while (emptyCount > 0) {
+    let maxLoops = 3000;
+    while (emptyCount > 0 && maxLoops-- > 0) {
       const exposed = new Map();
       const add = (r, c) => exposed.set(`${r},${c}`, { r, c });
       for (let i = 0; i < size; i++) {
@@ -175,93 +195,106 @@ class TapOutGame {
         }
       }
 
-      const templates = shuffle(shapeTemplates);
-      // Keep singles as useful filler while favouring the selected shapes.
-      if (emptyCount === size * size || Math.random() < 0.8) {
-        templates.sort((a, b) => b.length - a.length);
-      }
-      let placed = false;
-      for (const cell of shuffle(exposed.values())) {
-        for (const template of templates) {
-          for (const anchor of shuffle(template)) {
-            const cells = template.map(offset => ({
-              r: cell.r + offset.r - anchor.r,
-              c: cell.c + offset.c - anchor.c
-            }));
-            if (!cells.every(pt => pt.r >= 0 && pt.r < size && pt.c >= 0 && pt.c < size && remaining[pt.r][pt.c] !== null)) continue;
-            const validDirs = dirs.filter(d => this.isReversePieceClear(remaining, size, cells, d));
-            if (!validDirs.length) continue;
+      const exposedCells = shuffle(exposed.values());
 
-            const id = pieces.size + 1;
-            pieces.set(id, {
-              id, cells, dir: this.pickAlignedDir(template, validDirs),
-              color: this.colors[id % this.colors.length]
-            });
-            cells.forEach(pt => {
-              grid[pt.r][pt.c] = id;
-              remaining[pt.r][pt.c] = null;
-            });
-            emptyCount -= cells.length;
-            placed = true;
-            break;
+      const findCandidate = (templates) => {
+        let best = null;
+        let minPenalty = 999;
+        for (const cell of exposedCells) {
+          for (const template of templates) {
+            for (const anchor of shuffle(template)) {
+              const cells = template.map(offset => ({
+                r: cell.r + offset.r - anchor.r,
+                c: cell.c + offset.c - anchor.c
+              }));
+              if (!cells.every(pt => pt.r >= 0 && pt.r < size && pt.c >= 0 && pt.c < size && remaining[pt.r][pt.c] !== null)) continue;
+              const validDirs = dirs.filter(d => this.isReversePieceClear(remaining, size, cells, d));
+              const alignedDirs = this.getAlignedValidDirs(template, validDirs);
+              if (!alignedDirs.length) continue;
+
+              for (const dir of shuffle(alignedDirs)) {
+                const penalty = countParallelNeighbors(cells, dir);
+                if (penalty < minPenalty) {
+                  minPenalty = penalty;
+                  best = { cells, dir };
+                  if (minPenalty === 0) return best;
+                }
+              }
+            }
           }
-          if (placed) break;
         }
-        if (placed) break;
+        return best;
+      };
+
+      let bestCandidate = null;
+      if (mode === 'rectangles') {
+        const templatesByLen = {
+          4: [
+            [{ r: 0, c: 0 }, { r: 0, c: 1 }, { r: 0, c: 2 }, { r: 0, c: 3 }],
+            [{ r: 0, c: 0 }, { r: 1, c: 0 }, { r: 2, c: 0 }, { r: 3, c: 0 }]
+          ],
+          3: [
+            [{ r: 0, c: 0 }, { r: 0, c: 1 }, { r: 0, c: 2 }],
+            [{ r: 0, c: 0 }, { r: 1, c: 0 }, { r: 2, c: 0 }]
+          ],
+          2: [
+            [{ r: 0, c: 0 }, { r: 0, c: 1 }],
+            [{ r: 0, c: 0 }, { r: 1, c: 0 }]
+          ],
+          1: [
+            [{ r: 0, c: 0 }]
+          ]
+        };
+        // Natural distribution: mostly 1x2 cars (~60%), some 1x3 trucks (~30%), occasional 1x4 bus (~10%)
+        const rand = Math.random();
+        const order = rand < 0.60 ? [2, 3, 4] : (rand < 0.90 ? [3, 2, 4] : [4, 2, 3]);
+        const multiTemplates = [];
+        for (const len of order) {
+          multiTemplates.push(...shuffle(templatesByLen[len]));
+        }
+
+        bestCandidate = findCandidate(multiTemplates);
+        // Fall back to 1x1 singles only if no multi-cell car/plank fits
+        if (!bestCandidate) {
+          bestCandidate = findCandidate(templatesByLen[1]);
+        }
+      } else {
+        // 'squares' mode: single 1x1 tiles with anti-clustering direction scoring
+        bestCandidate = findCandidate([[{ r: 0, c: 0 }]]);
+      }
+
+      if (bestCandidate) {
+        const id = pieces.size + 1;
+        const { cells, dir } = bestCandidate;
+        pieces.set(id, {
+          id, cells, dir,
+          color: this.colors[id % this.colors.length]
+        });
+        cells.forEach(pt => {
+          grid[pt.r][pt.c] = id;
+          remaining[pt.r][pt.c] = null;
+        });
+        emptyCount -= cells.length;
+      } else {
+        break;
       }
     }
     return { grid, pieces };
   }
 
-  getShapeTemplates(mode) {
-    if (mode === 'squares') {
-      return [
-        [{ r: 0, c: 0 }] // 1x1
-      ];
-    }
-
-    if (mode === 'rectangles') {
-      return [
-        // 1x3 vehicles / planks
-        [{ r: 0, c: 0 }, { r: 0, c: 1 }, { r: 0, c: 2 }],
-        [{ r: 0, c: 0 }, { r: 1, c: 0 }, { r: 2, c: 0 }],
-        // 1x2 cars
-        [{ r: 0, c: 0 }, { r: 0, c: 1 }],
-        [{ r: 0, c: 0 }, { r: 1, c: 0 }],
-        // 1x1 filler
-        [{ r: 0, c: 0 }]
-      ];
-    }
-
-    // 'corners' mode: L-shapes, bars, and single blocks
-    return [
-      // 3-cell L-corners
-      [{ r: 0, c: 0 }, { r: 1, c: 0 }, { r: 0, c: 1 }],
-      [{ r: 0, c: 0 }, { r: 1, c: 0 }, { r: 1, c: 1 }],
-      [{ r: 0, c: 0 }, { r: 0, c: 1 }, { r: 1, c: 1 }],
-      [{ r: 0, c: 1 }, { r: 1, c: 0 }, { r: 1, c: 1 }],
-      // 1x2 bars
-      [{ r: 0, c: 0 }, { r: 0, c: 1 }],
-      [{ r: 0, c: 0 }, { r: 1, c: 0 }],
-      // 1x1 blocks
-      [{ r: 0, c: 0 }]
-    ];
-  }
-
-  pickAlignedDir(template, validDirs) {
-    // For 1x2 or 1x3 horizontal, prefer left or right if available
+  getAlignedValidDirs(template, validDirs) {
+    // Planks and cars MUST move lengthways along their longitudinal axis
     const isHorizontal = template.length > 1 && template.every(pt => pt.r === template[0].r);
     const isVertical = template.length > 1 && template.every(pt => pt.c === template[0].c);
 
     if (isHorizontal) {
-      const horiz = validDirs.filter(d => d === 'left' || d === 'right');
-      if (horiz.length > 0) return horiz[Math.floor(Math.random() * horiz.length)];
-    } else if (isVertical) {
-      const vert = validDirs.filter(d => d === 'up' || d === 'down');
-      if (vert.length > 0) return vert[Math.floor(Math.random() * vert.length)];
+      return validDirs.filter(d => d === 'left' || d === 'right');
     }
-
-    return validDirs[Math.floor(Math.random() * validDirs.length)];
+    if (isVertical) {
+      return validDirs.filter(d => d === 'up' || d === 'down');
+    }
+    // Single blocks can move in any valid direction
+    return validDirs;
   }
 
   isReversePieceClear(grid, size, cells, dir) {
@@ -319,8 +352,7 @@ class TapOutGame {
 
     const modeLabels = {
       squares: 'Squares',
-      rectangles: 'Cars & Planks',
-      corners: 'Corner Shapes'
+      rectangles: 'Cars & Planks'
     };
     const modeLabel = modeLabels[this.shapeMode] || 'Classic';
     this.dom.levelBadge.textContent = `Level ${this.level}: ${this.gridSize}×${this.gridSize} (${modeLabel})`;
@@ -404,61 +436,24 @@ class TapOutGame {
     const maxC = Math.max(...piece.cells.map(p => p.c));
     const spanR = maxR - minR + 1;
     const spanC = maxC - minC + 1;
-    const isRect = piece.cells.length === spanR * spanC;
+    // A straight block spanning one to four cells
+    const el = document.createElement('div');
+    el.id = `piece-${piece.id}`;
+    el.className = `tap-block piece-${piece.id}`;
+    el.style.gridRow = `${minR + 1} / span ${spanR}`;
+    el.style.gridColumn = `${minC + 1} / span ${spanC}`;
+    el.style.backgroundColor = piece.color;
+    el.dataset.pieceId = piece.id;
 
-    if (isRect) {
-      // 1x1, 1x2, or 1x3 seamless single block
-      const el = document.createElement('div');
-      el.id = `piece-${piece.id}`;
-      el.className = `tap-block piece-${piece.id}`;
-      el.style.gridRow = `${minR + 1} / span ${spanR}`;
-      el.style.gridColumn = `${minC + 1} / span ${spanC}`;
-      el.style.backgroundColor = piece.color;
-      el.dataset.pieceId = piece.id;
+    el.innerHTML = this.getArrowSvg(piece.dir);
+    this.positionArrow(el, piece, minR, minC);
 
-      el.innerHTML = this.getArrowSvg(piece.dir);
-      this.positionArrow(el, piece, minR, minC);
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.handlePieceTap(piece.id);
+    });
 
-      el.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.handlePieceTap(piece.id);
-      });
-
-      container.appendChild(el);
-    } else {
-      // 3-cell L-shape in a 2x2 container
-      const el = document.createElement('div');
-      el.id = `piece-${piece.id}`;
-      el.className = `l-container piece-${piece.id}`;
-      el.style.gridRow = `${minR + 1} / span ${spanR}`;
-      el.style.gridColumn = `${minC + 1} / span ${spanC}`;
-      el.dataset.pieceId = piece.id;
-
-      // Determine rotation based on missing cell in 2x2
-      const relSet = new Set(piece.cells.map(p => `${p.r - minR},${p.c - minC}`));
-      let rotation = 0;
-      if (!relSet.has('1,1')) rotation = 0;
-      else if (!relSet.has('1,0')) rotation = 90;
-      else if (!relSet.has('0,0')) rotation = 180;
-      else if (!relSet.has('0,1')) rotation = 270;
-
-      el.innerHTML = `
-        <svg class="l-svg" viewBox="0 0 1000 1000">
-          <path d="M 100,4 L 900,4 A 96,96 0 0 1 996,100 L 996,372 A 96,96 0 0 1 900,468 L 564,468 A 96,96 0 0 0 468,564 L 468,900 A 96,96 0 0 1 372,996 L 100,996 A 96,96 0 0 1 4,900 L 4,100 A 96,96 0 0 1 100,4 Z"
-                fill="${piece.color}" stroke="#000000" stroke-width="2" vector-effect="non-scaling-stroke"
-                transform="rotate(${rotation} 500 500)"/>
-        </svg>
-        ${this.getArrowSvg(piece.dir)}
-      `;
-      this.positionArrow(el, piece, minR, minC);
-
-      el.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.handlePieceTap(piece.id);
-      });
-
-      container.appendChild(el);
-    }
+    container.appendChild(el);
   }
 
   positionArrow(el, piece, minR, minC) {

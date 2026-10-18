@@ -90,7 +90,6 @@
       <select id="shape-select">
         <option value="squares">Single Blocks (1×1 - Classic & Calm)</option>
         <option value="rectangles" selected>Cars & Planks (1×2, 1×3 - Parking Jam style)</option>
-        <option value="corners">Corners & Polyominoes (L-Shapes - Interlocking)</option>
       </select>
     </div>
     <div class="modal-actions">

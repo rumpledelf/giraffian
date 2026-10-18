@@ -32,12 +32,11 @@
       <circle cx="18" cy="58" r="3.5" fill="#000" opacity="0.3"/>
     </g>
 
-    <!-- L-Corner Shape (Purple) pointing Left -->
+    <!-- 1x2 Horizontal Car (Purple) pointing Left -->
     <g transform="translate(44, 44)">
-      <path d="M0 10 C0 4.5 4.5 0 10 0 L66 0 C71.5 0 76 4.5 76 10 L76 26 C76 31.5 71.5 36 66 36 L46 36 C40.5 36 36 40.5 36 46 L36 66 C36 71.5 31.5 76 26 76 L10 76 C4.5 76 0 71.5 0 66 Z" fill="#dcb0ed" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="0" y="0" width="76" height="36" rx="10" fill="#dcb0ed" stroke="#000" stroke-width="2"/>
       <path d="M14 18 L34 18 M14 18 L22 12 M14 18 L22 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="56" cy="18" r="3.5" fill="#000" opacity="0.3"/>
-      <circle cx="18" cy="56" r="3.5" fill="#000" opacity="0.3"/>
     </g>
 
     <!-- 1x1 Block (Blue) pointing Down -->
