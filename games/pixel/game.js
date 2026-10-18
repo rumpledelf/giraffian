@@ -174,13 +174,13 @@ class PixelGame {
 
   updateSpeedButton() {
     const labels = {
-      slow: '⚡ Drift (Bedtime)',
-      normal: '⚡ Steady (Standard)',
-      fast: '⚡ Swift (Express)'
+      slow: '⚡ Slow',
+      normal: '⚡ Normal',
+      fast: '⚡ Fast'
     };
     this.dom.btnSpeed.textContent = labels[this.speedMode] || '⚡ Speed';
     if (this.dom.speedLabel) {
-      this.dom.speedLabel.textContent = labels[this.speedMode] || 'Steady';
+      this.dom.speedLabel.textContent = labels[this.speedMode] || 'Normal';
     }
   }
 

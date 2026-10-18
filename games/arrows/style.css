@@ -151,15 +151,50 @@ button.icon-btn svg, .icon-btn svg {
   touch-action: manipulation;
 }
 
+.board-grid {
+  pointer-events: none;
+}
+
+.grid-slot {
+  fill: rgba(0, 0, 0, 0.025);
+  stroke: #bec6ce;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
 .arrow-piece {
   cursor: pointer;
   outline: none;
+  transition: filter 0.15s ease;
 }
 
-.arrow-line, .arrow-head {
-  stroke: var(--path-color, #2b2d42);
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.arrow-outline {
+  stroke: #000000;
+  pointer-events: none;
+  transition: stroke 0.15s ease;
+}
+
+.arrow-core {
+  stroke: var(--path-color, #ec8d6f);
+  pointer-events: none;
+}
+
+.arrow-head {
+  fill: var(--path-color, #ec8d6f);
+  stroke: #000000;
+  pointer-events: none;
+  transition: stroke 0.15s ease;
+}
+
+.arrow-tail-outline {
+  fill: #000000;
+  pointer-events: none;
+  transition: fill 0.15s ease;
+}
+
+.arrow-tail {
+  fill: var(--path-color, #ec8d6f);
   pointer-events: none;
 }
 
@@ -167,19 +202,34 @@ button.icon-btn svg, .icon-btn svg {
   pointer-events: all;
 }
 
-.arrow-piece:hover .arrow-line,
+.arrow-piece:hover .arrow-outline,
+.arrow-piece:focus-visible .arrow-outline,
 .arrow-piece:hover .arrow-head,
-.arrow-piece:focus-visible .arrow-line,
-.arrow-piece:focus-visible .arrow-head,
-.arrow-piece.hinted .arrow-line,
-.arrow-piece.hinted .arrow-head {
+.arrow-piece:focus-visible .arrow-head {
   stroke: #3a7ede;
-  filter: drop-shadow(0 0 3px rgba(58, 126, 222, 0.35));
 }
 
-.arrow-piece.blocked .arrow-line,
+.arrow-piece:hover .arrow-tail-outline,
+.arrow-piece:focus-visible .arrow-tail-outline {
+  fill: #3a7ede;
+}
+
+.arrow-piece:hover,
+.arrow-piece:focus-visible {
+  filter: drop-shadow(0 2px 6px rgba(58, 126, 222, 0.35));
+}
+
+.arrow-piece.blocked .arrow-outline,
 .arrow-piece.blocked .arrow-head {
-  stroke: #ec8d6f;
+  stroke: #e87550;
+}
+
+.arrow-piece.blocked .arrow-tail-outline {
+  fill: #e87550;
+}
+
+.arrow-piece.hinted {
+  filter: drop-shadow(0 0 8px rgba(247, 229, 95, 0.9));
 }
 
 .arrow-piece.departing {
@@ -426,4 +476,22 @@ button.icon-btn svg, .icon-btn svg {
   .board-frame {
     padding: 10px;
   }
+}
+
+/* Site page pattern: centred title, with the level badge and buttons as a nav row beneath it */
+.game-header {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
+}
+
+.title-group {
+  display: contents;
+}
+
+.title-group h1 {
+  flex-basis: 100%;
+  margin: 0 0 4px;
+  font-size: 2em;
+  text-align: center;
 }

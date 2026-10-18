@@ -1,5 +1,5 @@
 /**
- * Ball Sort - Relaxing, ad-free bedtime pattern matching puzzle.
+ * Ball Sort - ad-free colour sorting puzzle.
  */
 
 class BallSortGame {

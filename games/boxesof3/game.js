@@ -1,6 +1,6 @@
 /**
  * Boxes of 3 - Pantry / Triple Match sorting puzzle.
- * Clean, ad-free bedtime game with 3-per-row layout and occasional gaps.
+ * 3-per-row layout with occasional gaps.
  */
 
 class BoxesOfThreeGame {

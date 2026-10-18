@@ -63,28 +63,28 @@
       <div class="setting-row">
         <label for="color-count-select">Colours / Filled Tubes:</label>
         <select id="color-count-select">
-          <option value="3">3 (Quick & easy)</option>
-          <option value="4" selected>4 (Relaxing)</option>
-          <option value="5">5 (Engaging)</option>
-          <option value="6">6 (Tricky)</option>
-          <option value="7">7 (Deep puzzle)</option>
-          <option value="8">8 (Master)</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
         </select>
       </div>
       <div class="setting-row">
         <label for="vial-capacity-select">Balls per Tube:</label>
         <select id="vial-capacity-select">
           <option value="3">3 balls</option>
-          <option value="4" selected>4 balls (Standard)</option>
+          <option value="4" selected>4 balls</option>
           <option value="5">5 balls</option>
         </select>
       </div>
       <div class="setting-row">
         <label for="empty-vials-select">Empty Spare Tubes:</label>
         <select id="empty-vials-select">
-          <option value="1">1 spare (Challenging)</option>
-          <option value="2" selected>2 spares (Standard chill)</option>
-          <option value="3">3 spares (Very easy)</option>
+          <option value="1">1 spare</option>
+          <option value="2" selected>2 spares</option>
+          <option value="3">3 spares</option>
         </select>
       </div>
       <div class="modal-actions">

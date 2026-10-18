@@ -13,7 +13,6 @@
 
 #game-app {
   width: 100%;
-  max-width: 860px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -471,4 +470,22 @@
 
 .hidden {
   display: none !important;
+}
+
+/* Site page pattern: centred title, with the level badge and buttons as a nav row beneath it */
+.game-header {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
+}
+
+.title-group {
+  display: contents;
+}
+
+.title-group h1 {
+  flex-basis: 100%;
+  margin: 0 0 4px;
+  font-size: 2em;
+  text-align: center;
 }

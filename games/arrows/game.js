@@ -14,7 +14,7 @@ class ArrowsGame {
     this.animationFrame = null;
     this.winTimer = null;
     this.isAnimating = false;
-    this.colors = ['#2b2d42', '#3a7ede', '#589a56', '#8354ac'];
+    this.colors = ['#ec8d6f', '#f7e55f', '#589a56', '#82dee6', '#3a7ede', '#dcb0ed'];
     this.directions = { up: [-1, 0], right: [0, 1], down: [1, 0], left: [0, -1] };
     this.dom = {};
     for (const id of ['arrows-board', 'level-badge', 'paths-remaining-count', 'moves-count',
@@ -220,6 +220,26 @@ class ArrowsGame {
     board.setAttribute('width', this.boardSize);
     board.setAttribute('height', this.boardSize);
     board.replaceChildren();
+
+    // Dotted slot grid on board background for clear spatial alignment
+    const gridGroup = this.svgElement('g', { class: 'board-grid' });
+    const slotPad = Math.max(2, Math.round(this.cellSize * 0.08));
+    const slotSize = this.cellSize - slotPad * 2;
+    const slotRadius = Math.max(4, Math.round(this.cellSize * 0.16));
+    for (let r = 0; r < this.gridSize; r++) {
+      for (let c = 0; c < this.gridSize; c++) {
+        gridGroup.appendChild(this.svgElement('rect', {
+          class: 'grid-slot',
+          x: c * this.cellSize + slotPad,
+          y: r * this.cellSize + slotPad,
+          width: slotSize,
+          height: slotSize,
+          rx: slotRadius
+        }));
+      }
+    }
+    board.appendChild(gridGroup);
+
     for (const path of this.paths.values()) this.renderPath(path);
     this.updateStats();
   }
@@ -229,7 +249,7 @@ class ArrowsGame {
     const [dr, dc] = this.directions[path.dir];
     const head = points[points.length - 1];
     if (points.length === 1) points.unshift({ x: head.x - dc * this.cellSize * 0.25, y: head.y - dr * this.cellSize * 0.25 });
-    points.push({ x: head.x + dc * this.cellSize * 0.22, y: head.y + dr * this.cellSize * 0.22 });
+    points.push({ x: head.x + dc * this.cellSize * 0.24, y: head.y + dr * this.cellSize * 0.24 });
     return points;
   }
 
@@ -239,14 +259,23 @@ class ArrowsGame {
       'aria-label': `Arrow pointing ${path.dir}, ${path.cells.length} cells`,
       style: `--path-color: ${path.color}`
     });
-    // Transparent cell fills provide touch targets without thick invisible strokes.
+
+    // Touch hitboxes per cell
     for (const cell of path.cells) group.appendChild(this.svgElement('rect', {
       class: 'arrow-hit', x: cell.c * this.cellSize, y: cell.r * this.cellSize,
       width: this.cellSize, height: this.cellSize, fill: 'transparent'
     }));
-    group.appendChild(this.svgElement('path', { class: 'arrow-line', fill: 'none', 'stroke-width': '2', 'vector-effect': 'non-scaling-stroke' }));
-    group.appendChild(this.svgElement('path', { class: 'arrow-head', fill: 'none', 'stroke-width': '2', 'vector-effect': 'non-scaling-stroke' }));
+
+    // Dual-stroke body: outline creates strict 2px border around pastel core.
+    // Butt caps keep the body flush with the arrowhead; tail circles round off the back.
+    group.appendChild(this.svgElement('path', { class: 'arrow-outline', fill: 'none', 'stroke-linecap': 'butt', 'stroke-linejoin': 'round' }));
+    group.appendChild(this.svgElement('circle', { class: 'arrow-tail-outline' }));
+    group.appendChild(this.svgElement('polygon', { class: 'arrow-head', 'stroke-width': '2', 'stroke-linejoin': 'round' }));
+    group.appendChild(this.svgElement('path', { class: 'arrow-core', fill: 'none', 'stroke-linecap': 'butt', 'stroke-linejoin': 'round' }));
+    group.appendChild(this.svgElement('circle', { class: 'arrow-tail' }));
+
     this.drawPath(group, this.pointsForPath(path));
+
     group.addEventListener('click', () => this.handlePathTap(path.id));
     group.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); this.handlePathTap(path.id); }
@@ -256,15 +285,45 @@ class ArrowsGame {
   }
 
   drawPath(group, points) {
-    const body = group.querySelector('.arrow-line');
+    if (!points || points.length < 2) return;
+    const outline = group.querySelector('.arrow-outline');
+    const core = group.querySelector('.arrow-core');
     const head = group.querySelector('.arrow-head');
-    body.setAttribute('d', points.map((p, i) => `${i ? 'L' : 'M'}${p.x},${p.y}`).join(' '));
-    const end = points[points.length - 1], before = points[points.length - 2];
+    const tailOutline = group.querySelector('.arrow-tail-outline');
+    const tail = group.querySelector('.arrow-tail');
+
+    const bodyWidth = Math.max(12, Math.round(this.cellSize * 0.46));
+    const outlineWidth = bodyWidth + 4; // strictly 2px border on all sides
+
+    const end = points[points.length - 1];
+    const before = points[points.length - 2];
     const length = Math.hypot(end.x - before.x, end.y - before.y) || 1;
-    const dx = (end.x - before.x) / length, dy = (end.y - before.y) / length;
-    const arm = Math.min(8, this.cellSize * 0.24);
-    const wing = arm * 0.7;
-    head.setAttribute('d', `M${end.x - dx * arm - dy * wing},${end.y - dy * arm + dx * wing} L${end.x},${end.y} L${end.x - dx * arm + dy * wing},${end.y - dy * arm - dx * wing}`);
+    const dx = (end.x - before.x) / length;
+    const dy = (end.y - before.y) / length;
+
+    // Arrowhead: a clean triangle wider than the body, its base just ahead of the head cell's centre
+    const headLen = this.cellSize * 0.4;
+    const headWing = bodyWidth * 0.8;
+    const tip = { x: end.x + dx * this.cellSize * 0.18, y: end.y + dy * this.cellSize * 0.18 };
+    const base = { x: tip.x - dx * headLen, y: tip.y - dy * headLen };
+    const pt = p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    head.setAttribute('points', [tip, { x: base.x - dy * headWing, y: base.y + dx * headWing },
+      { x: base.x + dy * headWing, y: base.y - dx * headWing }].map(pt).join(' '));
+
+    // Outline stops at the head's base; core pokes 1.5px past it to hide the base stroke inside the body
+    const bodyPath = reach => [...points.slice(0, -1), { x: base.x + dx * reach, y: base.y + dy * reach }]
+      .map((p, i) => `${i ? 'L' : 'M'}${pt(p)}`).join(' ');
+    outline.setAttribute('d', bodyPath(0));
+    outline.setAttribute('stroke-width', outlineWidth);
+    core.setAttribute('d', bodyPath(1.5));
+    core.setAttribute('stroke-width', bodyWidth);
+
+    const start = points[0];
+    for (const [circle, r] of [[tailOutline, outlineWidth / 2], [tail, bodyWidth / 2]]) {
+      circle.setAttribute('cx', start.x.toFixed(1));
+      circle.setAttribute('cy', start.y.toFixed(1));
+      circle.setAttribute('r', r);
+    }
   }
 
   handlePathTap(id) {

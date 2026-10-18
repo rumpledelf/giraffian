@@ -1,12 +1,59 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
-  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fffaf0" stroke="#000" stroke-width="2"/>
-  <g transform="translate(48 18)" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12.00 12.00 L12.00 36.00 L36.00 36.00 L36.00 60.00 L60.00 60.00 L60.00 84.00 L36.00 84.00 L36.00 108.00 L36.00 132.00 L60.00 132.00 L60.00 108.00 L84.00 108.00 L84.00 132.00 L84.00 137.28 M80.50 132.28L84.00 137.28L87.50 132.28" stroke="#2b2d42"/>
-    <path d="M108.00 132.00 L132.00 132.00 L132.00 108.00 L132.00 84.00 L108.00 84.00 L108.00 60.00 L84.00 60.00 L84.00 36.00 L60.00 36.00 L60.00 12.00 L36.00 12.00 L30.72 12.00 M35.72 8.50L30.72 12.00L35.72 15.50" stroke="#3a7ede"/>
-    <path d="M84.00 12.00 L108.00 12.00 L108.00 36.00 L132.00 36.00 L132.00 12.00 L132.00 6.72 M135.50 11.72L132.00 6.72L128.50 11.72" stroke="#589a56"/>
-    <path d="M12.00 60.00 L12.00 84.00 L12.00 108.00 L12.00 132.00 L12.00 137.28 M8.50 132.28L12.00 137.28L15.50 132.28" stroke="#8354ac"/>
-    <path d="M84.00 90.00 L84.00 84.00 L84.00 78.72 M87.50 83.72L84.00 78.72L80.50 83.72" stroke="#2b2d42"/>
-    <path d="M132.00 54.00 L132.00 60.00 L132.00 65.28 M128.50 60.28L132.00 65.28L135.50 60.28" stroke="#3a7ede"/>
-    <path d="M108.00 102.00 L108.00 108.00 L108.00 113.28 M104.50 108.28L108.00 113.28L111.50 108.28" stroke="#589a56"/>
+  <!-- Card Background -->
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fdf6ea" stroke="#000" stroke-width="2"/>
+
+  <!-- Dotted Grid Backdrop -->
+  <g transform="translate(36, 24)" fill="none" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="3 3">
+    <rect x="0" y="0" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="34" y="0" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="68" y="0" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="102" y="0" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="136" y="0" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+
+    <rect x="0" y="34" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="34" y="34" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="68" y="34" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="102" y="34" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="136" y="34" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+
+    <rect x="0" y="68" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="34" y="68" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="68" y="68" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="102" y="68" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="136" y="68" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+
+    <rect x="0" y="102" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="34" y="102" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="68" y="102" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="102" y="102" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+    <rect x="136" y="102" width="30" height="30" rx="6" fill="rgba(0,0,0,0.02)"/>
+  </g>
+
+  <!-- Winding Chunky Arrow Pieces: butt-capped bodies end flush at each head, tail circles round the back -->
+  <g transform="translate(36, 24)">
+    <!-- 1. Coral Path (Bottom-Left snaking Right) -->
+    <path d="M 15,117 L 15,83 L 49,83 L 49,49 L 118,49" fill="none" stroke="#000" stroke-width="20" stroke-linejoin="round"/>
+    <circle cx="15" cy="117" r="10" fill="#000"/>
+    <polygon points="131,49 118,36 118,62" fill="#ec8d6f" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 15,117 L 15,83 L 49,83 L 49,49 L 119.5,49" fill="none" stroke="#ec8d6f" stroke-width="16" stroke-linejoin="round"/>
+    <circle cx="15" cy="117" r="8" fill="#ec8d6f"/>
+    <!-- 2. Yellow Path (Bottom snaking Down) -->
+    <path d="M 49,117 L 83,117 L 83,83 L 117,83 L 117,118" fill="none" stroke="#000" stroke-width="20" stroke-linejoin="round"/>
+    <circle cx="49" cy="117" r="10" fill="#000"/>
+    <polygon points="117,131 104,118 130,118" fill="#f7e55f" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 49,117 L 83,117 L 83,83 L 117,83 L 117,119.5" fill="none" stroke="#f7e55f" stroke-width="16" stroke-linejoin="round"/>
+    <circle cx="49" cy="117" r="8" fill="#f7e55f"/>
+    <!-- 3. Aqua Path (Top winding Right) -->
+    <path d="M 15,49 L 15,15 L 84,15" fill="none" stroke="#000" stroke-width="20" stroke-linejoin="round"/>
+    <circle cx="15" cy="49" r="10" fill="#000"/>
+    <polygon points="97,15 84,2 84,28" fill="#82dee6" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 15,49 L 15,15 L 85.5,15" fill="none" stroke="#82dee6" stroke-width="16" stroke-linejoin="round"/>
+    <circle cx="15" cy="49" r="8" fill="#82dee6"/>
+    <!-- 4. Purple Path (Top-Right winding Down) -->
+    <path d="M 117,15 L 151,15 L 151,84" fill="none" stroke="#000" stroke-width="20" stroke-linejoin="round"/>
+    <circle cx="117" cy="15" r="10" fill="#000"/>
+    <polygon points="151,97 138,84 164,84" fill="#dcb0ed" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 117,15 L 151,15 L 151,85.5" fill="none" stroke="#dcb0ed" stroke-width="16" stroke-linejoin="round"/>
+    <circle cx="117" cy="15" r="8" fill="#dcb0ed"/>
   </g>
 </svg>

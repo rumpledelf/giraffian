@@ -164,7 +164,7 @@ class ArrowsAudio {
     osc.stop(t + 0.36);
   }
 
-  // Soothing bedtime victory arpeggio
+  // Victory arpeggio
   playWin() {
     if (this.muted) return;
     this.init();

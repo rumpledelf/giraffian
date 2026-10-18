@@ -1,4 +1,4 @@
-// Clean, procedural Web Audio sound synthesizer for relaxing bedtime feedback
+// Procedural Web Audio sound synthesizer
 class SoundManager {
   constructor() {
     this.ctx = null;
@@ -127,7 +127,7 @@ class SoundManager {
     });
   }
 
-  // Gentle calming victory arpeggio
+  // Victory arpeggio
   playWin() {
     if (this.muted) return;
     this.init();

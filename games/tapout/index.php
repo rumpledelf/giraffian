@@ -78,18 +78,18 @@
     <div class="setting-row">
       <label for="size-select">Grid Size:</label>
       <select id="size-select">
-        <option value="4">4×4 (Tiny & Quick)</option>
-        <option value="6" selected>6×6 (Standard Bedtime)</option>
-        <option value="8">8×8 (Engaging)</option>
-        <option value="10">10×10 (Challenging)</option>
-        <option value="12">12×12 (Grand Tapestry)</option>
+        <option value="4">4×4</option>
+        <option value="6" selected>6×6</option>
+        <option value="8">8×8</option>
+        <option value="10">10×10</option>
+        <option value="12">12×12</option>
       </select>
     </div>
     <div class="setting-row">
       <label for="shape-select">Piece Shapes & Style:</label>
       <select id="shape-select">
-        <option value="squares">Single Blocks (1×1 - Classic & Calm)</option>
-        <option value="rectangles" selected>Cars & Planks (1×2, 1×3 - Parking Jam style)</option>
+        <option value="squares">Single blocks (1×1)</option>
+        <option value="rectangles" selected>Cars & planks (1×2, 1×3)</option>
       </select>
     </div>
     <div class="modal-actions">

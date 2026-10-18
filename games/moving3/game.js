@@ -1,7 +1,7 @@
 /**
  * Moving 3 - Conveyor Match Puzzle
  * 3 endless conveyor belts moving in alternating directions with extra off-screen boxes.
- * Features 🍄 Mushroom hunt, smooth seamless wrap-around, solvable generation & bedtime pace.
+ * Seamless wrap-around belts with solvable generation.
  */
 
 class MovingThreeGame {
@@ -251,9 +251,9 @@ class MovingThreeGame {
 
   updateSpeedButton() {
     const labels = {
-      slow: '⚡ Cruise',
-      medium: '⚡ Steady',
-      fast: '⚡ Express',
+      slow: '⚡ Slow',
+      medium: '⚡ Medium',
+      fast: '⚡ Fast',
       shift: '⚡ Shift'
     };
     this.dom.btnSpeed.textContent = labels[this.speedMode] || '⚡ Speed';

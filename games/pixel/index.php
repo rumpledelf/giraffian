@@ -128,19 +128,19 @@
     <div class="setting-row">
       <label for="size-select">Picture Size / Complexity:</label>
       <select id="size-select">
-        <option value="12" selected>12×12 (Quick / Tiny)</option>
-        <option value="20">20×20 (Small)</option>
-        <option value="28">28×28 (Medium)</option>
-        <option value="48">48×48 (Large)</option>
-        <option value="100">100×100 (Grand Tapestry)</option>
+        <option value="12" selected>12×12</option>
+        <option value="20">20×20</option>
+        <option value="28">28×28</option>
+        <option value="48">48×48</option>
+        <option value="100">100×100</option>
       </select>
     </div>
     <div class="setting-row">
       <label for="speed-select">Shuttle Speed:</label>
       <select id="speed-select">
-        <option value="slow">Bedtime Drift (Gentle & relaxing)</option>
-        <option value="normal" selected>Steady Cruise (Standard)</option>
-        <option value="fast">Swift Express</option>
+        <option value="slow">Slow</option>
+        <option value="normal" selected>Normal</option>
+        <option value="fast">Fast</option>
       </select>
     </div>
     <div class="modal-actions">

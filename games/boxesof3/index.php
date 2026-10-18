@@ -72,16 +72,16 @@
       <div class="setting-row">
         <label for="item-types-select">Pantry Shelf Grid:</label>
         <select id="item-types-select">
-          <option value="6">6 Boxes (2 rows of 3 - Quick)</option>
-          <option value="9" selected>9 Boxes (3 rows of 3 - Relaxing)</option>
-          <option value="12">12 Boxes (4 rows of 3 - Deep puzzle)</option>
+          <option value="6">6 Boxes (2 rows of 3)</option>
+          <option value="9" selected>9 Boxes (3 rows of 3)</option>
+          <option value="12">12 Boxes (4 rows of 3)</option>
         </select>
       </div>
       <div class="setting-row">
         <label for="theme-select">Theme:</label>
         <select id="theme-select">
-          <option value="pantry" selected>Cozy Pantry (Jam, Honey, Bread, Fruit)</option>
-          <option value="shapes">Zen Crystals (Gems, Stars, Moons)</option>
+          <option value="pantry" selected>Pantry (Jam, Honey, Bread, Fruit)</option>
+          <option value="shapes">Crystals (Gems, Stars, Moons)</option>
         </select>
       </div>
       <div class="modal-actions">

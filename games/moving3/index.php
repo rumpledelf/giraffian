@@ -98,25 +98,25 @@
       <div class="setting-row">
         <label for="speed-select">Conveyor Speed:</label>
         <select id="speed-select">
-          <option value="slow" selected>Bedtime Cruise (Gentle & relaxing)</option>
-          <option value="medium">Steady Pace (Standard)</option>
-          <option value="fast">Swift Express (Challenge)</option>
-          <option value="shift">Shift on Move (Moves only when you play)</option>
+          <option value="slow" selected>Slow</option>
+          <option value="medium">Medium</option>
+          <option value="fast">Fast</option>
+          <option value="shift">Shift on move (only moves when you play)</option>
         </select>
       </div>
       <div class="setting-row">
         <label for="length-select">Conveyor Loop Size:</label>
         <select id="length-select">
-          <option value="4">4 per track (12 boxes total - Quick)</option>
-          <option value="5" selected>5 per track (15 boxes - Relaxed)</option>
-          <option value="6">6 per track (18 boxes - Deep search!)</option>
+          <option value="4">4 per track (12 boxes)</option>
+          <option value="5" selected>5 per track (15 boxes)</option>
+          <option value="6">6 per track (18 boxes)</option>
         </select>
       </div>
       <div class="setting-row">
         <label for="theme-select">Visual Theme:</label>
         <select id="theme-select">
-          <option value="pantry" selected>Pantry Treats (Mushroom 🍄, Jam, Croissant...)</option>
-          <option value="shapes">Zen Crystals (Diamonds, Stars, Orbs)</option>
+          <option value="pantry" selected>Pantry (Mushroom, Jam, Croissant...)</option>
+          <option value="shapes">Crystals (Diamonds, Stars, Orbs)</option>
         </select>
       </div>
       <div class="modal-actions">

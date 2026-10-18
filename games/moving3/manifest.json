@@ -1,7 +1,7 @@
 {
   "name": "Moving 3 Conveyor Puzzle",
   "short_name": "Moving3",
-  "description": "Ad-free bedtime conveyor match-3 puzzle",
+  "description": "Ad-free conveyor match-3 puzzle",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b1019",
