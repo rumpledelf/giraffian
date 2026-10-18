@@ -1,9 +1,10 @@
 <?php define("TITLE","Pregnancy comic");?>
+<?php define("DESCRIPTION", "A lighthearted pregnancy and parenting comic, from the first positive pregnancy test to morning sickness, ravenous hunger, flatulence and being overdue.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Pregnancy and parenting comic</h1>
 
-<p class="center"><img src="/comic/images/weealot.png"></p>
+<p class="center"><img alt="Pregnancy and parenting comic" src="/comic/images/weealot.png"></p>
 
 <p class="center">
 You are reading the Giraffian pregnancy and parenting comic. It is a lighthearted take on pregnancy and parenting, from that first positive pregnancy test and beyond. Use the yellow arrows to navigate.
@@ -11,7 +12,7 @@ You are reading the Giraffian pregnancy and parenting comic. It is a lighthearte
 
 <div id="booknav">
 	<div class="prev">&nbsp;</div>
-	<div class="next"><a href="/comic/where-it-all-begins">Next</a></div>
+	<div class="next"><a href="/comic/where-it-all-begins/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

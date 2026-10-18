@@ -1,7 +1,7 @@
-<?php define("TITLE","Online book - colors");?>
+<?php define("TITLE", "This frog is green - Colors book for kids");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
-<p class="center"><img src="/images/books/05-green.jpg"></p>
+<p class="center"><img alt="This frog is green" src="/images/books/05-green.jpg"></p>
 
 <h1 class="center">This frog is green</h1>
 <p class="center">
@@ -9,8 +9,8 @@
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/colors/brown">Prev</a></div>
-	<div class="next"><a href="/kids/colors/blue">Next</a></div>
+	<div class="prev"><a href="/kids/colors/brown/">Prev</a></div>
+	<div class="next"><a href="/kids/colors/blue/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

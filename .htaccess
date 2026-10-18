@@ -1,2 +1,35 @@
 RewriteEngine on
 ErrorDocument 404 /404.php
+
+# Sitemap is generated from the page folders
+RewriteRule ^sitemap\.xml$ /sitemap.php [L]
+
+# /foo/index.php duplicates its folder URL
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.php[\s?]
+RewriteRule ^ /%1 [R=301,L]
+
+# Raw quote/joke/name snippets are only read by the listing pages
+RewriteRule ^(quotes|jokes|badbabynames)/[^/]+\.txt$ /$1/ [R=301,L]
+
+# Old Drupal site (before mid-2025): URLs whose content has a new home
+RewriteRule ^sites/default/files/(coloringpdf|coloringthumb|coloringimage)/(.+)$ /images/$1/$2 [R=301,L]
+RewriteRule ^sites/default/files/craftteaser/(.+)$ /images/$1 [R=301,L]
+RewriteRule ^coloring-images(/.*)?$ /kids/crafts/coloring/ [R=301,L]
+RewriteRule ^books/whose-tail/(whose-tail-page-[0-9]+)/?$ /kids/books/whose-tail/$1/ [R=301,L]
+RewriteRule ^books/whose-tail/?$ /kids/books/whose-tail/ [R=301,L]
+RewriteRule ^books/1-10-and-back-again/([0-9]+-[a-z-]+)/?$ /kids/books/ruggles/10-and-back/$1/ [R=301,L]
+RewriteRule ^books(/.*)?$ /kids/books/ [R=301,L]
+RewriteRule ^kids/(aishas-alibi|aishas-pony)(/[a-z0-9-]+)?/?$ /kids/books/$1$2/ [R=301,L]
+RewriteRule ^kids/giraffian/whosetail/?$ /kids/books/whose-tail/ [R=301,L]
+RewriteRule ^kids/ruggles/10andback/?$ /kids/books/ruggles/10-and-back/ [R=301,L]
+RewriteRule ^kids/perfectusarts/ /kids/books/ [R=301,L]
+RewriteRule ^alphabet(/.*)?$ /kids/alphabet/ [R=301,L]
+RewriteRule ^glass(/.*)?$ /kids/crafts/glass/ [R=301,L]
+RewriteRule ^quotes?/[a-z0-9-]+(\.gif)?/?$ /quotes/ [R=301,L]
+RewriteRule ^jokes/[a-z0-9-]+/?$ /jokes/ [R=301,L]
+RewriteRule ^content/ /badbabynames/ [R=301,L]
+RewriteRule ^contact/?$ https://armadillosandwich.com/contact/ [R=301,L]
+RewriteRule ^giraffian-media-license/?$ /about/ [R=301,L]
+
+# Retired sections of the old site: gone for good, so crawlers stop retrying
+RewriteRule ^(general-site-news|australia|save-money|gardening|garden|news|node)(/.*)?$ - [G,L]

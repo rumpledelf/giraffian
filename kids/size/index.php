@@ -1,4 +1,5 @@
 <?php define("TITLE","Sort by size");?>
+<?php define("DESCRIPTION", "A simple drag-and-drop game for young children: sort the flowers into order from smallest to largest.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Sort by size</h1>
@@ -114,16 +115,16 @@ if (positions[0] == "flower1" &&
     positions[2] == "flower3" &&
     positions[3] == "flower4" )
   {
-  fobj.innerHTML = "These flowers are sorted from left to right! <img src=\"/images/tick-small.png\">";
+  fobj.innerHTML = "These flowers are sorted from left to right! <img alt=\"\" src=\"/images/tick-small.png\">";
   }
 else if (positions[3] == "flower1" &&
          positions[2] == "flower2" &&
          positions[1] == "flower3" &&
          positions[0] == "flower4" )
          {
-         fobj.innerHTML = "These flowers are sorted from right to left! <img src=\"/images/tick-small.png\">";
+         fobj.innerHTML = "These flowers are sorted from right to left! <img alt=\"\" src=\"/images/tick-small.png\">";
           }
-else fobj.innerHTML = "These flowers are in the wrong order. <img src=\"/images/cross-small.png\">";
+else fobj.innerHTML = "These flowers are in the wrong order. <img alt=\"\" src=\"/images/cross-small.png\">";
 }
 function selectmouse(e)
 {
@@ -160,14 +161,14 @@ document.onmouseup=dodrop;
 
 <div class="center">
 <div style="margin-left: auto; margin-right: auto; background: url(/images/sortsize/shelf.png); background-repeat:no-repeat; width: 620px;";>
-<img id="flower2" src="/images/sortsize/pinkflower2.png" name="flower2" class="dragme" style="position:relative;">
-<img id="flower4"src="/images/sortsize/pinkflower4.png" name="flower4" class="dragme" style="position:relative;">
-<img id="flower1" src="/images/sortsize/pinkflower1.png" name="flower1" class="dragme" style="position:relative;">
-<img id="flower3" src="/images/sortsize/pinkflower3.png" name="flower3" class="dragme" style="position:relative;">
+<img alt="Pink flower, size 2" id="flower2" src="/images/sortsize/pinkflower2.png" name="flower2" class="dragme" style="position:relative;">
+<img alt="Pink flower, size 4" id="flower4"src="/images/sortsize/pinkflower4.png" name="flower4" class="dragme" style="position:relative;">
+<img alt="Pink flower, size 1" id="flower1" src="/images/sortsize/pinkflower1.png" name="flower1" class="dragme" style="position:relative;">
+<img alt="Pink flower, size 3" id="flower3" src="/images/sortsize/pinkflower3.png" name="flower3" class="dragme" style="position:relative;">
 </div>
 </div>
 <br />
-<div class="center" id="fcaption">These flowers are in the wrong order. <img src="/images/cross-small.png"></div>
+<div class="center" id="fcaption">These flowers are in the wrong order. <img alt="" src="/images/cross-small.png"></div>
 <br />
 <p class="center"><small><em>You may need to turn your phone sideways to view this properly</em></small></p>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

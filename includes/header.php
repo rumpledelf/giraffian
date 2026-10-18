@@ -1,5 +1,6 @@
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/variables.php'; ?>
 <!DOCTYPE html>
+<html lang="en-AU">
 	<head>
 		<!-- Google Tag Manager -->
 		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NXJ6DGQ8');</script>
@@ -7,7 +8,16 @@
 		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0062762197282708" crossorigin="anonymous"></script>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title><?php echo $sitename . (defined('TITLE') ? " | " . TITLE : ""); ?></title>
+                <title><?php echo htmlspecialchars($pagetitle); ?></title>
+<?php if ($pagedescription): ?>
+		<meta name="description" content="<?php echo htmlspecialchars($pagedescription); ?>">
+<?php endif; ?>
+		<link rel="canonical" href="<?php echo htmlspecialchars($canonical); ?>">
+		<meta property="og:site_name" content="Giraffian">
+		<meta property="og:title" content="<?php echo htmlspecialchars($pagetitle); ?>">
+		<meta property="og:url" content="<?php echo htmlspecialchars($canonical); ?>">
+		<meta property="og:type" content="website">
+		<meta property="og:image" content="<?php echo $siteurl; ?>/android-chrome-512x512.png">
                 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -31,14 +41,14 @@
 			<p><small><em>kid's educational activities, a parenting webcomic and other fun things for children and parents alike.</em></small></p>
 			<div id="menu">
 				<ul>
-					<li><a class="button coral" href="/games">games</a></li>
-					<li><a class="button yellow" href="/comic">comic</a></li>
-					<li><a class="button green" href="/words">words</a></li>
-					<li><a class="button aqua" href="/numbers">numbers</a></li>
-					<li><a class="button blue" href="/pictures">pictures</a></li>
-					<li><a class="button darkpurple" href="/kids/books">books</a></li>
-					<li><a class="button purple" href="/parents">for parents</a></li>
-					<li><a class="button grey" href="/about">about</a></li>
+					<li><a class="button coral" href="/games/">games</a></li>
+					<li><a class="button yellow" href="/comic/">comic</a></li>
+					<li><a class="button green" href="/words/">words</a></li>
+					<li><a class="button aqua" href="/numbers/">numbers</a></li>
+					<li><a class="button blue" href="/pictures/">pictures</a></li>
+					<li><a class="button darkpurple" href="/kids/books/">books</a></li>
+					<li><a class="button purple" href="/parents/">for parents</a></li>
+					<li><a class="button grey" href="/about/">about</a></li>
 				</ul>
 			</div>
 		</div>

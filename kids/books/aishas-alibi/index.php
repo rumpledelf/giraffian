@@ -1,10 +1,11 @@
-<?php define("TITLE","Online book - Aisha's Alibi");?>
+<?php define("TITLE", "Aisha's Alibi - online picture book for kids");?>
+<?php define("DESCRIPTION", "Aisha's Alibi, a free online picture book based on a slightly gruesome excuse a real four-year-old once used.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">Aisha's Alibi</h1>
 
-<p class="center"><img src="/images/aishasalibi.png"></p>
+<p class="center"><img alt="Aisha&#x27;s Alibi" src="/images/aishasalibi.png"></p>
 
 <p class="center">
 A somewhat gruesome excuse that was actually used by Aisha, when she was four.<br />
@@ -16,7 +17,7 @@ Click on the yellow arrows to navigate.
 
 <div id="booknav">
 	<div class="prev">&nbsp;</div>
-	<div class="next"><a href="/kids/books/aishas-alibi/aishas-alibi-page-1">Next</a></div>
+	<div class="next"><a href="/kids/books/aishas-alibi/aishas-alibi-page-1/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

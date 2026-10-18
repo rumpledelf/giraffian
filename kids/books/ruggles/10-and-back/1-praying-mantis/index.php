@@ -1,17 +1,17 @@
-<?php define("TITLE","Online book - 10 and back");?>
+<?php define("TITLE", "1 praying mantis - 1 to 10 and back again counting book");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">1 praying mantis</h1>
 
-<p class="center"><img src="/images/books/1mantis-scaled.jpg"></p>
+<p class="center"><img alt="1 praying mantis" src="/images/books/1mantis-scaled.jpg"></p>
 
 <p class="center">
 One praying mantis watches from a high branch.
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/books/ruggles/10-and-back/2-frogs">Prev</a></div>
+	<div class="prev"><a href="/kids/books/ruggles/10-and-back/2-frogs/">Prev</a></div>
 	<div class="next"><a href="/kids/books/">Next</a></div>
 </div>
 

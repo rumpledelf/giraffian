@@ -2,7 +2,7 @@
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
-<p class="center"><img src="/images/books/yacht.png"></p>
+<p class="center"><img alt="Y is for yacht" src="/images/books/yacht.png"></p>
 
 <h1 class="center">
 Y is for yacht
@@ -10,8 +10,8 @@ Y is for yacht
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/alphabet/x">Prev</a></div>
-	<div class="next"><a href="/kids/alphabet/z">Next</a></div>
+	<div class="prev"><a href="/kids/alphabet/x/">Prev</a></div>
+	<div class="next"><a href="/kids/alphabet/z/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

@@ -1,10 +1,10 @@
-<?php define("TITLE","Online book - Aisha's Pony");?>
+<?php define("TITLE", "Aisha's Pony, page 8 - picture book for kids");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">Aisha's Pony (Page 8)</h1>
 
-<p class="center"><img src="/images/books/pony8.png"></p>
+<p class="center"><img alt="Aisha&#x27;s Pony (Page 8)" src="/images/books/pony8.png"></p>
 
 <p class="center">
 When she went back to the shed to get more paint, a raindrop fell on her nose.
@@ -16,8 +16,8 @@ And then it really started to rain.
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/books/aishas-pony/aishas-pony-page-7">Prev</a></div>
-	<div class="next"><a href="/kids/books/aishas-pony/aishas-pony-page-9">Next</a></div>
+	<div class="prev"><a href="/kids/books/aishas-pony/aishas-pony-page-7/">Prev</a></div>
+	<div class="next"><a href="/kids/books/aishas-pony/aishas-pony-page-9/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

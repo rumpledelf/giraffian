@@ -1,4 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - flowers");?>
+<?php define("DESCRIPTION", "Free printable flowers for kids' crafts: roses, daisies, poppies and sunflowers for cards, invitations, decoupage and scrapbooking.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - flowers</h1>
@@ -18,83 +19,83 @@ These flowers can be printed out and used in various craft activities.  If you a
 </ul>
 
 <div class="smalltile">
-<img src="3blueflowers.png">
+<img alt="Three blue flowers" src="3blueflowers.png">
 </div>
 
 <div class="smalltile">
-<img src="3pinkflowers.png">
+<img alt="Three pink flowers" src="3pinkflowers.png">
 </div>
 
 <div class="smalltile">
-<img src="blueflower.png">
+<img alt="Blue flower" src="blueflower.png">
 </div>
 
 <div class="smalltile">
-<img src="blueflower2.png">
+<img alt="Blue flower" src="blueflower2.png">
 </div>
 
 <div class="smalltile">
-<img src="bluepoppy.png">
+<img alt="Blue poppy" src="bluepoppy.png">
 </div>
 
 <div class="smalltile">
-<img src="bronzesunflower.png">
+<img alt="Bronze sunflower" src="bronzesunflower.png">
 </div>
 
 <div class="smalltile">
-<img src="coralflower.png">
+<img alt="Coral flower" src="coralflower.png">
 </div>
 
 <div class="smalltile">
-<img src="darkpinkflower.png">
+<img alt="Dark pink flower" src="darkpinkflower.png">
 </div>
 
 <div class="smalltile">
-<img src="lilacflower.png">
+<img alt="Lilac flower" src="lilacflower.png">
 </div>
 
 <div class="smalltile">
-<img src="orangeflower.png">
+<img alt="Orange flower" src="orangeflower.png">
 </div>
 
 <div class="smalltile">
-<img src="palepinkflower.png">
+<img alt="Pale pink flower" src="palepinkflower.png">
 </div>
 
 <div class="smalltile">
-<img src="pinkdaisy.png">
+<img alt="Pink daisy" src="pinkdaisy.png">
 </div>
 
 <div class="smalltile">
-<img src="pinkrose.png">
+<img alt="Pink rose" src="pinkrose.png">
 </div>
 
 <div class="smalltile">
-<img src="poppy.png">
+<img alt="Poppy" src="poppy.png">
 </div>
 
 <div class="smalltile">
-<img src="purpleflower.png">
+<img alt="Purple flower" src="purpleflower.png">
 </div>
 
 <div class="smalltile">
-<img src="redflower.png">
+<img alt="Red flower" src="redflower.png">
 </div>
 
 <div class="smalltile">
-<img src="redrose.png">
+<img alt="Red rose" src="redrose.png">
 </div>
 
 <div class="smalltile">
-<img src="sunflower.png">
+<img alt="Sunflower" src="sunflower.png">
 </div>
 
 <div class="smalltile">
-<img src="whiteflower.png">
+<img alt="White flower" src="whiteflower.png">
 </div>
 
 <div class="smalltile">
-<img src="yellowdaisy.png">
+<img alt="Yellow daisy" src="yellowdaisy.png">
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

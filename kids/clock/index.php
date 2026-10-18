@@ -1,10 +1,11 @@
 <?php define("TITLE","Learn to tell the time on an analogue clock");?>
+<?php define("DESCRIPTION", "An interactive activity to help children learn to tell the time on an analogue clock.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Learn to tell the time on an analogue clock</h1>
 
 <p class="center">
-<img src="." class="clock" name="clock" width="300" height="300">
+<img alt="Learn to tell the time on an analogue clock" src="." class="clock" name="clock" width="300" height="300">
 </p>
 <script language="javascript">
 hours = Math.floor((Math.random()*12))+1;
@@ -94,7 +95,7 @@ else{
 <span id="thedigitime">&nbsp</span>
 </p>
 <p class="center">
-<a href="/kids/clock">Another random time!</a> 
+<a href="/kids/clock/">Another random time!</a> 
 </p>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

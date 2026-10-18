@@ -1,4 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - hearts, stars and moons");?>
+<?php define("DESCRIPTION", "Free printable glass-look hearts, stars and moons for greeting cards, party invitations, decoupage and scrapbooking.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - hearts, stars and moons</h1>
@@ -17,67 +18,63 @@ These hearts, stars and moons can be printed out and used in various craft activ
 </ul>
 
 <div class="smalltile">
-<img src="bluestar.png">
+<img alt="Blue star" src="bluestar.png">
 </div>
 
 <div class="smalltile">
-<img src="goldheart.png">
+<img alt="Gold heart" src="goldheart.png">
 </div>
 
 <div class="smalltile">
-<img src="goldmoon.png">
+<img alt="Gold moon" src="goldmoon.png">
 </div>
 
 <div class="smalltile">
-<img src="goldmoonmirror.png">
+<img alt="Gold moon (mirrored)" src="goldmoonmirror.png">
 </div>
 
 <div class="smalltile">
-<img src="goldhearrt.png">
+<img alt="Green star" src="greenstar.png">
 </div>
 
 <div class="smalltile">
-<img src="greenstar.png">
+<img alt="Lilac star" src="lilacstar.png">
 </div>
 
 <div class="smalltile">
-<img src="lilacstar.png">
+<img alt="Pink heart" src="pinkheart.png">
 </div>
 
 <div class="smalltile">
-<img src="pinkheart.png">
+<img alt="Pink star" src="pinkstar.png">
 </div>
 
 <div class="smalltile">
-<img src="pinkstar.png">
+<img alt="Purple heart" src="purpleheart.png">
 </div>
 
 <div class="smalltile">
-<img src="purpleheart.png">
+<img alt="Purple star" src="purplestar.png">
 </div>
 
 <div class="smalltile">
-<img src="purplestar.png">
+<img alt="Red heart" src="redheart.png">
 </div>
 
 <div class="smalltile">
-<img src="redheart.png">
+<img alt="Red star" src="redstar.png">
 </div>
 
 <div class="smalltile">
-<img src="redstar.png">
+<img alt="Silver moon" src="silvermoon.png">
 </div>
 
 <div class="smalltile">
-<img src="silvermoon.png">
+<img alt="Silver moon (mirrored)" src="silvermoonmirror.png">
 </div>
 
 <div class="smalltile">
-<img src="silvermoonmirror.png">
-</div>
-
-<div class="smalltile">
-<img src="silverstar.png">
+<img alt="Silver star" src="silverstar.png">
 </div>
 
 

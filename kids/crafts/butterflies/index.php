@@ -1,4 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - butterflies");?>
+<?php define("DESCRIPTION", "Free printable butterflies for kids' crafts: greeting cards, party invitations, decoupage, scrapbooking and paper butterflies with pipecleaner legs.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - butterflies</h1>
@@ -18,67 +19,67 @@ These butterflies can be printed out and used in various craft activities. If yo
 </ul>
 
 <div class="smalltile">
-<img src="butterfly1.png">
+<img alt="Printable butterfly 1" src="butterfly1.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly2.png">
+<img alt="Printable butterfly 2" src="butterfly2.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly3.png">
+<img alt="Printable butterfly 3" src="butterfly3.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly4.png">
+<img alt="Printable butterfly 4" src="butterfly4.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly5.png">
+<img alt="Printable butterfly 5" src="butterfly5.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly6.png">
+<img alt="Printable butterfly 6" src="butterfly6.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly7.png">
+<img alt="Printable butterfly 7" src="butterfly7.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly8.png">
+<img alt="Printable butterfly 8" src="butterfly8.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly9.png">
+<img alt="Printable butterfly 9" src="butterfly9.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly10.png">
+<img alt="Printable butterfly 10" src="butterfly10.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly11.png">
+<img alt="Printable butterfly 11" src="butterfly11.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly12.png">
+<img alt="Printable butterfly 12" src="butterfly12.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly13.png">
+<img alt="Printable butterfly 13" src="butterfly13.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly14.png">
+<img alt="Printable butterfly 14" src="butterfly14.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly15.png">
+<img alt="Printable butterfly 15" src="butterfly15.png">
 </div>
 
 <div class="smalltile">
-<img src="butterfly16.png">
+<img alt="Printable butterfly 16" src="butterfly16.png">
 </div>
 
 

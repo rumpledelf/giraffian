@@ -1,7 +1,7 @@
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 <?php define("TITLE","X is for x-ray");?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
-<p class="center"><img src="/images/books/xray.png"></p>
+<p class="center"><img alt="X is for x-ray" src="/images/books/xray.png"></p>
 
 <h1 class="center">
 X is for x-ray
@@ -9,8 +9,8 @@ X is for x-ray
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/alphabet/w">Prev</a></div>
-	<div class="next"><a href="/kids/alphabet/y">Next</a></div>
+	<div class="prev"><a href="/kids/alphabet/w/">Prev</a></div>
+	<div class="next"><a href="/kids/alphabet/y/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

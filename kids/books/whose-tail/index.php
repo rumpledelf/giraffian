@@ -1,9 +1,10 @@
-<?php define("TITLE","Online book - whose tail is this");?>
+<?php define("TITLE", "Whose tail is this? - guessing book for kids");?>
+<?php define("DESCRIPTION", "Whose tail is this? A free online guessing book for young children: guess the animal from its tail, then turn the page to find out.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Online book - whose tail is this?</h1>
 
-<p class="center"><img src="/images/whosetail.png"></p>
+<p class="center"><img alt="Online book - whose tail is this?" src="/images/whosetail.png"></p>
 
 <p class="center">
 A Giraffian twist on the classic story.
@@ -14,8 +15,7 @@ Click on the yellow arrows to navigate.
 
 <div id="booknav">
 	<div class="prev">&nbsp;</div>
-	<div class="next"><a href="/kids/books/whose-tail/whose-tail-page-1
-">Next</a></div>
+	<div class="next"><a href="/kids/books/whose-tail/whose-tail-page-1/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

@@ -1,14 +1,14 @@
-<?php define("TITLE","Online book - numbers");?>
+<?php define("TITLE", "Nine (9) flowers - Counting book for kids");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
-<p class="center"><img src="/images/books/flowers.png"></p>
+<p class="center"><img alt="Nine (9) flowers" src="/images/books/flowers.png"></p>
 
 <h1 class="center">Nine (9) flowers</h1>
 <p class="center">One plant with nine pretty flowers.</p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/numbers/8">Prev</a></div>
-	<div class="next"><a href="/kids/numbers/10">Next</a></div>
+	<div class="prev"><a href="/kids/numbers/8/">Prev</a></div>
+	<div class="next"><a href="/kids/numbers/10/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

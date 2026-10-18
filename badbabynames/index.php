@@ -1,4 +1,5 @@
 <?php define("TITLE","Bad Baby Names");?>
+<?php define("DESCRIPTION", "Some people give their children terrible names. A collection of the worst baby names people have actually used.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/pagination.php'; ?>
 

@@ -3,7 +3,7 @@
 
 <h1 class="center">Pimples</h1>
 
-<p class="center"><img src="/comic/images/pimples.png"></p>
+<p class="center"><img alt="Pimples" src="/comic/images/pimples.png"></p>
 
 <p class="center">
 You know how they say that pregnant women glow? Well, that's just your skin overproducing on oil from all those hormones. For some lucky pregnant women, this translates into a sudden reversion to pimply adolescence, even for those who never had a zit in the past.
@@ -13,8 +13,8 @@ While your face is busy breaking out (or if it isn't), you might find your moles
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/comic/ravenous-hunger">Prev</a></div>
-	<div class="next"><a href="/comic/flatulence">Next</a></div>
+	<div class="prev"><a href="/comic/ravenous-hunger/">Prev</a></div>
+	<div class="next"><a href="/comic/flatulence/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

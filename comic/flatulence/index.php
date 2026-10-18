@@ -3,7 +3,7 @@
 
 <h1 class="center">Flatulence</h1>
 
-<p class="center"><img src="/comic/images/flatulence.png"></p>
+<p class="center"><img alt="Flatulence" src="/comic/images/flatulence.png"></p>
 
 <p class="center">
 Then the flatulence kicks in. Not the sort of fart that no-one notices, we're talking farts that can kill your pets and mortally wound your houseplants. They are most likely to occur during important meetings with your boss, visits to the gynecologist (during examinations) and of course during intimate moments. This one is best avoided by purchasing or babysitting a large dog and keeping it close at all times, so you have something to blame the smells on.
@@ -13,8 +13,8 @@ The reason you get flatulence in pregnancy is because of the relaxing effect of 
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/comic/pimples">Prev</a></div>
-	<div class="next"><a href="/comic/varicose-veins">Next</a></div>
+	<div class="prev"><a href="/comic/pimples/">Prev</a></div>
+	<div class="next"><a href="/comic/varicose-veins/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

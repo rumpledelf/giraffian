@@ -1,10 +1,11 @@
-<?php define("TITLE","Online book - 10 and back");?>
+<?php define("TITLE", "1 to 10 and back again - counting book for kids");?>
+<?php define("DESCRIPTION", "1 to 10 and back again, a free online counting book for young children by Tammy Ruggles, from one caterpillar to ten fireflies and back.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">1 to 10 and back again</h1>
 
-<p class="center"><img src="/images/1to10.png"></p>
+<p class="center"><img alt="1 to 10 and back again" src="/images/1to10.png"></p>
 
 <p class="center">
 A learn-to-count online book by Tammy Ruggles.
@@ -15,7 +16,7 @@ Click on the yellow arrows to navigate.
 
 <div id="booknav">
 	<div class="prev">&nbsp;</div>
-	<div class="next"><a href="/kids/books/ruggles/10-and-back/1-caterpillar">Next</a></div>
+	<div class="next"><a href="/kids/books/ruggles/10-and-back/1-caterpillar/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

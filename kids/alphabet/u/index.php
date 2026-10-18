@@ -2,7 +2,7 @@
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 
-<p class="center"><img src="/images/books/unicorn.png"></p>
+<p class="center"><img alt="U is for unicorn" src="/images/books/unicorn.png"></p>
 
 <h1 class="center">
 U is for unicorn
@@ -10,8 +10,8 @@ U is for unicorn
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/alphabet/t">Prev</a></div>
-	<div class="next"><a href="/kids/alphabet/v">Next</a></div>
+	<div class="prev"><a href="/kids/alphabet/t/">Prev</a></div>
+	<div class="next"><a href="/kids/alphabet/v/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

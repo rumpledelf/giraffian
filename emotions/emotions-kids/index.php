@@ -1,4 +1,5 @@
 <?php define("TITLE","Emotions for kids");?>
+<?php define("DESCRIPTION", "Simple drawings of the faces that go with common emotions, to help young children recognise happy, sad, scared, surprised, disgusted and angry.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Emotions for kids</h1>
@@ -9,32 +10,32 @@ Some little pictures showing the facial expressions that go with the most common
 
 <div class="smalltile">
 <h2>Happy</h2>
-<img src="/kids/emotions-images/happy.png">
+<img alt="Happy face" src="/kids/emotions-images/happy.png">
 </div>
 
 <div class="smalltile">
 <h2>Sad</h2>
-<img src="/kids/emotions-images/sad.png">
+<img alt="Sad face" src="/kids/emotions-images/sad.png">
 </div>
 
 <div class="smalltile">
 <h2>Scared</h2>
-<img src="/kids/emotions-images/scared.png">
+<img alt="Scared face" src="/kids/emotions-images/scared.png">
 </div>
 
 <div class="smalltile">
 <h2>Surprised</h2>
-<img src="/kids/emotions-images/surprise.png">
+<img alt="Surprise face" src="/kids/emotions-images/surprise.png">
 </div>
 
 <div class="smalltile">
 <h2>Disgusted</h2>
-<img src="/kids/emotions-images/disgust.png">
+<img alt="Disgust face" src="/kids/emotions-images/disgust.png">
 </div>
 
 <div class="smalltile">
 <h2>Angry</h2>
-<img src="/kids/emotions-images/angry.png">
+<img alt="Angry face" src="/kids/emotions-images/angry.png">
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

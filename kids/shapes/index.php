@@ -1,4 +1,5 @@
 <?php define("TITLE","Shapes and colors");?>
+<?php define("DESCRIPTION", "An interactive shapes and colours game for young children: pick a shape, pick a colour and learn the names of both.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1 class="center">Shapes and Colors</h1>
@@ -23,29 +24,29 @@
    <td style="text-align:center;" width: "10%" id="colleft">
    <ul>
       <li><a href="javascript:setShape('Triangle')">
-      <img src="/kids/shapes-images/triangle.png"></a></li>
+      <img alt="Triangle" src="/kids/shapes-images/triangle.png"></a></li>
       <li><a href="javascript:setShape('Circle')">
-      <img src="/kids/shapes-images/circle.png"></a></li>
+      <img alt="Circle" src="/kids/shapes-images/circle.png"></a></li>
       <li><a href="javascript:setShape('Square')">
-      <img src="/kids/shapes-images/square.png"></a></li>
+      <img alt="Square" src="/kids/shapes-images/square.png"></a></li>
       <li><a href="javascript:setShape('Star')">
-      <img src="/kids/shapes-images/star.png"></a></li>
+      <img alt="Star" src="/kids/shapes-images/star.png"></a></li>
       <li><a href="javascript:setShape('Pentagon')">
-      <img src="/kids/shapes-images/pentagon.png"></a></li>
+      <img alt="Pentagon" src="/kids/shapes-images/pentagon.png"></a></li>
       <li><a href="javascript:setShape('Hexagon')">
-      <img src="/kids/shapes-images/hexagon.png"></a></li>
+      <img alt="Hexagon" src="/kids/shapes-images/hexagon.png"></a></li>
       <li><a href="javascript:setShape('Octagon')">
-      <img src="/kids/shapes-images/octagon.png"></a></li>
+      <img alt="Octagon" src="/kids/shapes-images/octagon.png"></a></li>
       <li><a href="javascript:setShape('Diamond')">
-      <img src="/kids/shapes-images/diamond.png"></a></li>
+      <img alt="Diamond" src="/kids/shapes-images/diamond.png"></a></li>
       <li><a href="javascript:setShape('Rectangle')">
-      <img src="/kids/shapes-images/rectangle.png"></a></li>
+      <img alt="Rectangle" src="/kids/shapes-images/rectangle.png"></a></li>
       <li><a href="javascript:setShape('Oval')">
-      <img src="/kids/shapes-images/oval.png"></a></li>
+      <img alt="Oval" src="/kids/shapes-images/oval.png"></a></li>
       <li><a href="javascript:setShape('Trapezium')">
-      <img src="/kids/shapes-images/trapezium.png"></a></li>
+      <img alt="Trapezium" src="/kids/shapes-images/trapezium.png"></a></li>
       <li><a href="javascript:setShape('Parallelogram');">
-      <img src="/kids/shapes-images/parallelogram.png"></a></li>
+      <img alt="Parallelogram" src="/kids/shapes-images/parallelogram.png"></a></li>
    </ul>
    </td>
 <!--------------------------------------Center column-->
@@ -61,25 +62,25 @@
 <td width="10%" id="colright">
 <ul>
   <li><a href="javascript:setColour('Red')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: red; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: red; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('Orange')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Orange; border: 2px solid #000000; margin:2px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Orange; border: 2px solid #000000; margin:2px;"></a></li>
   <li><a href="javascript:setColour('Pink')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Pink; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Pink; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('Yellow')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Yellow; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Yellow; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('Green')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Lime; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Lime; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('Aqua')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Aqua; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Aqua; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('Blue')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Blue; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Blue; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('Purple')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Purple; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Purple; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('Grey')">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Gray; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: Gray; border: 2px solid #000000; margin:1px;"></a></li>
   <li><a href="javascript:setColour('White');">
-  <img src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: White; border: 2px solid #000000; margin:1px;"></a></li>
+  <img alt="" src="/kids/shapes-images/colour.png" width="35" height="35" style="background-color: White; border: 2px solid #000000; margin:1px;"></a></li>
 </ul>
   </td>
   </tr>

@@ -1,10 +1,10 @@
-<?php define("TITLE","Online book - Aisha's Pony");?>
+<?php define("TITLE", "Aisha's Pony, page 1 - picture book for kids");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">Aisha's Pony (Page 1)</h1>
 
-<p class="center"><img src="/images/books/pony1.png"></p>
+<p class="center"><img alt="Aisha&#x27;s Pony (Page 1)" src="/images/books/pony1.png"></p>
 
 <p class="center">
 Aisha is a little girl who wants a pony.
@@ -14,7 +14,7 @@ On her birthday, her mum gave her a grey pony.
 
 <div id="booknav">
 	<div class="prev"><a href="/kids/books/aishas-pony/">Prev</a></div>
-	<div class="next"><a href="/kids/books/aishas-pony/aishas-pony-page-2">Next</a></div>
+	<div class="next"><a href="/kids/books/aishas-pony/aishas-pony-page-2/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

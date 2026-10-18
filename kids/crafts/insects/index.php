@@ -1,4 +1,5 @@
 <?php define("TITLE","Printable kid's crafts - insects");?>
+<?php define("DESCRIPTION", "Free printable insects for kids' crafts: beetles, ladybirds, dragonflies and moths for cards, decoupage and scrapbooking.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>Printable kid's crafts - insects</h1>
@@ -17,51 +18,51 @@ These dragonflies, butterflies, moths, beetles and ladybugs (ladybirds) can be p
 <li>As forum or discord avatars</li>
 </ul>
 <div class="smalltile">
-<img src="bluedragonfly.png">
+<img alt="Blue dragonfly" src="bluedragonfly.png">
 </div>
 
 <div class="smalltile">
-<img src="pinkdragonfly.png">
+<img alt="Pink dragonfly" src="pinkdragonfly.png">
 </div>
 
 <div class="smalltile">
-<img src="moth.png">
+<img alt="Moth" src="moth.png">
 </div>
 
 <div class="smalltile">
-<img src="monarchbutterfly.png">
+<img alt="Monarch butterfly" src="monarchbutterfly.png">
 </div>
 
 <div class="smalltile">
-<img src="blackbeetle.png">
+<img alt="Black beetle" src="blackbeetle.png">
 </div>
 
 <div class="smalltile">
-<img src="leafbeetle.png">
+<img alt="Leaf beetle" src="leafbeetle.png">
 </div>
 
 <div class="smalltile">
-<img src="scarab.png">
+<img alt="Scarab" src="scarab.png">
 </div>
 
 <div class="smalltile">
-<img src="christmasbeetle.png">
+<img alt="Christmas beetle" src="christmasbeetle.png">
 </div>
 
 <div class="smalltile">
-<img src="redladybird.png">
+<img alt="Red ladybird" src="redladybird.png">
 </div>
 
 <div class="smalltile">
-<img src="yellowladybird.png">
+<img alt="Yellow ladybird" src="yellowladybird.png">
 </div>
 
 <div class="smalltile">
-<img src="spottybeetle.png">
+<img alt="Spotty beetle" src="spottybeetle.png">
 </div>
 
 <div class="smalltile">
-<img src="redbeetle.png">
+<img alt="Red beetle" src="redbeetle.png">
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

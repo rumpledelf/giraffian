@@ -1,18 +1,18 @@
-<?php define("TITLE","Online book - 10 and back");?>
+<?php define("TITLE", "8 ants - 1 to 10 and back again counting book");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <p>&nbsp;</p>
 <h1 class="center">8 ants</h1>
 
-<p class="center"><img src="/images/books/8ants-scaled.jpg"></p>
+<p class="center"><img alt="8 ants" src="/images/books/8ants-scaled.jpg"></p>
 
 <p class="center">
 Eight ants marching to our picnic.
 </p>
 
 <div id="booknav">
-	<div class="prev"><a href="/kids/books/ruggles/10-and-back/7-silkworms">Prev</a></div>
-	<div class="next"><a href="/kids/books/ruggles/10-and-back/9-butterflies">Next</a></div>
+	<div class="prev"><a href="/kids/books/ruggles/10-and-back/7-silkworms/">Prev</a></div>
+	<div class="next"><a href="/kids/books/ruggles/10-and-back/9-butterflies/">Next</a></div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

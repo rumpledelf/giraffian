@@ -1,4 +1,5 @@
 <?php define("TITLE","About");?>
+<?php define("DESCRIPTION", "About Giraffian, a hobby site of kids' activities and parenting humour from rural NSW, Australia, online since 2002.");?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <h1>About</h1>
@@ -12,6 +13,6 @@ No information about you is collected for any kind of nefarious purpose. I'm sur
 </p>
 <h3>Use of material on this site</h3>
 <p>
-If you want to use any of the images on this site, please ask before just taking them, and at the very least leave a link back to this site. I've seen my artwork used on other websites before and while it is flattering to some degree, please let me know first.
+If you want to use any of the images on this site, please ask before just taking them, and at the very least leave a link back to this site. I've seen my artwork used on other websites before and while it is flattering to some degree, please <a href="https://armadillosandwich.com/contact/">let me know</a> first.
 </p>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
