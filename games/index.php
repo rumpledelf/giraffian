@@ -23,4 +23,10 @@
   <p>Watch boxes cruise along looping conveyor belts and drop items to match three in a row.</p>
 </div>
 
+<div class="tile">
+  <a href="/games/pixel"><img src="/images/thumb-pixel.svg" alt="Pixel Unravel preview"></a>
+  <h2><a href="/games/pixel">Pixel Unravel</a></h2>
+  <p>Launch orbital vacuum shuttles around charming pixel art to slurp up matching color layers.</p>
+</div>
+
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

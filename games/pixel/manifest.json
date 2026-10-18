@@ -1,0 +1,9 @@
+{
+  "name": "Pixel Unravel - Giraffian",
+  "short_name": "Pixel",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ec8d6f",
+  "description": "Unravel charming pixel art layer by layer with orbital vacuum shuttles."
+}

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
+  <!-- Background card rounded (2px border matching UI) -->
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fffaf0" stroke="#000" stroke-width="2"/>
+
+  <!-- Orbital Rail Track -->
+  <rect x="36" y="24" width="168" height="106" rx="14" fill="#f4fbfb" stroke="#000" stroke-width="2"/>
+
+  <!-- Pixel Art Subject: Cute Strawberry in Center -->
+  <g transform="translate(86, 38)">
+    <!-- Green Leaves (Top) -->
+    <rect x="24" y="0" width="8" height="8" rx="1" fill="#589a56" stroke="#467c45" stroke-width="1"/>
+    <rect x="32" y="0" width="8" height="8" rx="1" fill="#589a56" stroke="#467c45" stroke-width="1"/>
+    <rect x="16" y="8" width="8" height="8" rx="1" fill="#589a56" stroke="#467c45" stroke-width="1"/>
+    <rect x="24" y="8" width="8" height="8" rx="1" fill="#589a56" stroke="#467c45" stroke-width="1"/>
+    <rect x="32" y="8" width="8" height="8" rx="1" fill="#589a56" stroke="#467c45" stroke-width="1"/>
+    <rect x="40" y="8" width="8" height="8" rx="1" fill="#589a56" stroke="#467c45" stroke-width="1"/>
+
+    <!-- Red Strawberry Body -->
+    <rect x="16" y="16" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+    <rect x="24" y="16" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+    <rect x="32" y="16" width="8" height="8" rx="1" fill="#f7e55f" stroke="#d4c243" stroke-width="1"/><!-- Yellow seed -->
+    <rect x="40" y="16" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+
+    <rect x="16" y="24" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+    <rect x="24" y="24" width="8" height="8" rx="1" fill="#f7e55f" stroke="#d4c243" stroke-width="1"/><!-- Yellow seed -->
+    <rect x="32" y="24" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+    <rect x="40" y="24" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+
+    <rect x="24" y="32" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+    <rect x="32" y="32" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+
+    <rect x="28" y="40" width="8" height="8" rx="1" fill="#ec8d6f" stroke="#c96a4d" stroke-width="1"/>
+  </g>
+
+  <!-- Vacuum Beam Effect from top rail -->
+  <polygon points="124,24 102,46 110,46 132,24" fill="rgba(236, 141, 111, 0.35)"/>
+  <circle cx="114" cy="35" r="3" fill="#ec8d6f"/>
+
+  <!-- Orbital Vacuum Shuttle (Cruising along top rail) -->
+  <g transform="translate(116, 16)">
+    <rect x="0" y="0" width="28" height="16" rx="8" fill="#ffffff" stroke="#000" stroke-width="2"/>
+    <circle cx="14" cy="8" r="4.5" fill="#ec8d6f"/>
+    <!-- Count badge -->
+    <rect x="22" y="-4" width="14" height="11" rx="4" fill="#ec8d6f" stroke="#000" stroke-width="1"/>
+    <text x="29" y="5" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="7" fill="#fff" text-anchor="middle">8</text>
+  </g>
+
+  <!-- Staging Bays / Docking Area below -->
+  <g transform="translate(42, 140)">
+    <!-- Empty bay 1 -->
+    <rect x="0" y="0" width="24" height="22" rx="6" fill="rgba(0,0,0,0.04)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <!-- Bay 2 with Green Shuttle (Active/Parked) -->
+    <rect x="30" y="0" width="24" height="22" rx="6" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
+    <circle cx="42" cy="11" r="5" fill="#589a56"/>
+    <!-- Empty bay 3 -->
+    <rect x="60" y="0" width="24" height="22" rx="6" fill="rgba(0,0,0,0.04)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <!-- Bay 4 with Yellow Shuttle -->
+    <rect x="90" y="0" width="24" height="22" rx="6" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
+    <circle cx="102" cy="11" r="5" fill="#f7e55f"/>
+    <!-- Empty bay 5 -->
+    <rect x="120" y="0" width="24" height="22" rx="6" fill="rgba(0,0,0,0.04)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <!-- Empty bay 6 -->
+    <rect x="150" y="0" width="24" height="22" rx="6" fill="rgba(0,0,0,0.04)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2,2"/>
+  </g>
+
+  <!-- Playful stars -->
+  <text x="20" y="24" font-size="12">✨</text>
+  <text x="214" y="70" font-size="12">⭐</text>
+</svg>
