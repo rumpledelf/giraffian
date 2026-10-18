@@ -1,0 +1,10 @@
+{
+  "name": "Boxes of 3 Pantry Puzzle",
+  "short_name": "BoxesOf3",
+  "description": "Ad-free bedtime triplet sorting puzzle",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f141c",
+  "theme_color": "#0f141c",
+  "orientation": "portrait"
+}

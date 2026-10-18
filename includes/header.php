@@ -31,7 +31,7 @@
 			<p><small><em>kid's educational activities, a parenting webcomic and other fun things for children and parents alike.</em></small></p>
 			<div id="menu">
 				<ul>
-					<li><a class="button coral" href="/jokes">jokes</a></li>
+					<li><a class="button coral" href="/games">games</a></li>
 					<li><a class="button yellow" href="/comic">comic</a></li>
 					<li><a class="button green" href="/words">words</a></li>
 					<li><a class="button aqua" href="/numbers">numbers</a></li>

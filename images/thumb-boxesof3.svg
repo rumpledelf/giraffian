@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
+  <!-- Background card rounded (2px border matching UI) -->
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#eaf6f8" stroke="#000" stroke-width="2"/>
+
+  <!-- Shelf line -->
+  <line x1="20" y1="140" x2="220" y2="140" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Left Box (Packed/Sealed) -->
+  <g transform="translate(24, 45)">
+    <rect x="0" y="0" width="85" height="85" rx="14" fill="#dcfce7" stroke="#589a56" stroke-width="2"/>
+    <text x="42" y="38" font-size="26" text-anchor="middle">✨</text>
+    <text x="42" y="62" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#3f993f" text-anchor="middle">PACKED</text>
+  </g>
+
+  <!-- Right Box (Beige background, black 2px outer border) -->
+  <g transform="translate(130, 45)">
+    <rect x="0" y="0" width="85" height="85" rx="14" fill="#fffaf0" stroke="#000" stroke-width="2"/>
+    <!-- 2 Filled: white tiles with solid grey border -->
+    <rect x="10" y="10" width="65" height="20" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="1.8"/>
+    <rect x="10" y="33" width="65" height="20" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="1.8"/>
+    <!-- 1 Empty: beigey background with dotted grey border -->
+    <rect x="10" y="56" width="65" height="20" rx="6" fill="rgba(0,0,0,0.04)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+    <!-- Items -->
+    <text x="42" y="26" font-size="15" text-anchor="middle">🍯</text>
+    <text x="42" y="49" font-size="15" text-anchor="middle">🍯</text>
+  </g>
+
+  <!-- Sparkles -->
+  <text x="18" y="35" font-size="16">✨</text>
+  <text x="215" y="40" font-size="15">⭐</text>
+</svg>

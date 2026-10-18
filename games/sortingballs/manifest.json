@@ -1,0 +1,10 @@
+{
+  "name": "Ball Sort Bedtime Puzzle",
+  "short_name": "BallSort",
+  "description": "Clean, ad-free bedtime ball sorting puzzle",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "orientation": "portrait"
+}

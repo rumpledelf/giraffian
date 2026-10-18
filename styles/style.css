@@ -81,6 +81,7 @@ h2 a, h2 a:visited {
 }
 .tile {
 	display: inline-block;
+	vertical-align: top;
 	width: calc(32% - 48px);
 	margin: 24px;
 	margin-bottom: 32px;
