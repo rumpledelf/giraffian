@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
+  <defs>
+    <polygon id="hex" points="26,2 50,13 50,37 26,48 2,37 2,13" stroke-linejoin="round"/>
+  </defs>
+
+  <!-- Card Background -->
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fdf6ea" stroke="#000" stroke-width="2"/>
+
+  <!-- Empty Indented Hex Cells (2px dotted grey border) -->
+  <use href="#hex" x="66" y="34" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="2" stroke-dasharray="2 3"/>
+  <use href="#hex" x="122" y="34" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="2" stroke-dasharray="2 3"/>
+  <use href="#hex" x="150" y="76" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="2" stroke-dasharray="2 3"/>
+  <use href="#hex" x="66" y="118" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="2" stroke-dasharray="2 3"/>
+
+  <!-- Left Stack (x=38, y=78): Green base layers + Coral top layers (1px tile borders, thick 6px steps) -->
+  <g transform="translate(38, 78)">
+    <use href="#hex" y="0" fill="#589a56" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-6" fill="#589a56" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-12" fill="#ec8d6f" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-18" fill="#ec8d6f" stroke="#000" stroke-width="1"/>
+    <text x="26" y="7" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">3</text>
+  </g>
+
+  <!-- Center Stack (x=94, y=78): Yellow base layers + Coral top layers receiving flip -->
+  <g transform="translate(94, 78)">
+    <use href="#hex" y="0" fill="#f7e55f" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-6" fill="#f7e55f" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-12" fill="#ec8d6f" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-18" fill="#ec8d6f" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-24" fill="#ec8d6f" stroke="#000" stroke-width="1"/>
+    <text x="26" y="1" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">6</text>
+  </g>
+
+  <!-- Bottom-Right Stack (x=122, y=120): Aqua base + Purple top -->
+  <g transform="translate(122, 120)">
+    <use href="#hex" y="0" fill="#82dee6" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-6" fill="#dcb0ed" stroke="#000" stroke-width="1"/>
+    <use href="#hex" y="-12" fill="#dcb0ed" stroke="#000" stroke-width="1"/>
+    <text x="26" y="13" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">2</text>
+  </g>
+
+  <!-- Motion Arc: Coral Hex flipping from Left Stack to Center Stack -->
+  <path d="M 64 56 Q 92 16 120 48" fill="none" stroke="#3a7ede" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Mid-Flip Coral Hex Tile on Arc -->
+  <g transform="translate(68, 16) rotate(-10 26 25) scale(1, 0.72)">
+    <use href="#hex" fill="#ec8d6f" stroke="#000" stroke-width="1"/>
+  </g>
+
+  <!-- Playful ambient card sparkles -->
+  <text x="18" y="32" font-size="16">✨</text>
+  <text x="212" y="38" font-size="15">⭐</text>
+</svg>

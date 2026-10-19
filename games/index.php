@@ -54,4 +54,10 @@
   <p>Pick free tiles into your 7-slot tray and clear triplets until the whole pile is gone.</p>
 </div>
 
+<div class="tile">
+  <a href="/games/hexsort/"><img src="/images/thumb-hexsort.svg" alt="Hex Sort preview"></a>
+  <h2><a href="/games/hexsort/">Hex Sort</a></h2>
+  <p>Place layered hex stacks on the board to chain colour flips and clear stacks of ten.</p>
+</div>
+
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
