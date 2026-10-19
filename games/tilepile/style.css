@@ -159,6 +159,7 @@ button.icon-btn svg, .icon-btn svg {
   justify-content: center;
   align-items: center;
   width: min(580px, calc(100vw - 32px));
+  max-width: 100%;
   min-height: 290px;
   overflow: visible;
 }
@@ -170,44 +171,72 @@ button.icon-btn svg, .icon-btn svg {
   margin: 0 auto;
 }
 
-/* Square Tiles (50px x 50px) */
+/* Tiles: the box is the hit area; the SVG draws the face and slab. */
 .pile-tile {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.85rem;
+  font-size: var(--pile-font-size, 1.85rem);
   line-height: 1;
-  box-sizing: border-box;
-  transition: border-color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
   user-select: none;
 }
 
-/* Free / Uncovered Tile */
 .pile-tile.free {
-  background: #ffffff;
-  border: 2px solid var(--grey-border);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
   cursor: pointer;
 }
 
-.pile-tile.free:hover {
-  border-color: var(--accent-blue);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15), 0 0 8px rgba(58, 126, 222, 0.35);
+.pile-tile.blocked {
+  cursor: not-allowed;
 }
 
-/* Blocked / Covered Tile (Clearly visible layer below) */
-.pile-tile.blocked {
-  background: var(--blocked-bg);
-  border: 2px solid var(--blocked-border);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
-  filter: grayscale(35%) brightness(0.92);
-  opacity: 0.9;
-  cursor: not-allowed;
+.tile-body {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Only tiles resting on the board itself cast a shadow. */
+.pile-tile.base .tile-body {
+  filter: drop-shadow(1px 2px 2px rgba(66, 57, 39, 0.16));
+}
+
+.tile-body path, .tile-body rect {
+  stroke: var(--grey-border, #bec6ce);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.15s ease;
+}
+
+.tile-slab { fill: url(#tile-side-free); }
+.tile-edge { fill: none; opacity: 0.6; }
+.tile-top { fill: #ffffff; }
+
+/* Covered tiles keep their colours; only the face is a touch darker. */
+.pile-tile.blocked .tile-top { fill: #e8ecef; }
+
+.pile-tile.free:hover .tile-body path, .pile-tile.free:hover .tile-body rect {
+  stroke: var(--accent-blue);
+}
+.pile-tile.free:hover .tile-body {
+  filter: drop-shadow(0 0 5px rgba(58, 126, 222, 0.35));
+}
+.pile-tile.base.free:hover .tile-body {
+  filter: drop-shadow(1px 2px 2px rgba(66, 57, 39, 0.16)) drop-shadow(0 0 5px rgba(58, 126, 222, 0.35));
+}
+
+/* The symbol sits centred on the square face, not the whole box. */
+.tile-symbol {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% / (1 + 0.16));
+  height: calc(100% / (1 + 0.16));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .pile-tile.shake {
@@ -259,15 +288,21 @@ button.icon-btn svg, .icon-btn svg {
 }
 
 .tray-slot.has-tile {
-  background: #ffffff;
-  border-style: solid;
-  border-color: var(--grey-border);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+}
+
+.pile-tile:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
+}
+
+.tray-slot.matching .tile-body path, .tray-slot.matching .tile-body rect {
+  stroke: var(--match-green);
 }
 
 .tray-slot.matching {
-  border-color: var(--match-green);
-  box-shadow: 0 0 10px rgba(88, 154, 86, 0.5);
   animation: match-glow 0.32s ease infinite alternate;
 }
 
@@ -292,15 +327,10 @@ button.icon-btn svg, .icon-btn svg {
   z-index: 9999;
   width: 50px;
   height: 50px;
-  border-radius: 12px;
-  background: #ffffff;
-  border: 2px solid var(--accent-blue);
-  box-shadow: 0 4px 12px rgba(58, 126, 222, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 1.85rem;
+  line-height: 1;
   pointer-events: none;
+  transform-origin: 0 0;
 }
 
 /* Confetti / Puff Particles */
@@ -476,10 +506,7 @@ button.icon-btn svg, .icon-btn svg {
     height: 310px;
   }
   .pile-tile {
-    width: 44px;
-    height: 44px;
-    aspect-ratio: 1 / 1;
-    font-size: 1.55rem;
+    font-size: var(--pile-font-size, 1.55rem);
   }
   .flying-tile {
     width: 44px;

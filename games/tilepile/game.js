@@ -1,3 +1,46 @@
+// Tile drawing: a square face with its thickness extruded down-right, so the
+// bottom and right sides both show (light bottom, darker right).
+const TILE_DEPTH = 0.16; // slab thickness as a fraction of the face size
+
+const TILE_BODY_SVG = (() => {
+  const box = 100;
+  const d = box * TILE_DEPTH / (1 + TILE_DEPTH);
+  const f = box - d; // face size
+  const r = f * 0.2;
+  const k = r / Math.SQRT2;
+  const n = v => +v.toFixed(2);
+  const arc = (x, y) => `A${n(r)} ${n(r)} 0 0 1 ${n(x)} ${n(y)}`;
+  // Outline of the face swept along the diagonal (the slab's silhouette).
+  const slab = [
+    `M${n(r)} 0`, `H${n(f - r)}`,
+    arc(f - r + k, r - k),
+    `L${n(f - r + k + d)} ${n(r - k + d)}`,
+    arc(box, r + d),
+    `V${n(box - r)}`,
+    arc(box - r, box),
+    `H${n(r + d)}`,
+    arc(r + d - k, box - r + k),
+    `L${n(r - k)} ${n(f - r + k)}`,
+    arc(0, f - r),
+    `V${n(r)}`,
+    arc(r, 0), 'Z'
+  ].join(' ');
+  const c = f - r + k;
+  return `<svg class="tile-body" viewBox="0 0 ${box} ${box}" aria-hidden="true">` +
+    `<path class="tile-slab" d="${slab}"/>` +
+    `<path class="tile-edge" d="M${n(c)} ${n(c)} L${n(c + d)} ${n(c + d)}"/>` +
+    `<rect class="tile-top" width="${n(f)}" height="${n(f)}" rx="${n(r)}"/>` +
+    `</svg>`;
+})();
+
+// Hard-split gradients for the two visible sides, shared by every tile.
+document.body.insertAdjacentHTML('afterbegin', `
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="tile-side-free" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="100" y2="0">
+      <stop offset="50%" stop-color="#dde3e8"/><stop offset="50%" stop-color="#c3cbd3"/>
+    </linearGradient>
+  </defs></svg>`);
+
 /**
  * Tile Pile Match - Procedural Triplet Tile Match Puzzle
  * Vanilla ES6, zero external dependencies, responsive 2px design system.
@@ -9,6 +52,7 @@ class TilePileGame {
     this.maxTraySlots = 7;
     this.history = [];
     this.isAnimating = false;
+    this.boardVersion = 0;
     this.level = Math.max(1, Number(localStorage.getItem('tilepile_level')) || 1);
     this.mode = localStorage.getItem('tilepile_mode') === 'endless' ? 'endless' : 'levels';
     this.themeKey = localStorage.getItem('tilepile_theme') || 'pantry';
@@ -296,11 +340,7 @@ class TilePileGame {
     }
 
     // Helper: does slot B cover slot A?
-    const covers = (b, a) => (
-      b.layer > a.layer &&
-      Math.abs(b.gx - a.gx) < 2 &&
-      Math.abs(b.gy - a.gy) < 2
-    );
+    const covers = (b, a) => this.tileCovers(b, a);
 
     let remaining = [...slots];
     const assignments = new Map();
@@ -349,11 +389,11 @@ class TilePileGame {
     this.cancelAnimation();
     this.hideModals();
     this.tiles = this.generatePile(this.level);
-    this.initialState = this.snapshot();
     this.history = [];
     this.tray = [];
     this.matchesCleared = 0;
     this.movesCount = 0;
+    this.initialState = this.snapshot();
     this.render();
   }
 
@@ -376,7 +416,8 @@ class TilePileGame {
 
   restore(state) {
     this.tiles = state.tiles.map(t => ({ ...t }));
-    this.tray = state.tray.map(t => ({ ...t }));
+    const tilesById = new Map(this.tiles.map(t => [t.id, t]));
+    this.tray = state.tray.map(t => tilesById.get(t.id));
     this.matchesCleared = state.matchesCleared;
     this.movesCount = state.movesCount;
   }
@@ -392,12 +433,10 @@ class TilePileGame {
     this.tiles.forEach(t => {
       if (mapping[t.symbol]) t.symbol = mapping[t.symbol];
     });
-    this.tray.forEach(t => {
-      if (mapping[t.symbol]) t.symbol = mapping[t.symbol];
-    });
   }
 
   cancelAnimation() {
+    this.boardVersion++;
     this.isAnimating = false;
     document.querySelectorAll('.flying-tile, .puff-particle').forEach(el => el.remove());
   }
@@ -414,14 +453,21 @@ class TilePileGame {
     this.dom.levelBadge.textContent = isEndless ? 'Endless' : `Level ${this.level}`;
   }
 
-  // A tile is free to pick if NO uncollected tile on a higher layer overlaps it
+  // Match the layer/row/column order used to draw overlapping tiles.
+  tileCovers(top, bottom) {
+    const above = top.layer > bottom.layer ||
+      (top.layer === bottom.layer && (top.gy > bottom.gy ||
+        (top.gy === bottom.gy && top.gx > bottom.gx)));
+    return above && Math.abs(top.gx - bottom.gx) < 2 &&
+      Math.abs(top.gy - bottom.gy) < 2;
+  }
+
+  // A tile is free only when no remaining tile is drawn over it.
   isTileFree(tile) {
     if (tile.collected) return false;
     return !this.tiles.some(other =>
       !other.collected &&
-      other.layer > tile.layer &&
-      Math.abs(other.gx - tile.gx) < 2 &&
-      Math.abs(other.gy - tile.gy) < 2
+      this.tileCovers(other, tile)
     );
   }
 
@@ -443,12 +489,23 @@ class TilePileGame {
     });
 
     const isMobile = window.innerWidth <= 540;
-    const stepPx = isMobile ? 24 : 28;
-
-    const pileWidth = (maxGx - minGx) * stepPx;
-    const pileHeight = (maxGy - minGy) * stepPx;
-
     const stageWidth = stage.clientWidth || 540;
+    const baseStep = isMobile ? 24 : 28;
+    const baseTileSize = isMobile ? 44 : 50;
+    const maxLayer = Math.max(...this.tiles.map(t => t.layer));
+    const baseWidth = (maxGx - minGx - 2) * baseStep + baseTileSize * (1 + TILE_DEPTH * (maxLayer + 1));
+    const scale = Math.min(1, Math.max(1, stageWidth - 16) / baseWidth);
+    const stepPx = baseStep * scale;
+    const tileSize = baseTileSize * scale;
+    stage.style.setProperty('--pile-font-size', `${(isMobile ? 1.55 : 1.85) * scale}rem`);
+
+    // Each tile is a square face plus a slab pushed down-right; every layer
+    // sits one slab higher (up-left) than the one beneath it.
+    const depth = Math.round(tileSize * TILE_DEPTH);
+
+    const pileWidth = (maxGx - minGx - 2) * stepPx + tileSize + depth * (maxLayer + 1);
+    const pileHeight = (maxGy - minGy - 2) * stepPx + tileSize + depth * (maxLayer + 1);
+
     const stageHeight = stage.clientHeight || 260;
 
     const offsetX = Math.max(8, Math.round((stageWidth - pileWidth) / 2));
@@ -465,20 +522,23 @@ class TilePileGame {
       if (tile.collected) return;
 
       const isFree = this.isTileFree(tile);
-      const left = offsetX + (tile.gx - minGx) * stepPx;
-      const top = offsetY + (tile.gy - minGy) * stepPx;
+      const lift = (maxLayer - tile.layer) * depth;
+      const left = offsetX + (tile.gx - minGx) * stepPx + lift;
+      const top = offsetY + (tile.gy - minGy) * stepPx + lift;
       const zIndex = tile.layer * 20 + tile.gy;
 
       const el = document.createElement('div');
       el.id = `pile-tile-${tile.id}`;
-      el.className = `pile-tile ${isFree ? 'free' : 'blocked'}`;
-      el.textContent = tile.symbol;
+      el.className = `pile-tile ${isFree ? 'free' : 'blocked'}${tile.layer === 0 ? ' base' : ''}`;
+      this.addTileFace(el, tile.symbol);
+      el.style.width = `${tileSize + depth}px`;
+      el.style.height = `${tileSize + depth}px`;
       el.style.left = `${left}px`;
       el.style.top = `${top}px`;
       el.style.zIndex = zIndex;
       el.tabIndex = isFree ? 0 : -1;
       el.setAttribute('role', 'button');
-      el.setAttribute('aria-label', `${tile.symbol} tile, ${isFree ? 'free to pick' : 'covered by layer above'}`);
+      el.setAttribute('aria-label', `${tile.symbol} tile, ${isFree ? 'free to pick' : 'covered by another tile'}`);
 
       el.addEventListener('click', () => this.handleTileClick(tile, el));
       el.addEventListener('keydown', e => {
@@ -504,7 +564,7 @@ class TilePileGame {
       const tile = this.tray[i];
       if (tile) {
         slot.classList.add('has-tile');
-        slot.textContent = tile.symbol;
+        this.addTileFace(slot, tile.symbol);
         slot.setAttribute('aria-label', `Tray slot ${i + 1}: ${tile.symbol}`);
       } else {
         slot.setAttribute('aria-label', `Tray slot ${i + 1}: empty`);
@@ -518,6 +578,14 @@ class TilePileGame {
     this.dom.tilesLeft.textContent = remaining;
     this.dom.matchesCleared.textContent = this.matchesCleared;
     this.dom.btnUndo.disabled = this.history.length === 0 || this.isAnimating;
+  }
+
+  addTileFace(el, symbol) {
+    el.insertAdjacentHTML('beforeend', TILE_BODY_SVG);
+    const face = document.createElement('span');
+    face.className = 'tile-symbol';
+    face.textContent = symbol;
+    el.appendChild(face);
   }
 
   async handleTileClick(tile, tileEl) {
@@ -539,6 +607,7 @@ class TilePileGame {
     }
 
     this.isAnimating = true;
+    const version = this.boardVersion;
     this.history.push(this.snapshot());
     this.movesCount++;
     this.audio.playTileTap();
@@ -559,9 +628,11 @@ class TilePileGame {
 
     const clone = document.createElement('div');
     clone.className = 'flying-tile';
-    clone.textContent = tile.symbol;
+    this.addTileFace(clone, tile.symbol);
     clone.style.left = `${startRect.left}px`;
     clone.style.top = `${startRect.top}px`;
+    clone.style.width = `${startRect.width}px`;
+    clone.style.height = `${startRect.height}px`;
     document.body.appendChild(clone);
 
     this.renderTray();
@@ -569,10 +640,11 @@ class TilePileGame {
     const endRect = targetSlotEl.getBoundingClientRect();
     targetSlotEl.style.visibility = 'hidden';
 
+    const endScale = endRect.width / startRect.width;
     const anim = clone.animate([
       { transform: 'translate(0, 0) scale(1)' },
       { transform: `translate(${(endRect.left - startRect.left) * 0.5}px, ${(endRect.top - startRect.top) * 0.5 - 20}px) scale(1.08)`, offset: 0.5 },
-      { transform: `translate(${endRect.left - startRect.left}px, ${endRect.top - startRect.top}px) scale(1)` }
+      { transform: `translate(${endRect.left - startRect.left}px, ${endRect.top - startRect.top}px) scale(${endScale})` }
     ], {
       duration: 250,
       easing: 'cubic-bezier(0.2, 0.9, 0.3, 1)'
@@ -580,6 +652,7 @@ class TilePileGame {
 
     await anim.finished;
     clone.remove();
+    if (version !== this.boardVersion) return;
     targetSlotEl.style.visibility = '';
     this.audio.playTileLand();
 
@@ -587,12 +660,14 @@ class TilePileGame {
     this.renderPile();
     this.updateStats();
 
-    await this.checkMatch();
+    await this.checkMatch(version);
 
+    if (version !== this.boardVersion) return;
     this.isAnimating = false;
+    this.updateStats();
   }
 
-  async checkMatch() {
+  async checkMatch(version = this.boardVersion) {
     // Check if any symbol in tray has 3 matching tiles
     const counts = {};
     this.tray.forEach(t => counts[t.symbol] = (counts[t.symbol] || 0) + 1);
@@ -615,6 +690,7 @@ class TilePileGame {
 
       this.audio.playMatch();
       await new Promise(r => setTimeout(r, 260));
+      if (version !== this.boardVersion) return;
 
       // Trigger poof particles
       matchIndices.forEach(idx => {
@@ -627,6 +703,7 @@ class TilePileGame {
       });
 
       await new Promise(r => setTimeout(r, 280));
+      if (version !== this.boardVersion) return;
 
       // Remove the 3 matched tiles from tray
       this.tray = this.tray.filter((t, i) => !matchIndices.includes(i));
@@ -638,6 +715,7 @@ class TilePileGame {
       const allCollected = this.tiles.every(t => t.collected);
       if (allCollected && this.tray.length === 0) {
         await new Promise(r => setTimeout(r, 250));
+        if (version !== this.boardVersion) return;
         this.handleVictory();
         return;
       }
@@ -646,6 +724,7 @@ class TilePileGame {
     // Check for jammed tray
     if (this.tray.length >= this.maxTraySlots) {
       await new Promise(r => setTimeout(r, 300));
+      if (version !== this.boardVersion) return;
       this.audio.playBonk();
       this.dom.jamModal.classList.remove('hidden');
     }
