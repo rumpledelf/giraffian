@@ -42,4 +42,16 @@
   <p>Untangle winding arrows by finding a clear route out for each path.</p>
 </div>
 
+<div class="tile">
+  <a href="/games/coinsort/"><img src="/images/thumb-coinsort.svg" alt="Coin Sort preview"></a>
+  <h2><a href="/games/coinsort/">Coin Sort</a></h2>
+  <p>Stack matching coins until ten of a colour merge into the next one up.</p>
+</div>
+
+<div class="tile">
+  <a href="/games/tilepile/"><img src="/images/thumb-tilepile.svg" alt="Tile Pile Match preview"></a>
+  <h2><a href="/games/tilepile/">Tile Pile</a></h2>
+  <p>Pick free tiles into your 7-slot tray and clear triplets until the whole pile is gone.</p>
+</div>
+
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

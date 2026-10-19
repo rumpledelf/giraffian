@@ -1,52 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
   <!-- Background card rounded (2px border matching UI) -->
-  <rect x="6" y="6" width="228" height="168" rx="20" fill="#eaf6f8" stroke="#000" stroke-width="2"/>
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fdf6ea" stroke="#000" stroke-width="2"/>
 
-  <!-- Conveyor Track 1 -->
-  <rect x="20" y="32" width="200" height="42" rx="12" fill="#d8edf1" stroke="#000" stroke-width="2"/>
-  <line x1="30" y1="32" x2="30" y2="74" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="60" y1="32" x2="60" y2="74" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="90" y1="32" x2="90" y2="74" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="120" y1="32" x2="120" y2="74" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="150" y1="32" x2="150" y2="74" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="180" y1="32" x2="180" y2="74" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="210" y1="32" x2="210" y2="74" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <!-- Conveyor Track 1 (generous height so belt reads clearly at small scale) -->
+  <rect x="20" y="22" width="200" height="54" rx="14" fill="#d8edf1" stroke="#000" stroke-width="2"/>
+  <line x1="34" y1="22" x2="34" y2="76" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="64" y1="22" x2="64" y2="76" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="94" y1="22" x2="94" y2="76" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="124" y1="22" x2="124" y2="76" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="154" y1="22" x2="154" y2="76" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="184" y1="22" x2="184" y2="76" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
 
-  <!-- Moving Box on Track 1 (Beige box with black border) -->
-  <g transform="translate(60, 36)">
-    <rect x="0" y="0" width="100" height="34" rx="8" fill="#fffaf0" stroke="#000" stroke-width="2"/>
-    <!-- White tiles with solid grey border -->
-    <rect x="6" y="5" width="26" height="24" rx="5" fill="#ffffff" stroke="#bec6ce" stroke-width="1.5"/>
-    <rect x="37" y="5" width="26" height="24" rx="5" fill="#ffffff" stroke="#bec6ce" stroke-width="1.5"/>
-    <rect x="68" y="5" width="26" height="24" rx="5" fill="#ffffff" stroke="#bec6ce" stroke-width="1.5"/>
-    <text x="19" y="22" font-size="14" text-anchor="middle">🍄</text>
-    <text x="50" y="22" font-size="14" text-anchor="middle">🍄</text>
-    <text x="81" y="22" font-size="14" text-anchor="middle">🥐</text>
+  <!-- Moving Box on Track 1 (centered with 11px belt padding above & below) -->
+  <g transform="translate(56, 33)">
+    <rect x="0" y="0" width="96" height="32" rx="8" fill="#fffaf0" stroke="#000" stroke-width="2"/>
+    <!-- White square tiles with solid grey border -->
+    <rect x="8" y="5" width="22" height="22" rx="5" fill="#ffffff" stroke="#bec6ce" stroke-width="1.5"/>
+    <rect x="37" y="5" width="22" height="22" rx="5" fill="#ffffff" stroke="#bec6ce" stroke-width="1.5"/>
+    <rect x="66" y="5" width="22" height="22" rx="5" fill="#ffffff" stroke="#bec6ce" stroke-width="1.5"/>
+    <text x="19" y="16" font-size="13" text-anchor="middle" dominant-baseline="central">🍄</text>
+    <text x="48" y="16" font-size="13" text-anchor="middle" dominant-baseline="central">🍄</text>
+    <text x="77" y="16" font-size="13" text-anchor="middle" dominant-baseline="central">🥐</text>
   </g>
 
-  <!-- Track 1 arrow -->
-  <path d="M 180 53 L 195 53 M 190 47 L 196 53 L 190 59" stroke="#3a7ede" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Track 1 arrow (moving right) -->
+  <path d="M 172 49 L 192 49 M 185 43 L 192 49 L 185 55" stroke="#3a7ede" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- Conveyor Track 2 -->
-  <rect x="20" y="102" width="200" height="42" rx="12" fill="#d8edf1" stroke="#000" stroke-width="2"/>
-  <line x1="30" y1="102" x2="30" y2="144" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="60" y1="102" x2="60" y2="144" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="90" y1="102" x2="90" y2="144" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="120" y1="102" x2="120" y2="144" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="150" y1="102" x2="150" y2="144" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="180" y1="102" x2="180" y2="144" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
-  <line x1="210" y1="102" x2="210" y2="144" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <!-- Conveyor Track 2 (generous height with belt padding) -->
+  <rect x="20" y="96" width="200" height="54" rx="14" fill="#d8edf1" stroke="#000" stroke-width="2"/>
+  <line x1="34" y1="96" x2="34" y2="150" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="64" y1="96" x2="64" y2="150" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="94" y1="96" x2="94" y2="150" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="124" y1="96" x2="124" y2="150" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="154" y1="96" x2="154" y2="150" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
+  <line x1="184" y1="96" x2="184" y2="150" stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
 
-  <!-- Moving Box on Track 2 (Packed) -->
-  <g transform="translate(100, 106)">
-    <rect x="0" y="0" width="100" height="34" rx="8" fill="#dcfce7" stroke="#589a56" stroke-width="2"/>
-    <text x="50" y="23" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#3f993f" text-anchor="middle">✨ PACKED ✨</text>
+  <!-- Moving Box on Track 2 (Packed, centered with 11px belt padding above & below) -->
+  <g transform="translate(92, 107)">
+    <rect x="0" y="0" width="96" height="32" rx="8" fill="#dcfce7" stroke="#589a56" stroke-width="2"/>
+    <text x="48" y="16" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#3f993f" text-anchor="middle" dominant-baseline="central">✨ PACKED ✨</text>
   </g>
 
-  <!-- Track 2 arrow (Opposite direction) -->
-  <path d="M 60 123 L 45 123 M 50 117 L 44 123 L 50 129" stroke="#3a7ede" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Track 2 arrow (moving left) -->
+  <path d="M 68 123 L 48 123 M 55 117 L 48 123 L 55 129" stroke="#3a7ede" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- Sparkles -->
-  <text x="15" y="25" font-size="15">✨</text>
-  <text x="210" y="100" font-size="16">⭐</text>
+  <!-- Ambient Card Sparkles -->
+  <text x="18" y="32" font-size="16">✨</text>
+  <text x="212" y="38" font-size="15">⭐</text>
 </svg>

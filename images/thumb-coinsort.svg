@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
+  <!-- Card Background -->
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fdf6ea" stroke="#000" stroke-width="2"/>
+
+  <!-- 3 Board Slots (2px dotted border) -->
+  <rect x="24" y="36" width="54" height="116" rx="14" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="2" stroke-dasharray="2 3"/>
+  <rect x="93" y="36" width="54" height="116" rx="14" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="2" stroke-dasharray="2 3"/>
+  <rect x="162" y="36" width="54" height="116" rx="14" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="2" stroke-dasharray="2 3"/>
+
+  <!-- Motion Arc: Coin hopping from Slot 1 into Slot 2 -->
+  <path d="M 51 60 Q 85 16 120 72" fill="none" stroke="#3a7ede" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Flying Coin (Coral 2) on Arc -->
+  <g transform="translate(63, 20) rotate(-8 22 9)">
+    <rect x="0" y="0" width="44" height="18" rx="9" fill="#ec8d6f" stroke="#000" stroke-width="2"/>
+    <text x="22" y="10" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">2</text>
+  </g>
+
+  <!-- Slot 1: Stack of 1s (Grey, individual coins with clean gaps) -->
+  <g>
+    <rect x="29" y="126" width="44" height="18" rx="9" fill="#bec6ce" stroke="#000" stroke-width="2"/>
+    <text x="51" y="135" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">1</text>
+
+    <rect x="29" y="104" width="44" height="18" rx="9" fill="#bec6ce" stroke="#000" stroke-width="2"/>
+    <text x="51" y="113" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">1</text>
+
+    <rect x="29" y="82" width="44" height="18" rx="9" fill="#bec6ce" stroke="#000" stroke-width="2"/>
+    <text x="51" y="91" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">1</text>
+  </g>
+
+  <!-- Slot 2: Stack of 2s (Coral, individual coins with clean gaps) -->
+  <g>
+    <rect x="98" y="126" width="44" height="18" rx="9" fill="#ec8d6f" stroke="#000" stroke-width="2"/>
+    <text x="120" y="135" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">2</text>
+
+    <rect x="98" y="104" width="44" height="18" rx="9" fill="#ec8d6f" stroke="#000" stroke-width="2"/>
+    <text x="120" y="113" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">2</text>
+
+    <rect x="98" y="82" width="44" height="18" rx="9" fill="#ec8d6f" stroke="#000" stroke-width="2"/>
+    <text x="120" y="91" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">2</text>
+  </g>
+
+  <!-- Slot 3: Freshly merged 3 (Yellow) -->
+  <g>
+    <rect x="167" y="126" width="44" height="18" rx="9" fill="#f7e55f" stroke="#000" stroke-width="2"/>
+    <text x="189" y="135" font-family="'Comic Relief', sans-serif" font-weight="bold" font-size="12" fill="#000" text-anchor="middle" dominant-baseline="central">3</text>
+  </g>
+
+  <!-- Playful ambient card sparkles (matching other thumbnails) -->
+  <text x="18" y="32" font-size="16">✨</text>
+  <text x="212" y="38" font-size="15">⭐</text>
+</svg>

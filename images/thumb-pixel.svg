@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
   <!-- Background card rounded (2px border matching UI) -->
-  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fffaf0" stroke="#000" stroke-width="2"/>
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fdf6ea" stroke="#000" stroke-width="2"/>
 
   <!-- Orbital Rail Track -->
   <rect x="36" y="24" width="168" height="106" rx="14" fill="#f4fbfb" stroke="#000" stroke-width="2"/>

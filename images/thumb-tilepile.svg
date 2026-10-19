@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
+  <!-- Card Background -->
+  <rect x="6" y="6" width="228" height="168" rx="20" fill="#fdf6ea" stroke="#000" stroke-width="2"/>
+
+  <!-- Layer 0 (Base Layer, Edge-to-Edge) -->
+  <!-- Row 0: Blocked tiles -->
+  <rect x="75" y="20" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="88" y="33" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🍓</text>
+
+  <rect x="105" y="20" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="118" y="33" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🥐</text>
+
+  <rect x="135" y="20" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="148" y="33" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🍋</text>
+
+  <!-- Row 1: Left Wing (Free), Center Blocked, Right Wing (Free) -->
+  <!-- Left Wing (Uncovered) -->
+  <rect x="45" y="50" width="26" height="26" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="1.8"/>
+  <text x="58" y="63" font-size="14" text-anchor="middle" dominant-baseline="central">🥑</text>
+
+  <rect x="75" y="50" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="88" y="63" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🍇</text>
+
+  <rect x="105" y="50" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="118" y="63" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🍄</text>
+
+  <rect x="135" y="50" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="148" y="63" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🧁</text>
+
+  <!-- Right Wing (Uncovered) -->
+  <rect x="165" y="50" width="26" height="26" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="1.8"/>
+  <text x="178" y="63" font-size="14" text-anchor="middle" dominant-baseline="central">🍓</text>
+
+  <!-- Row 2: Blocked tiles -->
+  <rect x="75" y="80" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="88" y="93" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🍋</text>
+
+  <rect x="105" y="80" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="118" y="93" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🥑</text>
+
+  <rect x="135" y="80" width="26" height="26" rx="6" fill="#ece8df" stroke="#d4d0c7" stroke-width="1.8"/>
+  <text x="148" y="93" font-size="14" text-anchor="middle" dominant-baseline="central" opacity="0.9">🥐</text>
+
+  <!-- Layer 1 (Upper Layer: 50% half-step offset, crisp white free tiles) -->
+  <!-- Row 0.5 -->
+  <rect x="90" y="35" width="26" height="26" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="2"/>
+  <text x="103" y="48" font-size="15" text-anchor="middle" dominant-baseline="central">🍯</text>
+
+  <rect x="120" y="35" width="26" height="26" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="2"/>
+  <text x="133" y="48" font-size="15" text-anchor="middle" dominant-baseline="central">🧁</text>
+
+  <!-- Row 1.5 -->
+  <rect x="90" y="65" width="26" height="26" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="2"/>
+  <text x="103" y="78" font-size="15" text-anchor="middle" dominant-baseline="central">🍇</text>
+
+  <rect x="120" y="65" width="26" height="26" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="2"/>
+  <text x="133" y="78" font-size="15" text-anchor="middle" dominant-baseline="central">🍯</text>
+
+  <!-- Flight Path: Arc towards 7-slot tray -->
+  <path d="M 103 48 Q 75 75 68 138" fill="none" stroke="#3a7ede" stroke-width="2" stroke-dasharray="3 3"/>
+
+  <!-- Flying Tile (Honey 🍯) on Flight Path -->
+  <g transform="translate(68, 86) rotate(-8 13 13)">
+    <rect x="0" y="0" width="26" height="26" rx="6" fill="#ffffff" stroke="#3a7ede" stroke-width="2"/>
+    <text x="13" y="13" font-size="15" text-anchor="middle" dominant-baseline="central">🍯</text>
+  </g>
+
+  <!-- Tight 7-Slot Holding Tray Frame (symmetric 6px padding on left and right) -->
+  <rect x="25" y="132" width="190" height="34" rx="10" fill="#fffaf0" stroke="#000" stroke-width="2"/>
+
+  <!-- Tray Slots: 7 square slots (w=22, h=22), 4px gap, 6px padding all around -->
+  <!-- Slot 0: Honey -->
+  <rect x="31" y="138" width="22" height="22" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="1.8"/>
+  <text x="42" y="149" font-size="13" text-anchor="middle" dominant-baseline="central">🍯</text>
+
+  <!-- Slot 1: Honey -->
+  <rect x="57" y="138" width="22" height="22" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="1.8"/>
+  <text x="68" y="149" font-size="13" text-anchor="middle" dominant-baseline="central">🍯</text>
+
+  <!-- Slot 2: Strawberry -->
+  <rect x="83" y="138" width="22" height="22" rx="6" fill="#ffffff" stroke="#bec6ce" stroke-width="1.8"/>
+  <text x="94" y="149" font-size="13" text-anchor="middle" dominant-baseline="central">🍓</text>
+
+  <!-- Slot 3: Empty Dotted -->
+  <rect x="109" y="138" width="22" height="22" rx="6" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2 2"/>
+
+  <!-- Slot 4: Empty Dotted -->
+  <rect x="135" y="138" width="22" height="22" rx="6" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2 2"/>
+
+  <!-- Slot 5: Empty Dotted -->
+  <rect x="161" y="138" width="22" height="22" rx="6" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2 2"/>
+
+  <!-- Slot 6: Empty Dotted -->
+  <rect x="187" y="138" width="22" height="22" rx="6" fill="rgba(0,0,0,0.045)" stroke="#bec6ce" stroke-width="1.5" stroke-dasharray="2 2"/>
+
+  <!-- Ambient Card Sparkles -->
+  <text x="18" y="32" font-size="16">✨</text>
+  <text x="212" y="38" font-size="15">⭐</text>
+</svg>
