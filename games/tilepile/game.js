@@ -52,6 +52,7 @@ class TilePileGame {
     this.maxTraySlots = 7;
     this.history = [];
     this.isAnimating = false;
+    this.pendingTaps = []; // tile ids tapped while a move was animating
     this.boardVersion = 0;
     this.level = Math.max(1, Number(localStorage.getItem('tilepile_level')) || 1);
     this.mode = localStorage.getItem('tilepile_mode') === 'endless' ? 'endless' : 'levels';
@@ -438,6 +439,7 @@ class TilePileGame {
   cancelAnimation() {
     this.boardVersion++;
     this.isAnimating = false;
+    this.pendingTaps = [];
     document.querySelectorAll('.flying-tile, .puff-particle').forEach(el => el.remove());
   }
 
@@ -471,12 +473,17 @@ class TilePileGame {
     );
   }
 
+  // Tiles are updated in place rather than rebuilt: replacing a tile's element
+  // between press and release swallows the click.
   renderPile() {
     const stage = this.dom.pileStage;
-    stage.replaceChildren();
+    const existing = new Map([...stage.children].map(el => [el.id, el]));
 
     const activeTiles = this.tiles.filter(t => !t.collected);
-    if (activeTiles.length === 0) return;
+    if (activeTiles.length === 0) {
+      stage.replaceChildren();
+      return;
+    }
 
     // Determine bounding box across all tiles (to keep stage centered consistently)
     let minGx = Infinity, maxGx = -Infinity;
@@ -511,45 +518,66 @@ class TilePileGame {
     const offsetX = Math.max(8, Math.round((stageWidth - pileWidth) / 2));
     const offsetY = Math.max(8, Math.round((stageHeight - pileHeight) / 2));
 
-    // Sort by layer asc, then gy asc, then gx asc so DOM order matches z-index
+    // Sort by layer asc, then gy asc, then gx asc; the rank is the z-index
     const sortedTiles = [...this.tiles].sort((a, b) => {
       if (a.layer !== b.layer) return a.layer - b.layer;
       if (a.gy !== b.gy) return a.gy - b.gy;
       return a.gx - b.gx;
     });
 
-    sortedTiles.forEach(tile => {
-      if (tile.collected) return;
+    sortedTiles.forEach((tile, rank) => {
+      const id = `pile-tile-${tile.id}`;
+      let el = existing.get(id);
+      existing.delete(id);
+      if (tile.collected) {
+        if (el) el.remove();
+        return;
+      }
 
       const isFree = this.isTileFree(tile);
       const lift = (maxLayer - tile.layer) * depth;
       const left = offsetX + (tile.gx - minGx) * stepPx + lift;
       const top = offsetY + (tile.gy - minGy) * stepPx + lift;
-      const zIndex = tile.layer * 20 + tile.gy;
 
-      const el = document.createElement('div');
-      el.id = `pile-tile-${tile.id}`;
+      if (!el) {
+        el = this.createPileTile(tile.id);
+        stage.appendChild(el);
+      }
       el.className = `pile-tile ${isFree ? 'free' : 'blocked'}${tile.layer === 0 ? ' base' : ''}`;
-      this.addTileFace(el, tile.symbol);
+      if (this.pendingTaps.includes(tile.id)) el.classList.add('queued');
+      el.style.visibility = '';
+      el.querySelector('.tile-symbol').textContent = tile.symbol;
       el.style.width = `${tileSize + depth}px`;
       el.style.height = `${tileSize + depth}px`;
       el.style.left = `${left}px`;
       el.style.top = `${top}px`;
-      el.style.zIndex = zIndex;
+      el.style.zIndex = rank + 1;
       el.tabIndex = isFree ? 0 : -1;
-      el.setAttribute('role', 'button');
       el.setAttribute('aria-label', `${tile.symbol} tile, ${isFree ? 'free to pick' : 'covered by another tile'}`);
-
-      el.addEventListener('click', () => this.handleTileClick(tile, el));
-      el.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          this.handleTileClick(tile, el);
-        }
-      });
-
-      stage.appendChild(el);
     });
+
+    // Elements left over belong to tiles from a previous board
+    existing.forEach(el => el.remove());
+  }
+
+  createPileTile(tileId) {
+    const el = document.createElement('div');
+    el.id = `pile-tile-${tileId}`;
+    el.setAttribute('role', 'button');
+    this.addTileFace(el, '');
+    // Look the tile up on each tap: undo and restart replace the tile objects
+    const tap = () => {
+      const tile = this.tiles.find(t => t.id === tileId);
+      if (tile) this.handleTileClick(tile, el);
+    };
+    el.addEventListener('click', tap);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        tap();
+      }
+    });
+    return el;
   }
 
   renderTray() {
@@ -589,7 +617,16 @@ class TilePileGame {
   }
 
   async handleTileClick(tile, tileEl) {
-    if (this.isAnimating) return;
+    // Mid-animation taps on free tiles are queued, not dropped: the tile
+    // glows now and flies as soon as the current move finishes.
+    if (this.isAnimating) {
+      if (!tile.collected && this.isTileFree(tile) && !this.pendingTaps.includes(tile.id)) {
+        this.pendingTaps.push(tile.id);
+        tileEl.classList.add('queued');
+        this.audio.playTileTap();
+      }
+      return;
+    }
 
     // Blocked tile: gentle bonk and shake feedback
     if (!this.isTileFree(tile)) {
@@ -665,6 +702,25 @@ class TilePileGame {
     if (version !== this.boardVersion) return;
     this.isAnimating = false;
     this.updateStats();
+    this.runPendingTap();
+  }
+
+  runPendingTap() {
+    // A jam or win ends the move sequence; drop anything still queued
+    const stopped = !this.dom.jamModal.classList.contains('hidden') ||
+      this.tiles.every(t => t.collected);
+    while (this.pendingTaps.length && !stopped) {
+      const tileId = this.pendingTaps.shift();
+      const tile = this.tiles.find(t => t.id === tileId);
+      const el = tile && document.getElementById(`pile-tile-${tile.id}`);
+      if (el && !tile.collected && this.isTileFree(tile)) {
+        el.classList.remove('queued');
+        this.handleTileClick(tile, el);
+        return;
+      }
+    }
+    this.pendingTaps = [];
+    document.querySelectorAll('.pile-tile.queued').forEach(el => el.classList.remove('queued'));
   }
 
   async checkMatch(version = this.boardVersion) {

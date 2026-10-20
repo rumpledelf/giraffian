@@ -930,34 +930,47 @@ class PixelGame {
     }
   }
 
+  // Runs on every vacuumed pixel, so update the bays in place: rebuilding
+  // them would swap the element out mid-tap and swallow the click.
   renderStaging() {
-    this.dom.stagingBaysGrid.innerHTML = '';
+    const grid = this.dom.stagingBaysGrid;
+    if (grid.children.length !== this.stagingBays.length) {
+      grid.replaceChildren();
+      this.stagingBays.forEach((_, bayIdx) => {
+        const slot = document.createElement('div');
+        slot.innerHTML = '<div class="slot-color-pip"></div><div class="slot-count-badge"></div>';
+        slot.addEventListener('click', () => this.handleStagingClick(bayIdx));
+        grid.appendChild(slot);
+      });
+    }
     const exposedColors = this.getCurrentlyExposedColors();
 
     this.stagingBays.forEach((shuttle, bayIdx) => {
-      const slot = document.createElement('div');
+      const slot = grid.children[bayIdx];
+      const pip = slot.querySelector('.slot-color-pip');
+      const badge = slot.querySelector('.slot-count-badge');
+
       slot.className = 'staging-slot';
-
-      if (shuttle) {
-        slot.classList.add('occupied');
-        if (shuttle.inFlight) {
-          slot.classList.add('in-flight');
-        } else if (shuttle.remaining > 0 && exposedColors.has(shuttle.color)) {
-          slot.classList.add('ready-pulse');
-        }
-
-        const pal = this.palette[shuttle.color] || { hex: '#ec8d6f' };
-        slot.innerHTML = `
-          <div class="slot-color-pip" style="background-color: ${pal.hex}; border-color: ${pal.border};"></div>
-          <div class="slot-count-badge">${shuttle.remaining}</div>
-        `;
-
-        slot.addEventListener('click', () => this.handleStagingClick(bayIdx));
-      } else {
+      if (!shuttle) {
         slot.classList.add('empty');
+        pip.hidden = true;
+        badge.hidden = true;
+        return;
       }
 
-      this.dom.stagingBaysGrid.appendChild(slot);
+      slot.classList.add('occupied');
+      if (shuttle.inFlight) {
+        slot.classList.add('in-flight');
+      } else if (shuttle.remaining > 0 && exposedColors.has(shuttle.color)) {
+        slot.classList.add('ready-pulse');
+      }
+
+      const pal = this.palette[shuttle.color] || { hex: '#ec8d6f' };
+      pip.hidden = false;
+      badge.hidden = false;
+      pip.style.backgroundColor = pal.hex;
+      pip.style.borderColor = pal.border || '';
+      badge.textContent = shuttle.remaining;
     });
   }
 
