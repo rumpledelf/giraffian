@@ -114,7 +114,7 @@ Prompt: Use case: illustration-story. Asset type: opaque square full-frame sourc
 
 File: patchwork-quilt.png
 
-Prompt: Use case: illustration-story. Asset type: opaque square full-frame source art for a colour-removal pixel game. Patchwork Quilt: a bold close-up of nine enormous square fabric patches in a three-by-three arrangement, some divided diagonally into two big triangles. Irregular outer quilt edge crops into three canvas edges with cream background visible in broad corners, quilt fills 80% of square. No seams, stitches, fabric texture or small patterns. Use exactly 9 colours: cream #fffdf5, coral #ec8d6f, green #589a56, blue #3a7ede, yellow #f7e55f, lilac #dcb0ed, orange #efad48, teal #39a7a0, rose #db5f96. Every colour covers at least 4% of image in a large single solid patch. Minimum feature width 1/12 canvas. Every component one perfectly flat uniform colour. Sharp hard geometric edges, simple cut-paper poster. Strictly no gradients, shading, shadows, texture, grain, noise, dithering, lighting, outlines, borders, text, watermarks or simulated pixel art. Full-frame opaque square.
+Generated in code, not with imagegen: a 3×3 grid of nine different colours, with the middle patch of the top and bottom rows and the outer two of the middle row split along a random diagonal into a second colour. No two neighbouring patches (diagonals included) share a colour. The 12×12 version is the plain nine-patch without splits.
 
 ## Toy Blocks
 
