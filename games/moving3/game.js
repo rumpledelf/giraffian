@@ -6,10 +6,10 @@
 
 class MovingThreeGame {
   constructor() {
-    this.speedMode = localStorage.getItem('moving3_speed') || 'slow';
-    this.boxesPerTrack = parseInt(localStorage.getItem('moving3_boxesPerTrack') || '5', 10);
-    this.currentTheme = localStorage.getItem('moving3_theme') || 'pantry';
-    this.currentLevel = parseInt(localStorage.getItem('moving3_level') || '1', 10);
+    this.speedMode = gameStorage.getItem('moving3_speed') || 'slow';
+    this.boxesPerTrack = parseInt(gameStorage.getItem('moving3_boxesPerTrack') || '5', 10);
+    this.currentTheme = gameStorage.getItem('moving3_theme') || 'pantry';
+    this.currentLevel = parseInt(gameStorage.getItem('moving3_level') || '1', 10);
     this.isPaused = false;
 
     this.themes = {
@@ -120,8 +120,6 @@ class MovingThreeGame {
     this.dom.btnSpeed.addEventListener('click', () => this.cycleSpeed());
     this.dom.btnAdvance.addEventListener('click', () => this.shiftBeltsOnMove());
     this.dom.btnNew.addEventListener('click', () => {
-      this.currentLevel++;
-      localStorage.setItem('moving3_level', this.currentLevel);
       this.startNewGame();
     });
 
@@ -132,7 +130,7 @@ class MovingThreeGame {
 
     this.dom.btnSettings.addEventListener('click', () => {
       this.dom.speedSelect.value = this.speedMode;
-      this.dom.lengthSelect.value = this.boxesPerTrack;
+      this.dom.lengthSelect.value = Number(gameStorage.getItem('moving3_boxesPerTrack')) || 5;
       this.dom.themeSelect.value = this.currentTheme;
       this.dom.settingsModal.classList.remove('hidden');
     });
@@ -146,9 +144,9 @@ class MovingThreeGame {
       this.boxesPerTrack = parseInt(this.dom.lengthSelect.value, 10);
       this.currentTheme = this.dom.themeSelect.value;
 
-      localStorage.setItem('moving3_speed', this.speedMode);
-      localStorage.setItem('moving3_boxesPerTrack', this.boxesPerTrack);
-      localStorage.setItem('moving3_theme', this.currentTheme);
+      gameStorage.setItem('moving3_speed', this.speedMode);
+      gameStorage.setItem('moving3_boxesPerTrack', this.boxesPerTrack);
+      gameStorage.setItem('moving3_theme', this.currentTheme);
 
       this.updateSpeedButton();
       this.dom.settingsModal.classList.add('hidden');
@@ -158,7 +156,7 @@ class MovingThreeGame {
     this.dom.btnNextLevel.addEventListener('click', () => {
       this.dom.winModal.classList.add('hidden');
       this.currentLevel++;
-      localStorage.setItem('moving3_level', this.currentLevel);
+      gameStorage.setItem('moving3_level', this.currentLevel);
       this.startNewGame();
     });
 
@@ -245,7 +243,7 @@ class MovingThreeGame {
     const modes = ['slow', 'medium', 'fast', 'shift'];
     const nextIdx = (modes.indexOf(this.speedMode) + 1) % modes.length;
     this.speedMode = modes[nextIdx];
-    localStorage.setItem('moving3_speed', this.speedMode);
+    gameStorage.setItem('moving3_speed', this.speedMode);
     this.updateSpeedButton();
   }
 
@@ -274,6 +272,8 @@ class MovingThreeGame {
   /* --- Game Initialization --- */
 
   startNewGame() {
+    const growth = gameStorage.getItem('moving3_grow') === 'false' ? 0 : Math.floor((this.currentLevel - 1) / 3);
+    this.boxesPerTrack = Math.min(6, (Number(gameStorage.getItem('moving3_boxesPerTrack')) || 5) + growth);
     this.boardVersion = (this.boardVersion || 0) + 1;
     this.dom.winModal.classList.add('hidden');
     this.clearFloatingPreview();
@@ -417,10 +417,12 @@ class MovingThreeGame {
     const pitch = 260;
     const loopSpan = Math.max(this.boxesPerTrack * pitch, visibleSpan + pitch);
 
+    // The bottom belt moves 25% faster so it can catch up with the top belt.
     // Track 0 moves right (+), Track 1 moves left (-), Track 2 moves right (+)
     for (let track = 0; track < 3; track++) {
       const dir = (track % 2 === 0) ? 1 : -1;
-      this.trackOffsets[track] += speed * dt * dir;
+      const speedScale = track === 2 ? 1.25 : 1;
+      this.trackOffsets[track] += speed * speedScale * dt * dir;
 
       for (let b = 0; b < this.boxesPerTrack; b++) {
         const globalIdx = track * this.boxesPerTrack + b;
@@ -454,7 +456,8 @@ class MovingThreeGame {
 
     for (let track = 0; track < 3; track++) {
       const dir = (track % 2 === 0) ? 1 : -1;
-      this.trackOffsets[track] += shiftDist * dir;
+      const speedScale = track === 2 ? 1.25 : 1;
+      this.trackOffsets[track] += shiftDist * speedScale * dir;
 
       for (let b = 0; b < this.boxesPerTrack; b++) {
         const globalIdx = track * this.boxesPerTrack + b;
@@ -755,4 +758,140 @@ class MovingThreeGame {
 
 window.addEventListener('DOMContentLoaded', () => {
   window.movingGame = new MovingThreeGame();
+});
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    const grow = document.getElementById('grow-difficulty');
+    grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false';
+    document.getElementById('btn-settings').addEventListener('click', () => { grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false'; });
+    document.getElementById('btn-apply-settings').addEventListener('click', () => {
+      try { localStorage.setItem(options.id + '_grow', String(grow.checked)); } catch (error) { this.status('Browser saving is unavailable.'); }
+    }, true);
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.movingGame;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'moving3', levelKey: 'moving3_level',
+    fields: 'currentLevel boxesPerTrack currentTheme speedMode boxes initialSnapshot moveHistory moveCount boxesPacked targetPackedBoxes trackOffsets isPaused',
+    actions: 'startNewGame restartGame executeMove undoMove togglePause cycleSpeed shiftBeltsOnMove',
+    validate: s => s.currentLevel >= 1 && [4,5,6].includes(s.boxesPerTrack) && s.boxes.length === s.boxesPerTrack * 3 && s.boxes.every(b => b.items.length === 3 && b.items.every(i => i === null || (Number.isInteger(i) && i >= 1 && i <= 20))),
+    resume: g => { g.render(); g.updateUndoButton(); g.updateCounts(); g.updateSpeedButton(); g.dom.iconPause.classList.toggle('hidden', g.isPaused); g.dom.iconPlay.classList.toggle('hidden', !g.isPaused); g.dom.levelBadge.textContent = `Level ${g.currentLevel}`; if (g.boxesPacked >= g.targetPackedBoxes) g.handleWin(); },
+  });
 });

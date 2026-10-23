@@ -119,6 +119,8 @@
         <option value="endless">Endless Play</option>
       </select>
     </div>
+    <p id="save-status" role="status">Your board and progress are saved in this browser.</p>
+    <p class="center"><button id="btn-reset-progress" class="button grey" type="button">Reset progress</button></p>
     <div class="modal-actions">
       <button id="btn-close-settings" class="button grey">Cancel</button>
       <button id="btn-apply-settings" class="button green">Apply & New Game</button>
@@ -126,6 +128,7 @@
   </div>
 </div>
 
+<script src="/games/tilepile/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/tilepile/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>
 <script src="/games/tilepile/game.js?v=<?= filemtime(__DIR__ . '/game.js') ?>"></script>
 

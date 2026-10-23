@@ -4,10 +4,10 @@
 
 class BallSortGame {
   constructor() {
-    this.colorCount = parseInt(localStorage.getItem('bs_colorCount') || '4', 10);
-    this.vialCapacity = parseInt(localStorage.getItem('bs_vialCapacity') || '4', 10);
-    this.emptyVials = parseInt(localStorage.getItem('bs_emptyVials') || '2', 10);
-    this.currentLevel = parseInt(localStorage.getItem('bs_currentLevel') || '1', 10);
+    this.colorCount = parseInt(gameStorage.getItem('bs_colorCount') || '4', 10);
+    this.vialCapacity = parseInt(gameStorage.getItem('bs_vialCapacity') || '4', 10);
+    this.emptyVials = parseInt(gameStorage.getItem('bs_emptyVials') || '2', 10);
+    this.currentLevel = parseInt(gameStorage.getItem('bs_currentLevel') || '1', 10);
 
     this.vials = []; // Array of arrays: vials[i] = [bottomBallColor, ..., topBallColor]
     this.selectedVialIndex = null;
@@ -49,8 +49,6 @@ class BallSortGame {
     this.dom.btnUndo.addEventListener('click', () => this.undoMove());
     this.dom.btnAddVial.addEventListener('click', () => this.addExtraVial());
     this.dom.btnNew.addEventListener('click', () => {
-      this.currentLevel++;
-      this.saveProgress();
       this.startNewGame();
     });
 
@@ -60,7 +58,7 @@ class BallSortGame {
     });
 
     this.dom.btnSettings.addEventListener('click', () => {
-      this.dom.colorSelect.value = this.colorCount;
+      this.dom.colorSelect.value = Number(gameStorage.getItem('bs_colorCount')) || 4;
       this.dom.capacitySelect.value = this.vialCapacity;
       this.dom.emptySelect.value = this.emptyVials;
       this.dom.settingsModal.classList.remove('hidden');
@@ -75,9 +73,9 @@ class BallSortGame {
       this.vialCapacity = parseInt(this.dom.capacitySelect.value, 10);
       this.emptyVials = parseInt(this.dom.emptySelect.value, 10);
 
-      localStorage.setItem('bs_colorCount', this.colorCount);
-      localStorage.setItem('bs_vialCapacity', this.vialCapacity);
-      localStorage.setItem('bs_emptyVials', this.emptyVials);
+      gameStorage.setItem('bs_colorCount', this.colorCount);
+      gameStorage.setItem('bs_vialCapacity', this.vialCapacity);
+      gameStorage.setItem('bs_emptyVials', this.emptyVials);
 
       this.dom.settingsModal.classList.add('hidden');
       this.startNewGame();
@@ -110,7 +108,7 @@ class BallSortGame {
   }
 
   saveProgress() {
-    localStorage.setItem('bs_currentLevel', this.currentLevel);
+    gameStorage.setItem('bs_currentLevel', this.currentLevel);
   }
 
   /* --- Solvable Level Generation --- */
@@ -122,7 +120,7 @@ class BallSortGame {
 
     // Try generating with fast BFS validation to guarantee a non-trivial, solvable level
     let attempts = 0;
-    while (attempts < 100) {
+    while (attempts < 3) {
       attempts++;
       const candidateVials = this.buildRandomBoard(N, K, E);
       const solution = this.solveBFS(candidateVials, K, 60); // max depth 60
@@ -132,7 +130,14 @@ class BallSortGame {
     }
 
     // Fallback: reverse-walk generation from solved state if BFS generator timed out
-    return this.generateByReverseWalk(N, K, E);
+    let best = null, bestScore = -1;
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const board = this.generateByReverseWalk(N, K, E);
+      const score = board.reduce((sum, tube) => sum + tube.reduce((runs, color, i) =>
+        runs + (i > 0 && color !== tube[i - 1] ? 1 : 0), 0), 0);
+      if (score > bestScore) { best = board; bestScore = score; }
+    }
+    return best;
   }
 
   buildRandomBoard(N, K, E) {
@@ -219,7 +224,9 @@ class BallSortGame {
     visited.add(this.hashState(startVials));
 
     let nodes = 0;
+    const deadline = performance.now() + 80;
     while (queue.length > 0 && nodes < 15000) {
+      if (performance.now() > deadline) return null;
       nodes++;
       const current = queue.shift();
 
@@ -275,6 +282,8 @@ class BallSortGame {
   /* --- Game Flow --- */
 
   startNewGame() {
+    const growth = gameStorage.getItem('sortingballs_grow') === 'false' ? 0 : Math.floor((this.currentLevel - 1) / 3);
+    this.colorCount = Math.min(8, (Number(gameStorage.getItem('bs_colorCount')) || 4) + growth);
     this.boardVersion = (this.boardVersion || 0) + 1;
     this.isAnimating = false;
     this.dom.winModal.classList.add('hidden');
@@ -605,4 +614,140 @@ class BallSortGame {
 // Start the game when DOM is ready
 window.addEventListener('DOMContentLoaded', () => {
   window.game = new BallSortGame();
+});
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    const grow = document.getElementById('grow-difficulty');
+    grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false';
+    document.getElementById('btn-settings').addEventListener('click', () => { grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false'; });
+    document.getElementById('btn-apply-settings').addEventListener('click', () => {
+      try { localStorage.setItem(options.id + '_grow', String(grow.checked)); } catch (error) { this.status('Browser saving is unavailable.'); }
+    }, true);
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.game;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'sortingballs', levelKey: 'bs_currentLevel',
+    fields: 'currentLevel colorCount vialCapacity emptyVials vials initialSnapshot moveHistory moveCount extraVialsAdded',
+    actions: 'startNewGame restartLevel addExtraVial executeCascadeMove undoMove',
+    validate: s => s.currentLevel >= 1 && [3,4,5].includes(s.vialCapacity) && s.vials.length >= 4 && s.vials.every(v => Array.isArray(v) && v.length <= s.vialCapacity && v.every(c => Number.isInteger(c) && c >= 1 && c <= 8)),
+    resume: g => { g.render(); g.updateUndoButton(); g.dom.levelIndicator.textContent = `Level ${g.currentLevel}`; g.dom.btnAddVial.disabled = g.extraVialsAdded >= 2; if (g.isStateWon(g.vials, g.vialCapacity)) g.handleWin(); },
+  });
 });

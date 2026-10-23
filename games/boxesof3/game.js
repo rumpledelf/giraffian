@@ -6,9 +6,9 @@
 class BoxesOfThreeGame {
   constructor() {
     // Total boxes: 6 (2 rows of 3), 9 (3 rows of 3), 12 (4 rows of 3)
-    this.totalBoxesCount = parseInt(localStorage.getItem('boxes3_totalBoxes') || '9', 10);
-    this.currentTheme = localStorage.getItem('boxes3_theme') || 'pantry';
-    this.currentLevel = parseInt(localStorage.getItem('boxes3_level') || '1', 10);
+    this.totalBoxesCount = parseInt(gameStorage.getItem('boxes3_totalBoxes') || '9', 10);
+    this.currentTheme = gameStorage.getItem('boxes3_theme') || 'pantry';
+    this.currentLevel = parseInt(gameStorage.getItem('boxes3_level') || '1', 10);
 
     // Pantry & Shape theme dictionaries
     this.themes = {
@@ -88,8 +88,6 @@ class BoxesOfThreeGame {
     this.dom.btnUndo.addEventListener('click', () => this.undoMove());
     this.dom.btnHint.addEventListener('click', () => this.provideHint());
     this.dom.btnNew.addEventListener('click', () => {
-      this.currentLevel++;
-      localStorage.setItem('boxes3_level', this.currentLevel);
       this.startNewGame();
     });
 
@@ -104,7 +102,7 @@ class BoxesOfThreeGame {
 
     this.dom.btnThemeToggle.addEventListener('click', () => {
       this.currentTheme = this.currentTheme === 'pantry' ? 'shapes' : 'pantry';
-      localStorage.setItem('boxes3_theme', this.currentTheme);
+      gameStorage.setItem('boxes3_theme', this.currentTheme);
       this.updateThemeIcon();
       this.render();
     });
@@ -115,7 +113,7 @@ class BoxesOfThreeGame {
     });
 
     this.dom.btnSettings.addEventListener('click', () => {
-      this.dom.itemTypesSelect.value = this.totalBoxesCount;
+      this.dom.itemTypesSelect.value = Number(gameStorage.getItem('boxes3_totalBoxes')) || 9;
       this.dom.themeSelect.value = this.currentTheme;
       this.dom.settingsModal.classList.remove('hidden');
     });
@@ -128,8 +126,8 @@ class BoxesOfThreeGame {
       this.totalBoxesCount = parseInt(this.dom.itemTypesSelect.value, 10);
       this.currentTheme = this.dom.themeSelect.value;
 
-      localStorage.setItem('boxes3_totalBoxes', this.totalBoxesCount);
-      localStorage.setItem('boxes3_theme', this.currentTheme);
+      gameStorage.setItem('boxes3_totalBoxes', this.totalBoxesCount);
+      gameStorage.setItem('boxes3_theme', this.currentTheme);
 
       this.updateThemeIcon();
       this.dom.settingsModal.classList.add('hidden');
@@ -139,7 +137,7 @@ class BoxesOfThreeGame {
     this.dom.btnNextLevel.addEventListener('click', () => {
       this.dom.winModal.classList.add('hidden');
       this.currentLevel++;
-      localStorage.setItem('boxes3_level', this.currentLevel);
+      gameStorage.setItem('boxes3_level', this.currentLevel);
       this.startNewGame();
     });
 
@@ -168,6 +166,8 @@ class BoxesOfThreeGame {
   /* --- Solvable Scramble Generation with Occasional Gaps --- */
 
   startNewGame() {
+    const growth = gameStorage.getItem('boxesof3_grow') === 'false' ? 0 : Math.floor((this.currentLevel - 1) / 3);
+    this.totalBoxesCount = Math.min(12, (Number(gameStorage.getItem('boxes3_totalBoxes')) || 9) + growth * 3);
     this.boardVersion = (this.boardVersion || 0) + 1;
     this.dom.winModal.classList.add('hidden');
     this.selected = null;
@@ -615,4 +615,140 @@ class BoxesOfThreeGame {
 
 window.addEventListener('DOMContentLoaded', () => {
   window.boxesGame = new BoxesOfThreeGame();
+});
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    const grow = document.getElementById('grow-difficulty');
+    grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false';
+    document.getElementById('btn-settings').addEventListener('click', () => { grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false'; });
+    document.getElementById('btn-apply-settings').addEventListener('click', () => {
+      try { localStorage.setItem(options.id + '_grow', String(grow.checked)); } catch (error) { this.status('Browser saving is unavailable.'); }
+    }, true);
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.boxesGame;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'boxesof3', levelKey: 'boxes3_level',
+    fields: 'currentLevel totalBoxesCount currentTheme boxes initialSnapshot moveHistory moveCount boxesPacked targetPackedBoxes',
+    actions: 'startNewGame restartGame executeMove undoMove',
+    validate: s => s.currentLevel >= 1 && [6,9,12].includes(s.totalBoxesCount) && s.boxes.length === s.totalBoxesCount && s.boxes.every(b => b.items.length === 3 && b.items.every(i => i === null || (Number.isInteger(i) && i >= 1 && i <= 12))),
+    resume: g => { g.render(); g.updateUndoButton(); g.updateCounts(); g.updateThemeIcon(); g.dom.levelBadge.textContent = `Level ${g.currentLevel}`; if (g.boxesPacked >= g.targetPackedBoxes) g.handleWin(); },
+  });
 });

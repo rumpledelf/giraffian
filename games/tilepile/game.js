@@ -54,9 +54,9 @@ class TilePileGame {
     this.isAnimating = false;
     this.pendingTaps = []; // tile ids tapped while a move was animating
     this.boardVersion = 0;
-    this.level = Math.max(1, Number(localStorage.getItem('tilepile_level')) || 1);
-    this.mode = localStorage.getItem('tilepile_mode') === 'endless' ? 'endless' : 'levels';
-    this.themeKey = localStorage.getItem('tilepile_theme') || 'pantry';
+    this.level = Math.max(1, Number(gameStorage.getItem('tilepile_level')) || 1);
+    this.mode = gameStorage.getItem('tilepile_mode') === 'endless' ? 'endless' : 'levels';
+    this.themeKey = gameStorage.getItem('tilepile_theme') || 'pantry';
 
     this.themes = {
       pantry: {
@@ -170,8 +170,8 @@ class TilePileGame {
     this.dom.btnApplySettings.addEventListener('click', () => {
       this.themeKey = this.dom.themeSelect.value;
       this.mode = this.dom.modeSelect.value;
-      localStorage.setItem('tilepile_theme', this.themeKey);
-      localStorage.setItem('tilepile_mode', this.mode);
+      gameStorage.setItem('tilepile_theme', this.themeKey);
+      gameStorage.setItem('tilepile_mode', this.mode);
       this.dom.settingsModal.classList.add('hidden');
       this.updateThemeUI();
       this.newGame();
@@ -199,7 +199,7 @@ class TilePileGame {
     const keys = Object.keys(this.themes);
     const idx = keys.indexOf(this.themeKey);
     this.themeKey = keys[(idx + 1) % keys.length];
-    localStorage.setItem('tilepile_theme', this.themeKey);
+    gameStorage.setItem('tilepile_theme', this.themeKey);
     this.updateThemeUI();
     this.applyThemeSymbols();
     this.render();
@@ -216,7 +216,7 @@ class TilePileGame {
 
   nextLevel() {
     this.level++;
-    localStorage.setItem('tilepile_level', String(this.level));
+    gameStorage.setItem('tilepile_level', String(this.level));
     this.newGame();
   }
 
@@ -305,6 +305,14 @@ class TilePileGame {
       slots = [...layer0, ...layer1, ...layer2];
     }
 
+    // Each four-layout cycle adds another six-tile layer of dependencies.
+    const extraLayers = Math.min(4, Math.floor((level - 1) / 4));
+    const topLayer = Math.max(...slots.map(s => s.layer));
+    for (let layer = 1; layer <= extraLayers; layer++) {
+      for (const gy of [1, 3]) for (const gx of [3, 5, 7]) {
+        slots.push({ gx, gy, layer: topLayer + layer });
+      }
+    }
     const tripletCount = Math.floor(slots.length / 3);
     const uniqueItemCount = Math.min(4 + Math.floor((level - 1) * 0.8), this.currentTheme.items.length);
 
@@ -323,67 +331,35 @@ class TilePileGame {
 
   // Assign symbols in triplets via reverse-play simulation to guarantee solvability
   assignSolvableSymbols(slots, tripletCount, uniqueItemCount) {
-    const chosenItems = [...this.currentTheme.items];
-    for (let i = chosenItems.length - 1; i > 0; i--) {
+    const pool = [...this.currentTheme.items];
+    for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [chosenItems[i], chosenItems[j]] = [chosenItems[j], chosenItems[i]];
+      [pool[i], pool[j]] = [pool[j], pool[i]];
     }
-    const themePool = chosenItems.slice(0, uniqueItemCount);
+    const symbols = pool.slice(0, uniqueItemCount);
 
-    // Build list of symbols needed for triplets
-    const tripletSymbols = [];
-    for (let t = 0; t < tripletCount; t++) {
-      tripletSymbols.push(themePool[t % themePool.length]);
+    // First find an actual legal removal order, including tiles uncovered mid-set.
+    const remaining = [...slots];
+    const order = [];
+    while (remaining.length) {
+      const free = remaining.filter(tile => !remaining.some(other => this.tileCovers(other, tile)));
+      const tile = free[Math.floor(Math.random() * free.length)];
+      order.push(tile);
+      remaining.splice(remaining.indexOf(tile), 1);
     }
-    for (let i = tripletSymbols.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [tripletSymbols[i], tripletSymbols[j]] = [tripletSymbols[j], tripletSymbols[i]];
-    }
 
-    // Helper: does slot B cover slot A?
-    const covers = (b, a) => this.tileCovers(b, a);
-
-    let remaining = [...slots];
-    const assignments = new Map();
-
-    for (let t = 0; t < tripletCount; t++) {
-      const symbol = tripletSymbols[t];
-
-      // Slots that currently have NO remaining slot covering them
-      let freeSlots = remaining.filter(slot =>
-        !remaining.some(other => covers(other, slot))
-      );
-
-      // If fewer than 3 free slots, supplement with highest-layer available
-      if (freeSlots.length < 3) {
-        remaining.sort((a, b) => b.layer - a.layer);
-        freeSlots = remaining.slice(0, 3);
-      } else {
-        // Randomize order of candidate free slots
-        for (let i = freeSlots.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [freeSlots[i], freeSlots[j]] = [freeSlots[j], freeSlots[i]];
-        }
+    // Later levels interleave up to three sets: ABC ABC ABC. Following the
+    // removal order needs at most seven tray slots and always clears every set.
+    // Matches are no longer all handed to the player as three exposed neighbours.
+    const width = Math.min(3, 1 + Math.floor((this.level - 1) / 2));
+    let offset = 0, set = 0;
+    while (set < tripletCount) {
+      const count = Math.min(width, tripletCount - set);
+      for (let repeat = 0; repeat < 3; repeat++) {
+        for (let i = 0; i < count; i++) order[offset++].symbol = symbols[(set + i) % symbols.length];
       }
-
-      const picked = freeSlots.slice(0, 3);
-      picked.forEach(slot => {
-        assignments.set(slot, symbol);
-        const idx = remaining.indexOf(slot);
-        if (idx !== -1) remaining.splice(idx, 1);
-      });
+      set += count;
     }
-
-    // Fallback for any leftover slots
-    if (remaining.length > 0) {
-      remaining.forEach((slot, i) => {
-        assignments.set(slot, themePool[i % themePool.length]);
-      });
-    }
-
-    slots.forEach(slot => {
-      slot.symbol = assignments.get(slot) || themePool[0];
-    });
   }
 
   newGame() {
@@ -865,4 +841,134 @@ class TilePileGame {
 // Initialise when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   window.tilePileGame = new TilePileGame();
+});
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.tilePileGame;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'tilepile', levelKey: 'tilepile_level',
+    fields: 'level mode themeKey tiles tray matchesCleared movesCount history initialState',
+    actions: 'newGame restartGame nextLevel undoMove handleTileClick checkMatch tidyUpTray shuffleFreeTiles cycleTheme',
+    validate: s => s.level >= 1 && s.tiles.length > 0 && s.tray.length <= 7 && s.tiles.every(t => Number.isInteger(t.id) && Number.isFinite(t.gx) && Number.isFinite(t.gy) && typeof t.symbol === 'string') && s.tray.every(t => s.tiles.some(p => p.id === t.id)),
+    resume: g => { g.restore(g.snapshot()); g.updateThemeUI(); g.render(); if (g.tiles.every(t => t.collected) && !g.tray.length) g.handleVictory(); else if (g.tray.length >= 7) g.dom.jamModal.classList.remove('hidden'); },
+  });
 });

@@ -1,7 +1,7 @@
 <?php define("TITLE", "Pixel Unravel"); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
-<link rel="stylesheet" href="/games/pixel/style.css">
+<link rel="stylesheet" href="/games/pixel/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
 <div id="game-app">
   <!-- Header Bar -->
@@ -126,7 +126,7 @@
       </select>
     </div>
     <div class="setting-row">
-      <label for="size-select">Picture Size / Complexity:</label>
+      <label for="size-select">Starting picture size:</label>
       <select id="size-select">
         <option value="12" selected>12×12</option>
         <option value="20">20×20</option>
@@ -143,6 +143,9 @@
         <option value="fast">Fast</option>
       </select>
     </div>
+    <p><label><input type="checkbox" id="grow-difficulty" checked> Grow puzzle size as I finish levels</label></p>
+    <p id="save-status" role="status">Your board and progress are saved in this browser.</p>
+    <p class="center"><button id="btn-reset-progress" class="button grey" type="button">Reset progress</button></p>
     <div class="modal-actions">
       <button id="btn-close-settings" class="button grey">Cancel</button>
       <button id="btn-apply-settings" class="button green">Apply & New Game</button>
@@ -150,8 +153,9 @@
   </div>
 </div>
 
-<script src="/games/pixel/audio.js"></script>
+<script src="/games/pixel/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
+<script src="/games/pixel/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>
 <script src="/games/pixel/pictures.js"></script>
-<script src="/games/pixel/game.js"></script>
+<script src="/games/pixel/game.js?v=<?= filemtime(__DIR__ . '/game.js') ?>"></script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

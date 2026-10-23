@@ -1,7 +1,7 @@
 <?php define("TITLE", "Conveyor Match 3"); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
-<link rel="stylesheet" href="/games/moving3/style.css">
+<link rel="stylesheet" href="/games/moving3/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
 <div id="game-app">
   <div class="game-header">
@@ -105,7 +105,7 @@
         </select>
       </div>
       <div class="setting-row">
-        <label for="length-select">Conveyor Loop Size:</label>
+        <label for="length-select">Starting conveyor size:</label>
         <select id="length-select">
           <option value="4">4 per track (12 boxes)</option>
           <option value="5" selected>5 per track (15 boxes)</option>
@@ -119,7 +119,10 @@
           <option value="shapes">Crystals (Diamonds, Stars, Orbs)</option>
         </select>
       </div>
-      <div class="modal-actions">
+      <p><label><input type="checkbox" id="grow-difficulty" checked> Grow puzzle size as I finish levels</label></p>
+    <p id="save-status" role="status">Your board and progress are saved in this browser.</p>
+    <p class="center"><button id="btn-reset-progress" class="button grey" type="button">Reset progress</button></p>
+    <div class="modal-actions">
         <button id="btn-close-settings" class="button grey">Cancel</button>
         <button id="btn-apply-settings" class="button green">Apply & New Game</button>
       </div>
@@ -127,7 +130,8 @@
   </div>
 </div>
 
-<script src="/games/moving3/audio.js"></script>
-<script src="/games/moving3/game.js"></script>
+<script src="/games/moving3/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
+<script src="/games/moving3/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>
+<script src="/games/moving3/game.js?v=<?= filemtime(__DIR__ . '/game.js') ?>"></script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

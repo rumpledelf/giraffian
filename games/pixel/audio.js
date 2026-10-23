@@ -6,7 +6,7 @@
 class PixelAudio {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('pixel_muted') === 'true';
+    this.muted = gameStorage.getItem('pixel_muted') === 'true';
     this.noteCounter = 0;
     this.pentatonicScale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25]; // C, D, E, G, A, C, D, E
   }
@@ -25,7 +25,7 @@ class PixelAudio {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('pixel_muted', this.muted);
+    gameStorage.setItem('pixel_muted', this.muted);
     return this.muted;
   }
 

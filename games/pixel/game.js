@@ -5,11 +5,12 @@
 
 class PixelGame {
   constructor() {
+    this.level = Math.max(1, Number(gameStorage.getItem('pixel_level')) || 1);
     this.models = this.initModels();
-    this.selectedSize = parseInt(localStorage.getItem('pixel_size') || '12', 10);
-    this.difficulty = localStorage.getItem('pixel_difficulty') === 'easy' ? 'easy' : 'challenging';
+    this.selectedSize = parseInt(gameStorage.getItem('pixel_size') || '12', 10);
+    this.difficulty = gameStorage.getItem('pixel_difficulty') === 'easy' ? 'easy' : 'challenging';
     this.currentModelId = null;
-    this.speedMode = localStorage.getItem('pixel_speed') || 'normal'; // 'slow', 'normal', 'fast'
+    this.speedMode = gameStorage.getItem('pixel_speed') || 'normal'; // 'slow', 'normal', 'fast'
     
     this.gridSize = 12;
     this.grid = []; // 2D array of color keys or null
@@ -114,6 +115,8 @@ class PixelGame {
 
     this.dom.btnNextLevel.addEventListener('click', () => {
       this.dom.winModal.classList.add('hidden');
+      this.level++;
+      gameStorage.setItem('pixel_level', String(this.level));
       this.loadRandomPictureForSize(this.selectedSize);
     });
 
@@ -130,9 +133,9 @@ class PixelGame {
       this.selectedSize = parseInt(this.dom.sizeSelect.value, 10);
       this.difficulty = this.dom.difficultySelect.value;
       this.speedMode = this.dom.speedSelect.value;
-      localStorage.setItem('pixel_size', this.selectedSize);
-      localStorage.setItem('pixel_difficulty', this.difficulty);
-      localStorage.setItem('pixel_speed', this.speedMode);
+      gameStorage.setItem('pixel_size', this.selectedSize);
+      gameStorage.setItem('pixel_difficulty', this.difficulty);
+      gameStorage.setItem('pixel_speed', this.speedMode);
       this.updateSpeedButton();
       this.dom.settingsModal.classList.add('hidden');
       this.loadRandomPictureForSize(this.selectedSize);
@@ -168,7 +171,7 @@ class PixelGame {
     const modes = ['slow', 'normal', 'fast'];
     const nextIdx = (modes.indexOf(this.speedMode) + 1) % modes.length;
     this.speedMode = modes[nextIdx];
-    localStorage.setItem('pixel_speed', this.speedMode);
+    gameStorage.setItem('pixel_speed', this.speedMode);
     this.updateSpeedButton();
   }
 
@@ -198,7 +201,7 @@ class PixelGame {
   populateSettings() {
     this.dom.difficultySelect.value = this.difficulty;
     if (this.dom.sizeSelect) {
-      this.dom.sizeSelect.value = String(this.selectedSize);
+      this.dom.sizeSelect.value = gameStorage.getItem('pixel_size') || '12';
     }
     if (this.dom.speedSelect) {
       this.dom.speedSelect.value = this.speedMode;
@@ -207,7 +210,10 @@ class PixelGame {
 
   /* --- 3. Level Setup & Solvable Queue Generation --- */
   loadRandomPictureForSize(size) {
-    this.selectedSize = size || this.selectedSize || 12;
+    const sizes = [12, 20, 28, 48, 100];
+    const baseline = Number(gameStorage.getItem('pixel_size')) || 12;
+    const growth = gameStorage.getItem('pixel_grow') === 'false' ? 0 : Math.floor((this.level - 1) / 3);
+    this.selectedSize = sizes[Math.min(sizes.length - 1, Math.max(0, sizes.indexOf(baseline)) + growth)];
     const candidates = this.models.filter(m => m.size === this.selectedSize &&
       (this.difficulty === 'easy' ? m.colorCount <= 5 : m.colorCount >= 8));
     let pick = candidates[0];
@@ -231,7 +237,7 @@ class PixelGame {
     this.dom.canvas.width = pictureSize;
     this.dom.canvas.height = pictureSize;
     this.dom.orbitStage.style.setProperty('--picture-size', `${pictureSize}px`);
-    this.dom.levelBadge.textContent = `${model.size}×${model.size}: ${model.title}`;
+    this.dom.levelBadge.textContent =  `Level ${this.level}: ${model.size}×${model.size} ${model.title}`;
     this.dom.winModal.classList.add('hidden');
 
     const rawData = model.data;
@@ -770,7 +776,9 @@ class PixelGame {
     }
 
     if (remainingPixels === 0) {
+      const modelId = this.currentModelId;
       setTimeout(() => {
+        if (modelId !== this.currentModelId || this.grid.some(row => row.some(c => c !== null))) return;
         window.pixelAudio.playVictory();
         this.dom.winModal.classList.remove('hidden');
       }, 350);
@@ -1009,4 +1017,141 @@ class PixelGame {
 // Boot game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   window.pixelGame = new PixelGame();
+});
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    const grow = document.getElementById('grow-difficulty');
+    grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false';
+    document.getElementById('btn-settings').addEventListener('click', () => { grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false'; });
+    document.getElementById('btn-apply-settings').addEventListener('click', () => {
+      try { localStorage.setItem(options.id + '_grow', String(grow.checked)); } catch (error) { this.status('Browser saving is unavailable.'); }
+    }, true);
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.pixelGame;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'pixel', levelKey: 'pixel_level',
+    fields: 'level selectedSize difficulty currentModelId speedMode gridSize grid shuttleQueues stagingBays undoStack isPaused',
+    actions: 'loadRandomPictureForSize restartLevel undoMove handleQueueClick handleStagingClick swapParkedShuttle togglePause cycleSpeed',
+    validate: s => s.level >= 1 && [12,20,28,48,100].includes(s.gridSize) && s.grid.length === s.gridSize && s.grid.every(r => r.length === s.gridSize) && s.shuttleQueues.length === 5 && s.stagingBays.length === 6,
+    resume: g => { const model = g.models.find(m => m.id === g.currentModelId); if (!model || model.size !== g.gridSize) throw new Error('Missing picture'); const cellSize = {12:20,20:16,28:14,48:10,100:6}[g.gridSize]; g.dom.canvas.width = g.dom.canvas.height = g.gridSize * cellSize; g.dom.orbitStage.style.setProperty('--picture-size', `${g.dom.canvas.width}px`); g.dom.levelBadge.textContent = `Level ${g.level}: ${model.title}`; g.inFlightShuttles = []; g.launchQueue = []; g.dom.shuttlesLayer.replaceChildren(); g.initBoundaries(); g.updateSpeedButton(); g.dom.iconPause.classList.toggle('hidden', g.isPaused); g.dom.iconPlay.classList.toggle('hidden', !g.isPaused); g.render(); g.checkWinCondition(); },
+    capture: (g, s) => { s.stagingBays = g.stagingBays.map(b => b && b.remaining > 0 ? { ...b, inFlight: false } : null); },
+  });
 });

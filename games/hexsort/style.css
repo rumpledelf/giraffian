@@ -548,6 +548,10 @@ button.icon-btn svg, .icon-btn svg {
 
 /* Settings Card */
 .settings-card {
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  box-sizing: border-box;
   text-align: left;
 }
 

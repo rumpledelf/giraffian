@@ -2,7 +2,7 @@
 class SoundManager {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('ballsort_muted') === 'true';
+    this.muted = gameStorage.getItem('ballsort_muted') === 'true';
   }
 
   init() {
@@ -19,7 +19,7 @@ class SoundManager {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('ballsort_muted', this.muted);
+    gameStorage.setItem('ballsort_muted', this.muted);
     return this.muted;
   }
 

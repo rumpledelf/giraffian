@@ -110,13 +110,13 @@ const LEVEL_LAYOUT_ROTATION = [
 class HexSortGame {
   constructor() {
     this.clearThreshold = 10;
-    const savedLayout = localStorage.getItem('hexsort_layout') || 'auto';
+    const savedLayout = gameStorage.getItem('hexsort_layout') || 'auto';
     this.layoutSetting = (savedLayout === 'auto' || BOARD_LAYOUTS[savedLayout]) ? savedLayout : 'auto';
-    const savedTarget = localStorage.getItem('hexsort_target') || 'progressive';
+    const savedTarget = gameStorage.getItem('hexsort_target') || 'progressive';
     this.targetSetting = ['60', 'progressive', '150', '250'].includes(savedTarget) ? savedTarget : 'progressive';
-    this.mode = localStorage.getItem('hexsort_mode') === 'endless' ? 'endless' : 'levels';
-    this.level = Math.max(1, Number(localStorage.getItem('hexsort_level')) || 1);
-    this.endlessCleared = Math.max(0, Number(localStorage.getItem('hexsort_endless_cleared')) || 0);
+    this.mode = gameStorage.getItem('hexsort_mode') === 'endless' ? 'endless' : 'levels';
+    this.level = Math.max(1, Number(gameStorage.getItem('hexsort_level')) || 1);
+    this.endlessCleared = Math.max(0, Number(gameStorage.getItem('hexsort_endless_cleared')) || 0);
 
     this.audio = new window.HexSortAudio();
     this.coords = [];
@@ -208,9 +208,9 @@ class HexSortGame {
       this.layoutSetting = this.dom['layout-select'].value;
       this.targetSetting = this.dom['target-select'].value;
       this.mode = this.dom['mode-select'].value;
-      localStorage.setItem('hexsort_layout', this.layoutSetting);
-      localStorage.setItem('hexsort_target', this.targetSetting);
-      localStorage.setItem('hexsort_mode', this.mode);
+      gameStorage.setItem('hexsort_layout', this.layoutSetting);
+      gameStorage.setItem('hexsort_target', this.targetSetting);
+      gameStorage.setItem('hexsort_mode', this.mode);
       this.dom['settings-modal'].classList.add('hidden');
       this.newGame();
     });
@@ -297,7 +297,7 @@ class HexSortGame {
     this.stacksCleared = state.stacksCleared;
     this.endlessCleared = state.endlessCleared;
     if (this.mode === 'endless') {
-      localStorage.setItem('hexsort_endless_cleared', String(this.endlessCleared));
+      gameStorage.setItem('hexsort_endless_cleared', String(this.endlessCleared));
     }
   }
 
@@ -415,7 +415,7 @@ class HexSortGame {
 
   nextLevel() {
     this.level++;
-    localStorage.setItem('hexsort_level', String(this.level));
+    gameStorage.setItem('hexsort_level', String(this.level));
     this.newGame();
   }
 
@@ -1036,7 +1036,7 @@ class HexSortGame {
           this.tilesCleared += 1;
           if (this.mode === 'endless') {
             this.endlessCleared += 1;
-            localStorage.setItem('hexsort_endless_cleared', String(this.endlessCleared));
+            gameStorage.setItem('hexsort_endless_cleared', String(this.endlessCleared));
           }
 
           currStackEl.replaceChildren();
@@ -1151,4 +1151,134 @@ class HexSortGame {
 
 window.addEventListener('DOMContentLoaded', () => {
   window.hexSortGame = new HexSortGame();
+});
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.hexSortGame;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'hexsort', levelKey: 'hexsort_level',
+    fields: 'level mode layoutSetting targetSetting cells tray tilesCleared stacksCleared endlessCleared history initialState',
+    actions: 'newGame restartGame nextLevel undoMove placeTrayStack settle shuffleTray',
+    validate: s => s.level >= 1 && s.tray.length === 3 && s.cells.length > 0 && s.cells.every(v => Array.isArray(v) && v.every(c => Number.isInteger(c) && c >= 0 && c < HEX_COLORS.length)),
+    resume: g => { g.buildGridTopology(); if (g.cells.length !== g.coords.length) throw new Error('Wrong board shape'); g.render(); if (g.mode === 'levels' && g.tilesCleared >= g.targetTiles) { g.dom['win-stats'].textContent = `${g.tilesCleared} tiles cleared · ${g.stacksCleared} stacks`; g.dom['win-modal'].classList.remove('hidden'); g.isAnimating = true; } else if (g.cells.every(s => s.length)) g.dom['jam-modal'].classList.remove('hidden'); },
+  });
 });

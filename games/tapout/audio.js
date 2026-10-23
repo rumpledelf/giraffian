@@ -6,7 +6,7 @@
 class TapOutAudio {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('tapout_muted') === 'true';
+    this.muted = gameStorage.getItem('tapout_muted') === 'true';
     this.whooshIndex = 0;
     this.pentatonic = [329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99]; // E4, G4, A4, C5, D5, E5, G5
   }
@@ -25,7 +25,7 @@ class TapOutAudio {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('tapout_muted', this.muted);
+    gameStorage.setItem('tapout_muted', this.muted);
     return this.muted;
   }
 

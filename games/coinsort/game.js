@@ -4,10 +4,10 @@ class CoinSortGame {
     this.capacity = 10;
     this.tiers = 8; // one per --coin-N colour, lowest to highest
     this.slotOptions = [6, 8, 10];
-    const slots = Number(localStorage.getItem('coinsort_slots')) || 8;
+    const slots = Number(gameStorage.getItem('coinsort_slots')) || 8;
     this.slotCount = this.slotOptions.includes(slots) ? slots : 8;
-    this.mode = localStorage.getItem('coinsort_mode') === 'endless' ? 'endless' : 'levels';
-    this.level = Math.max(1, Number(localStorage.getItem('coinsort_level')) || 1);
+    this.mode = gameStorage.getItem('coinsort_mode') === 'endless' ? 'endless' : 'levels';
+    this.level = Math.max(1, Number(gameStorage.getItem('coinsort_level')) || 1);
     this.audio = new window.CoinsortAudio();
     this.slots = [];
     this.best = 1;
@@ -35,7 +35,7 @@ class CoinSortGame {
 
   // Deals draw from the three colours up to the best one made so far
   get dealRange() {
-    return { lo: Math.max(0, this.best - 2), hi: this.best };
+    return { lo: Math.max(0, this.best - Math.min(4, 2 + Math.floor((this.level - 1) / 3))), hi: this.best };
   }
 
   bindEvents() {
@@ -57,8 +57,8 @@ class CoinSortGame {
     this.dom['btn-apply-settings'].addEventListener('click', () => {
       this.slotCount = Number(this.dom['slots-select'].value);
       this.mode = this.dom['mode-select'].value;
-      localStorage.setItem('coinsort_slots', String(this.slotCount));
-      localStorage.setItem('coinsort_mode', this.mode);
+      gameStorage.setItem('coinsort_slots', String(this.slotCount));
+      gameStorage.setItem('coinsort_mode', this.mode);
       this.dom['settings-modal'].classList.add('hidden');
       this.newGame();
     });
@@ -147,7 +147,7 @@ class CoinSortGame {
 
   nextLevel() {
     this.level++;
-    localStorage.setItem('coinsort_level', String(this.level));
+    gameStorage.setItem('coinsort_level', String(this.level));
     this.newGame();
   }
 
@@ -407,3 +407,133 @@ class CoinSortGame {
 }
 
 window.addEventListener('DOMContentLoaded', () => { window.coinSortGame = new CoinSortGame(); });
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.coinSortGame;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'coinsort', levelKey: 'coinsort_level',
+    fields: 'level mode slotCount slots best banked history initialState',
+    actions: 'newGame restartGame nextLevel undoMove handleSlotTap deal tidyUp',
+    validate: s => s.level >= 1 && [6,8,10].includes(s.slotCount) && s.slots.length === s.slotCount && s.slots.every(v => v.length <= 10 && v.every(c => Number.isInteger(c) && c >= 0 && c < 8)),
+    resume: g => { g.render(); if (g.mode === 'levels' && g.best >= g.goalTier) { g.paintCoin(g.dom['win-coin'], g.best); g.dom['win-modal'].classList.remove('hidden'); g.isAnimating = true; } else if (g.slots.every(s => s.length === 10)) g.showJam(); },
+  });
+});

@@ -11,11 +11,11 @@ class TapOutGame {
   constructor() {
     this.audio = new window.TapOutAudio();
     const urlParams = new URLSearchParams(window.location.search);
-    this.gridSize = parseInt(urlParams.get('size') || localStorage.getItem('tapout_grid_size') || '6', 10);
-    const requestedMode = urlParams.get('mode') || localStorage.getItem('tapout_shape_mode') || 'rectangles';
+    this.gridSize = parseInt(urlParams.get('size') || gameStorage.getItem('tapout_grid_size') || '6', 10);
+    const requestedMode = urlParams.get('mode') || gameStorage.getItem('tapout_shape_mode') || 'rectangles';
     this.shapeMode = requestedMode === 'squares' ? 'squares' : 'rectangles';
-    if (requestedMode === 'corners') localStorage.setItem('tapout_shape_mode', 'rectangles');
-    this.level = parseInt(localStorage.getItem('tapout_level') || '1', 10);
+    if (requestedMode === 'corners') gameStorage.setItem('tapout_shape_mode', 'rectangles');
+    this.level = parseInt(gameStorage.getItem('tapout_level') || '1', 10);
     this.grid = []; // gridSize x gridSize, holds pieceId or null
     this.pieces = new Map(); // pieceId -> { id, cells: [{r, c}], dir: 'up'|'down'|'left'|'right', color: string }
     this.undoStack = [];
@@ -76,7 +76,7 @@ class TapOutGame {
 
     // Settings
     this.dom.btnSettings.addEventListener('click', () => {
-      this.dom.sizeSelect.value = String(this.gridSize);
+      this.dom.sizeSelect.value = gameStorage.getItem('tapout_grid_size') || '6';
       if (this.dom.shapeSelect) {
         this.dom.shapeSelect.value = this.shapeMode;
       }
@@ -98,8 +98,8 @@ class TapOutGame {
       if (this.dom.shapeSelect) {
         this.shapeMode = this.dom.shapeSelect.value;
       }
-      localStorage.setItem('tapout_grid_size', String(this.gridSize));
-      localStorage.setItem('tapout_shape_mode', this.shapeMode);
+      gameStorage.setItem('tapout_grid_size', String(this.gridSize));
+      gameStorage.setItem('tapout_shape_mode', this.shapeMode);
       this.dom.settingsModal.classList.add('hidden');
       this.newGame();
     });
@@ -109,15 +109,13 @@ class TapOutGame {
     this.dom.btnUndo.addEventListener('click', () => this.undoMove());
     this.dom.btnHint.addEventListener('click', () => this.giveHint());
     this.dom.btnNew.addEventListener('click', () => {
-      this.level++;
-      localStorage.setItem('tapout_level', String(this.level));
       this.newGame();
     });
 
     this.dom.btnNextLevel.addEventListener('click', () => {
       this.dom.winModal.classList.add('hidden');
       this.level++;
-      localStorage.setItem('tapout_level', String(this.level));
+      gameStorage.setItem('tapout_level', String(this.level));
       this.newGame();
     });
 
@@ -343,6 +341,8 @@ class TapOutGame {
   }
 
   newGame() {
+    const growth = gameStorage.getItem('tapout_grow') === 'false' ? 0 : Math.floor((this.level - 1) / 3);
+    this.gridSize = Math.min(12, (Number(new URLSearchParams(location.search).get('size') || gameStorage.getItem('tapout_grid_size')) || 6) + growth * 2);
     this.boardVersion++;
     this.isAnimating = false;
     this.cancelPendingWin();
@@ -753,4 +753,140 @@ class TapOutGame {
 // Auto-boot on load
 window.addEventListener('DOMContentLoaded', () => {
   window.game = new TapOutGame();
+});
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    const grow = document.getElementById('grow-difficulty');
+    grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false';
+    document.getElementById('btn-settings').addEventListener('click', () => { grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false'; });
+    document.getElementById('btn-apply-settings').addEventListener('click', () => {
+      try { localStorage.setItem(options.id + '_grow', String(grow.checked)); } catch (error) { this.status('Browser saving is unavailable.'); }
+    }, true);
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.game;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'tapout', levelKey: 'tapout_level',
+    fields: 'level gridSize shapeMode grid pieces initialGridState initialPiecesState undoStack moveCount',
+    actions: 'newGame restartGame undoMove handlePieceTap',
+    validate: s => s.level >= 1 && [4,6,8,10,12].includes(s.gridSize) && s.grid.length === s.gridSize && s.grid.every(r => r.length === s.gridSize) && [...s.pieces.values()].every(p => p.cells.length && p.cells.every(c => c.r >= 0 && c.c >= 0 && c.r < s.gridSize && c.c < s.gridSize)),
+    resume: g => { g.renderBoard(); g.updateStats(); g.dom.levelBadge.textContent = `Level ${g.level}: ${g.gridSize}×${g.gridSize}`; g.checkWinCondition(); },
+  });
 });

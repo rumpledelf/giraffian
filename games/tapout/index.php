@@ -76,7 +76,7 @@
   <div class="modal-card settings-card">
     <h2>Tap Out Settings</h2>
     <div class="setting-row">
-      <label for="size-select">Grid Size:</label>
+      <label for="size-select">Starting grid size:</label>
       <select id="size-select">
         <option value="4">4×4</option>
         <option value="6" selected>6×6</option>
@@ -92,6 +92,9 @@
         <option value="rectangles" selected>Cars & planks (1×2, 1×3)</option>
       </select>
     </div>
+    <p><label><input type="checkbox" id="grow-difficulty" checked> Grow puzzle size as I finish levels</label></p>
+    <p id="save-status" role="status">Your board and progress are saved in this browser.</p>
+    <p class="center"><button id="btn-reset-progress" class="button grey" type="button">Reset progress</button></p>
     <div class="modal-actions">
       <button id="btn-close-settings" class="button grey">Cancel</button>
       <button id="btn-apply-settings" class="button green">Apply & New Game</button>
@@ -99,6 +102,7 @@
   </div>
 </div>
 
+<script src="/games/tapout/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/tapout/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>
 <script src="/games/tapout/game.js?v=<?= filemtime(__DIR__ . '/game.js') ?>"></script>
 

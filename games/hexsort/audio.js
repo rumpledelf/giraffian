@@ -6,7 +6,7 @@
 class HexSortAudio {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('hexsort_muted') === 'true';
+    this.muted = gameStorage.getItem('hexsort_muted') === 'true';
   }
 
   init() {
@@ -23,7 +23,7 @@ class HexSortAudio {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('hexsort_muted', this.muted);
+    gameStorage.setItem('hexsort_muted', this.muted);
     return this.muted;
   }
 

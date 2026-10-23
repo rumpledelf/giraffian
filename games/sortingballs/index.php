@@ -1,7 +1,7 @@
 <?php define("TITLE", "Ball Sort"); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
-<link rel="stylesheet" href="/games/sortingballs/style.css">
+<link rel="stylesheet" href="/games/sortingballs/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
 <div id="game-app">
   <div class="game-header">
@@ -61,7 +61,7 @@
     <div class="modal-card settings-card">
       <h2>Customise Puzzle</h2>
       <div class="setting-row">
-        <label for="color-count-select">Colours / Filled Tubes:</label>
+        <label for="color-count-select">Starting colours / filled tubes:</label>
         <select id="color-count-select">
           <option value="3">3</option>
           <option value="4" selected>4</option>
@@ -87,7 +87,10 @@
           <option value="3">3 spares</option>
         </select>
       </div>
-      <div class="modal-actions">
+      <p><label><input type="checkbox" id="grow-difficulty" checked> Grow puzzle size as I finish levels</label></p>
+    <p id="save-status" role="status">Your board and progress are saved in this browser.</p>
+    <p class="center"><button id="btn-reset-progress" class="button grey" type="button">Reset progress</button></p>
+    <div class="modal-actions">
         <button id="btn-close-settings" class="button grey">Cancel</button>
         <button id="btn-apply-settings" class="button green">Apply & New Game</button>
       </div>
@@ -95,7 +98,8 @@
   </div>
 </div>
 
-<script src="/games/sortingballs/audio.js"></script>
-<script src="/games/sortingballs/game.js"></script>
+<script src="/games/sortingballs/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
+<script src="/games/sortingballs/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>
+<script src="/games/sortingballs/game.js?v=<?= filemtime(__DIR__ . '/game.js') ?>"></script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

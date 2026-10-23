@@ -2,9 +2,9 @@
 class ArrowsGame {
   constructor() {
     this.sizes = [6, 8, 10, 12, 16];
-    const requested = Number(new URLSearchParams(location.search).get('size') || localStorage.getItem('arrows_size') || 10);
+    const requested = Number(new URLSearchParams(location.search).get('size') || gameStorage.getItem('arrows_size') || 10);
     this.gridSize = this.sizes.includes(requested) ? requested : 10;
-    this.level = Math.max(1, Number(localStorage.getItem('arrows_level')) || 1);
+    this.level = Math.max(1, Number(gameStorage.getItem('arrows_level')) || 1);
     this.audio = new window.ArrowsAudio();
     this.paths = new Map();
     this.grid = [];
@@ -118,20 +118,20 @@ class ArrowsGame {
   }
 
   bindEvents() {
-    this.dom['btn-new'].addEventListener('click', () => this.nextGame());
+    this.dom['btn-new'].addEventListener('click', () => this.newGame());
     this.dom['btn-next-level'].addEventListener('click', () => this.nextGame());
     this.dom['btn-restart'].addEventListener('click', () => this.restartGame());
     this.dom['btn-undo'].addEventListener('click', () => this.undoMove());
     this.dom['btn-hint'].addEventListener('click', () => this.giveHint());
     this.dom['btn-sound'].addEventListener('click', () => { this.audio.toggleMute(); this.updateSoundIcons(); });
     this.dom['btn-settings'].addEventListener('click', () => {
-      this.dom['size-select'].value = String(this.gridSize);
+      this.dom['size-select'].value = gameStorage.getItem('arrows_size') || '10';
       this.dom['settings-modal'].classList.remove('hidden');
     });
     this.dom['btn-close-settings'].addEventListener('click', () => this.dom['settings-modal'].classList.add('hidden'));
     this.dom['btn-apply-settings'].addEventListener('click', () => {
       this.gridSize = Number(this.dom['size-select'].value);
-      localStorage.setItem('arrows_size', String(this.gridSize));
+      gameStorage.setItem('arrows_size', String(this.gridSize));
       this.dom['settings-modal'].classList.add('hidden');
       this.newGame();
     });
@@ -174,11 +174,13 @@ class ArrowsGame {
 
   nextGame() {
     this.level++;
-    localStorage.setItem('arrows_level', String(this.level));
+    gameStorage.setItem('arrows_level', String(this.level));
     this.newGame();
   }
 
   newGame() {
+    const growth = gameStorage.getItem('arrows_grow') === 'false' ? 0 : Math.floor((this.level - 1) / 3);
+    const baseline = Number(new URLSearchParams(location.search).get('size') || gameStorage.getItem('arrows_size')) || 10; this.gridSize = this.sizes[Math.min(this.sizes.length - 1, Math.max(0, this.sizes.indexOf(baseline)) + growth)];
     this.cancelAnimation();
     const { grid, paths } = this.generatePuzzle(this.gridSize);
     this.grid = grid;
@@ -452,3 +454,139 @@ class ArrowsGame {
 }
 
 window.addEventListener('DOMContentLoaded', () => { window.arrowsGame = new ArrowsGame(); });
+
+
+/** Versioned, per-game browser checkpoint. Never serialize DOM or animation objects. */
+class BrowserCheckpoint {
+  constructor(game, options) {
+    this.game = game;
+    this.options = options;
+    this.key = 'giraffian_' + options.id + '_save_v1';
+    this.pending = 0;
+    this.restoring = false;
+    const fresh = this.encode();
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) {
+        if (raw.length > 4000000) throw new Error('Checkpoint too large');
+        const saved = JSON.parse(raw, BrowserCheckpoint.revive);
+        if (saved.version !== 1 || !this.valid(saved.state)) throw new Error('Invalid checkpoint');
+        this.apply(saved.state);
+      }
+    } catch (error) {
+      this.apply(JSON.parse(fresh, BrowserCheckpoint.revive).state);
+    }
+    for (const name of options.actions.split(' ')) {
+      if (typeof game[name] !== 'function') continue;
+      const original = game[name].bind(game);
+      game[name] = (...args) => {
+        this.save(); // Keep the last complete move if the page dies mid-animation.
+        this.pending++;
+        let result;
+        try { result = original(...args); }
+        catch (error) { this.pending--; throw error; }
+        if (result && typeof result.then === 'function') {
+          return result.finally(() => { this.pending--; this.save(); });
+        }
+        this.pending--;
+        this.save();
+        return result;
+      };
+    }
+    const grow = document.getElementById('grow-difficulty');
+    grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false';
+    document.getElementById('btn-settings').addEventListener('click', () => { grow.checked = gameStorage.getItem(options.id + '_grow') !== 'false'; });
+    document.getElementById('btn-apply-settings').addEventListener('click', () => {
+      try { localStorage.setItem(options.id + '_grow', String(grow.checked)); } catch (error) { this.status('Browser saving is unavailable.'); }
+    }, true);
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('Reset this game to level 1 and discard its saved board? Your other games are kept.')) return;
+      this.suspended = true;
+      // Reload cancels every old animation and timer before starting the fresh board.
+      try {
+        localStorage.removeItem(this.key);
+        localStorage.setItem(options.levelKey, '1');
+        if (options.id === 'hexsort') localStorage.removeItem('hexsort_endless_cleared');
+      } catch (error) { this.suspended = false; this.status('Browser saving is unavailable.'); return; }
+      location.reload();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.save(); });
+    window.addEventListener('pagehide', () => this.save());
+    // Also captures continuous play, pause/speed changes and delayed completion dialogs.
+    setInterval(() => this.save(), 1000);
+    this.save();
+  }
+
+  static replace(key, value) {
+    if (value instanceof Map) return { checkpointMap: [...value] };
+    return value;
+  }
+
+  static revive(key, value) {
+    if (value && Array.isArray(value.checkpointMap)) return new Map(value.checkpointMap);
+    return value;
+  }
+
+  encode() {
+    const state = {};
+    for (const field of this.options.fields.split(' ')) state[field] = this.game[field];
+    if (this.options.capture) this.options.capture(this.game, state);
+    return JSON.stringify({ version: 1, state }, BrowserCheckpoint.replace);
+  }
+
+  valid(state) {
+    if (!state || typeof state !== 'object') return false;
+    const safe = value => {
+      if (value === null || typeof value === 'boolean' || typeof value === 'string') return true;
+      if (typeof value === 'number') return Number.isFinite(value);
+      if (value instanceof Map) return [...value].every(pair => pair.every(safe));
+      if (Array.isArray(value)) return value.length <= 10000 && value.every(safe);
+      return typeof value === 'object' && Object.entries(value).every(([key, v]) => !['__proto__', 'constructor', 'prototype'].includes(key) && safe(v));
+    };
+    if (!safe(state)) return false;
+    for (const field of this.options.fields.split(' ')) {
+      const value = state[field], example = this.game[field];
+      if (value === undefined || typeof value !== typeof example) return false;
+      if (typeof value === 'number' && (!Number.isFinite(value) || value < 0)) return false;
+      if (Array.isArray(example) && !Array.isArray(value)) return false;
+      if (example instanceof Map && !(value instanceof Map)) return false;
+    }
+    return this.options.validate(state);
+  }
+
+  apply(state) {
+    this.restoring = true;
+    for (const field of this.options.fields.split(' ')) this.game[field] = state[field];
+    try { this.options.resume(this.game); }
+    finally { this.restoring = false; }
+  }
+
+  status(message) {
+    document.getElementById('save-status').textContent = message;
+  }
+
+  save() {
+    if (this.pending || this.restoring || this.suspended) return;
+    try {
+      const encoded = this.encode();
+      if (encoded !== this.lastSaved) {
+        localStorage.setItem(this.key, encoded);
+        this.lastSaved = encoded;
+      }
+      this.status('Your board and progress are saved in this browser.');
+    } catch (error) {
+      this.status('This browser could not save your game. Keep this page open to keep playing.');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const game = window.arrowsGame;
+  game.checkpoint = new BrowserCheckpoint(game, {
+    id: 'arrows', levelKey: 'arrows_level',
+    fields: 'level gridSize grid paths initialPaths history moves',
+    actions: 'newGame restartGame nextGame undoMove handlePathTap',
+    validate: s => s.level >= 1 && [6,8,10,12,16].includes(s.gridSize) && s.grid.length === s.gridSize && s.grid.every(r => r.length === s.gridSize) && [...s.paths.values()].every(p => p.cells.length && p.cells.every(c => c.r >= 0 && c.c >= 0 && c.r < s.gridSize && c.c < s.gridSize)),
+    resume: g => { g.render(); g.checkWinCondition(); },
+  });
+});

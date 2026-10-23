@@ -6,7 +6,7 @@
 class TilepileAudio {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('tilepile_muted') === 'true';
+    this.muted = gameStorage.getItem('tilepile_muted') === 'true';
   }
 
   init() {
@@ -23,7 +23,7 @@ class TilepileAudio {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('tilepile_muted', this.muted);
+    gameStorage.setItem('tilepile_muted', this.muted);
     return this.muted;
   }
 

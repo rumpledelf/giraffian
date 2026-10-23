@@ -2,7 +2,7 @@
 class ConveyorSoundManager {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('moving3_muted') === 'true';
+    this.muted = gameStorage.getItem('moving3_muted') === 'true';
   }
 
   init() {
@@ -17,7 +17,7 @@ class ConveyorSoundManager {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('moving3_muted', this.muted);
+    gameStorage.setItem('moving3_muted', this.muted);
     return this.muted;
   }
 

@@ -6,7 +6,7 @@
 class CoinsortAudio {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('coinsort_muted') === 'true';
+    this.muted = gameStorage.getItem('coinsort_muted') === 'true';
   }
 
   init() {
@@ -23,7 +23,7 @@ class CoinsortAudio {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('coinsort_muted', this.muted);
+    gameStorage.setItem('coinsort_muted', this.muted);
     return this.muted;
   }
 

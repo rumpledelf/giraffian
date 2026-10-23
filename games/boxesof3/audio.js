@@ -2,7 +2,7 @@
 class PantrySoundManager {
   constructor() {
     this.ctx = null;
-    this.muted = localStorage.getItem('boxes3_muted') === 'true';
+    this.muted = gameStorage.getItem('boxes3_muted') === 'true';
   }
 
   init() {
@@ -19,7 +19,7 @@ class PantrySoundManager {
 
   toggleMute() {
     this.muted = !this.muted;
-    localStorage.setItem('boxes3_muted', this.muted);
+    gameStorage.setItem('boxes3_muted', this.muted);
     return this.muted;
   }
 
