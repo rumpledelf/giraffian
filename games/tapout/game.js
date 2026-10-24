@@ -23,7 +23,7 @@ class TapOutGame {
     this.isAnimating = false;
     this.boardVersion = 0;
     this.winTimer = null;
-    this.colors = ['#82dee6', '#f7e55f', '#ec8d6f', '#589a56', '#dcb0ed', '#3a7ede'];
+    this.colors = ['#ad4242', '#82dee6', '#f7e55f', '#589a56', '#3a7ede', '#ec8d6f', '#dcb0ed'];
 
     this.dom = {
       app: document.getElementById('game-app'),

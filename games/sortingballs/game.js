@@ -31,6 +31,8 @@ class BallSortGame {
       winModal: document.getElementById('win-modal'),
       winStats: document.getElementById('win-stats'),
       btnNextLevel: document.getElementById('btn-next-level'),
+      vialsCompletedCount: document.getElementById('vials-completed-count'),
+      movesCount: document.getElementById('moves-count'),
       settingsModal: document.getElementById('settings-modal'),
       btnApplySettings: document.getElementById('btn-apply-settings'),
       btnCloseSettings: document.getElementById('btn-close-settings'),
@@ -55,6 +57,16 @@ class BallSortGame {
     this.dom.btnSound.addEventListener('click', () => {
       const isMuted = window.soundManager.toggleMute();
       this.updateSoundIcons();
+    });
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (this.vials && this.vials.length > 0 && !this.isAnimating) {
+          this.render();
+        }
+      }, 100);
     });
 
     this.dom.btnSettings.addEventListener('click', () => {
@@ -117,25 +129,44 @@ class BallSortGame {
     const K = this.vialCapacity;
     const N = this.colorCount;
     const E = this.emptyVials;
+    const level = this.currentLevel || 1;
 
-    // Try generating with fast BFS validation to guarantee a non-trivial, solvable level
+    // Minimum solution depth scales with level (shorter puzzles on early levels, deeper on high levels)
+    const minSolutionDepth = Math.min(50, Math.max(5, (N * 2) + Math.floor(level * 1.2)));
+
+    // Try generating with fast BFS validation for smaller configurations
     let attempts = 0;
-    while (attempts < 3) {
+    const bfsAttempts = N <= 8 && K <= 5 ? 4 : 0;
+    while (attempts < bfsAttempts) {
       attempts++;
       const candidateVials = this.buildRandomBoard(N, K, E);
-      const solution = this.solveBFS(candidateVials, K, 60); // max depth 60
-      if (solution && solution.length >= Math.max(5, N * 2)) {
+      const solution = this.solveBFS(candidateVials, K, 65);
+      if (solution && solution.length >= minSolutionDepth) {
         return candidateVials;
       }
     }
 
-    // Fallback: reverse-walk generation from solved state if BFS generator timed out
-    let best = null, bestScore = -1;
-    for (let attempt = 0; attempt < 12; attempt++) {
-      const board = this.generateByReverseWalk(N, K, E);
-      const score = board.reduce((sum, tube) => sum + tube.reduce((runs, color, i) =>
+    // Reverse-walk generator from solved state with entropy scaling:
+    // Early levels (1-3) leave gentle 2-ball runs for accessible opening moves.
+    // High levels (10+) demand maximum color fragmentation (no matching neighbors).
+    const maxPossibleSwitches = N * (K - 1);
+    const targetEntropy = Math.min(0.96, 0.52 + (level - 1) * 0.045);
+    const targetScore = Math.round(maxPossibleSwitches * targetEntropy);
+    const scrambleMultiplier = Math.min(10, 3 + Math.floor(level * 0.6));
+
+    let best = null, bestDiff = Infinity;
+    for (let attempt = 0; attempt < 16; attempt++) {
+      const board = this.generateByReverseWalk(N, K, E, scrambleMultiplier);
+      const switches = board.reduce((sum, tube) => sum + tube.reduce((runs, color, i) =>
         runs + (i > 0 && color !== tube[i - 1] ? 1 : 0), 0), 0);
-      if (score > bestScore) { best = board; bestScore = score; }
+
+      // On high levels, we want maximum switches (high entropy)
+      const diff = level >= 8 ? (maxPossibleSwitches - switches) : Math.abs(switches - targetScore);
+      if (diff < bestDiff) {
+        best = board;
+        bestDiff = diff;
+        if (diff <= 1) break;
+      }
     }
     return best;
   }
@@ -163,7 +194,7 @@ class BallSortGame {
     return vials;
   }
 
-  generateByReverseWalk(N, K, E) {
+  generateByReverseWalk(N, K, E, scrambleMultiplier = 4) {
     const vials = [];
     for (let c = 1; c <= N; c++) {
       const tube = [];
@@ -172,7 +203,7 @@ class BallSortGame {
     }
     for (let i = 0; i < E; i++) vials.push([]);
 
-    const steps = N * K * 4;
+    const steps = N * K * scrambleMultiplier;
     for (let s = 0; s < steps; s++) {
       // Every scramble step must undo as exactly one legal cascade move.
       // Leave the same colour exposed in the source (or leave it empty),
@@ -283,7 +314,7 @@ class BallSortGame {
 
   startNewGame() {
     const growth = gameStorage.getItem('sortingballs_grow') === 'false' ? 0 : Math.floor((this.currentLevel - 1) / 3);
-    this.colorCount = Math.min(8, (Number(gameStorage.getItem('bs_colorCount')) || 4) + growth);
+    this.colorCount = Math.min(16, (Number(gameStorage.getItem('bs_colorCount')) || 4) + growth);
     this.boardVersion = (this.boardVersion || 0) + 1;
     this.isAnimating = false;
     this.dom.winModal.classList.add('hidden');
@@ -323,47 +354,127 @@ class BallSortGame {
     this.render();
   }
 
-  /* --- Render UI --- */
+  /* --- Render UI & Viewport-Fitted Rows --- */
+
+  getAvailableWidth() {
+    const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+    const appEl = isBrowser ? (document.getElementById('game-app') || document.body) : null;
+    return isBrowser && window.innerWidth
+      ? Math.min(840, Math.max(240, (appEl?.clientWidth || window.innerWidth) - 24))
+      : 640;
+  }
+
+  calculateRowDistribution(totalVials) {
+    // Two balanced rows, or more when two rows of minimum-width tubes would overflow
+    const minVialWidth = 28, minGap = 16; // Widest gap used for rows of 7–8
+    const maxPerRow = Math.max(1, Math.floor((this.getAvailableWidth() + minGap) / (minVialWidth + minGap)));
+    const rowCount = Math.max(2, Math.ceil(totalVials / maxPerRow));
+    const perRow = Math.ceil(totalVials / rowCount);
+    const rows = [];
+    for (let left = totalVials; left > 0; left -= perRow) rows.push(Math.min(perRow, left));
+    return rows;
+  }
+
+  calculateTubeDimensions(maxInRow, capacity, rowCount = 2) {
+    const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+    const availableWidth = this.getAvailableWidth();
+
+    const vh = isBrowser && window.innerHeight ? window.innerHeight : 720;
+    // Estimated fixed UI overhead (header, instructions, status bar, toolbar, padding)
+    const availableHeight = Math.max(260, vh - 220);
+    const maxRowHeight = Math.floor((availableHeight - 20) / rowCount);
+
+    // Ensure generous gap between vials so rims (which overhang by 3px on each side) never collide
+    const gap = maxInRow >= 9 ? 14 : (maxInRow >= 7 ? 16 : 18);
+    const widthFromHorizontal = Math.floor((availableWidth - (gap * (maxInRow - 1))) / maxInRow);
+
+    // Headroom at top of tube so the top ball sits well below the rim
+    const tubeHeadroom = 18;
+    const maxBallStepFromVertical = Math.floor((maxRowHeight - tubeHeadroom - 12) / capacity);
+    const widthFromVertical = (maxBallStepFromVertical - 3) + 12;
+
+    // Constrain width so it never overflows horizontally OR vertically
+    const vialWidth = Math.max(28, Math.min(54, widthFromHorizontal, widthFromVertical));
+    const vialPadding = Math.max(3, Math.min(5, Math.round(vialWidth * 0.1)));
+    const ballSize = vialWidth - (vialPadding * 2);
+    const ballStep = ballSize + 3;
+    const vialHeight = (capacity * ballStep) + (vialPadding * 2) + tubeHeadroom;
+    const rowGap = Math.max(14, Math.min(24, Math.round(ballSize * 0.5)));
+
+    this.lastBallSize = ballSize;
+    this.lastVialPadding = vialPadding;
+    this.lastBallStep = ballStep;
+
+    return { ballSize, vialWidth, vialPadding, vialHeight, vialGap: gap, rowGap };
+  }
+
+  updateStats() {
+    if (this.dom.movesCount) {
+      this.dom.movesCount.textContent = this.moveCount;
+    }
+    if (this.dom.vialsCompletedCount) {
+      const completed = this.vials.filter(v => v.length === this.vialCapacity && v.every(b => b === v[0])).length;
+      this.dom.vialsCompletedCount.textContent = `${completed} / ${this.colorCount}`;
+    }
+  }
 
   render() {
     this.dom.grid.innerHTML = '';
+    const totalVials = this.vials.length;
+    if (totalVials === 0) return;
 
-    // Adjust tube height according to capacity
-    const vialHeight = (this.vialCapacity * 54) + 36;
+    const rowCounts = this.calculateRowDistribution(totalVials);
+    const maxInRow = Math.max(...rowCounts);
+    const dims = this.calculateTubeDimensions(maxInRow, this.vialCapacity, rowCounts.length);
 
-    this.vials.forEach((tube, idx) => {
-      const vialEl = document.createElement('div');
-      vialEl.className = 'vial';
-      vialEl.style.height = `${vialHeight}px`;
-      vialEl.dataset.index = idx;
+    this.dom.grid.style.setProperty('--ball-size', `${dims.ballSize}px`);
+    this.dom.grid.style.setProperty('--vial-width', `${dims.vialWidth}px`);
+    this.dom.grid.style.setProperty('--vial-padding', `${dims.vialPadding}px`);
+    this.dom.grid.style.setProperty('--vial-gap', `${dims.vialGap}px`);
+    this.dom.grid.style.setProperty('--row-gap', `${dims.rowGap}px`);
 
-      // Check if vial is complete
-      const isComplete = tube.length === this.vialCapacity && tube.every(b => b === tube[0]);
-      if (isComplete) {
-        vialEl.classList.add('completed');
+    let vialIdx = 0;
+    rowCounts.forEach(countInRow => {
+      const rowEl = document.createElement('div');
+      rowEl.className = 'vials-row';
+      rowEl.style.gap = `${dims.vialGap}px`;
+
+      for (let r = 0; r < countInRow && vialIdx < totalVials; r++) {
+        const idx = vialIdx++;
+        const tube = this.vials[idx];
+        const vialEl = document.createElement('div');
+        vialEl.className = 'vial';
+        vialEl.style.height = `${dims.vialHeight}px`;
+        vialEl.style.width = `${dims.vialWidth}px`;
+        vialEl.dataset.index = idx;
+
+        const isComplete = tube.length === this.vialCapacity && tube.every(b => b === tube[0]);
+        if (isComplete) vialEl.classList.add('completed');
+        if (this.selectedVialIndex === idx) vialEl.classList.add('selected');
+
+        tube.forEach((colorId, ballIndex) => {
+          const ballEl = document.createElement('div');
+          ballEl.className = `ball ball-color-${colorId}`;
+          ballEl.dataset.ballIndex = ballIndex;
+
+          if (this.selectedVialIndex === idx && ballIndex === tube.length - 1) {
+            ballEl.classList.add('popped-up');
+          }
+          vialEl.appendChild(ballEl);
+        });
+
+        vialEl.addEventListener('click', () => this.handleVialClick(idx));
+        rowEl.appendChild(vialEl);
       }
 
-      if (this.selectedVialIndex === idx) {
-        vialEl.classList.add('selected');
-      }
-
-      // Render balls inside tube
-      tube.forEach((colorId, ballIndex) => {
-        const ballEl = document.createElement('div');
-        ballEl.className = `ball ball-color-${colorId}`;
-        ballEl.dataset.ballIndex = ballIndex;
-
-        // If this tube is selected and this is the top ball, pop it up
-        if (this.selectedVialIndex === idx && ballIndex === tube.length - 1) {
-          ballEl.classList.add('popped-up');
-        }
-
-        vialEl.appendChild(ballEl);
-      });
-
-      vialEl.addEventListener('click', () => this.handleVialClick(idx));
-      this.dom.grid.appendChild(vialEl);
+      this.dom.grid.appendChild(rowEl);
     });
+
+    this.updateStats();
+  }
+
+  getVialElement(idx) {
+    return this.dom.grid.querySelector(`.vial[data-index="${idx}"]`);
   }
 
   /* --- Interaction --- */
@@ -409,7 +520,7 @@ class BallSortGame {
       if (!canMove) {
         // Invalid target
         window.soundManager.playInvalid();
-        const targetEl = this.dom.grid.children[index];
+        const targetEl = this.getVialElement(index);
         if (targetEl) {
           targetEl.classList.add('invalid-shake');
           setTimeout(() => targetEl.classList.remove('invalid-shake'), 350);
@@ -449,8 +560,8 @@ class BallSortGame {
     const targetTube = this.vials[targetIdx];
     const movesInBatch = [];
 
-    const sourceVialEl = this.dom.grid.children[sourceIdx];
-    const targetVialEl = this.dom.grid.children[targetIdx];
+    const sourceVialEl = this.getVialElement(sourceIdx);
+    const targetVialEl = this.getVialElement(targetIdx);
 
     if (sourceVialEl) {
       sourceVialEl.classList.remove('selected');
@@ -488,16 +599,16 @@ class BallSortGame {
         }
 
         // Target coordinates in destination vial
-        const ballSize = sourceBallRect.width || 52;
-        const ballStep = 54;
-        const vialPadding = 8;
+        const ballSize = sourceBallRect.width || this.lastBallSize || 36;
+        const vialPadding = this.lastVialPadding || 6;
+        const ballStep = this.lastBallStep || (ballSize + 3);
         const destLeft = targetVialRect.left + (targetVialRect.width - ballSize) / 2;
         const currentTargetCount = targetTube.length;
-        const destTop = targetVialRect.bottom - vialPadding - ((currentTargetCount + 1) * ballStep) + 4;
+        const destTop = targetVialRect.bottom - vialPadding - ((currentTargetCount + 1) * ballStep) + 3;
 
         // Peak arc height above vials
         const minTop = Math.min(sourceVialRect.top, targetVialRect.top);
-        const clearTop = minTop - 65;
+        const clearTop = minTop - Math.max(35, ballSize * 1.25);
 
         const deltaX = destLeft - sourceBallRect.left;
         const deltaY_clear = clearTop - sourceBallRect.top;
@@ -747,7 +858,7 @@ window.addEventListener('DOMContentLoaded', () => {
     id: 'sortingballs', levelKey: 'bs_currentLevel',
     fields: 'currentLevel colorCount vialCapacity emptyVials vials initialSnapshot moveHistory moveCount extraVialsAdded',
     actions: 'startNewGame restartLevel addExtraVial executeCascadeMove undoMove',
-    validate: s => s.currentLevel >= 1 && [3,4,5].includes(s.vialCapacity) && s.vials.length >= 4 && s.vials.every(v => Array.isArray(v) && v.length <= s.vialCapacity && v.every(c => Number.isInteger(c) && c >= 1 && c <= 8)),
+    validate: s => s.currentLevel >= 1 && [3,4,5,6,7,8].includes(s.vialCapacity) && s.vials.length >= 4 && s.vials.every(v => Array.isArray(v) && v.length <= s.vialCapacity && v.every(c => Number.isInteger(c) && c >= 1 && c <= 16)),
     resume: g => { g.render(); g.updateUndoButton(); g.dom.levelIndicator.textContent = `Level ${g.currentLevel}`; g.dom.btnAddVial.disabled = g.extraVialsAdded >= 2; if (g.isStateWon(g.vials, g.vialCapacity)) g.handleWin(); },
   });
 });

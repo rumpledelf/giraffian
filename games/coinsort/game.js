@@ -172,7 +172,7 @@ class CoinSortGame {
 
   paintCoin(el, tier) {
     el.style.setProperty('--coin-color', `var(--coin-${tier + 1})`);
-    el.style.setProperty('--coin-text', [3, 5, 7].includes(tier) ? '#fff' : '#000');
+    el.style.setProperty('--coin-text', [1, 3, 5, 7].includes(tier) ? '#fff' : '#000');
     el.textContent = tier + 1;
   }
 

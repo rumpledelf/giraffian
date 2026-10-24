@@ -57,6 +57,9 @@ class TilePileGame {
     this.level = Math.max(1, Number(gameStorage.getItem('tilepile_level')) || 1);
     this.mode = gameStorage.getItem('tilepile_mode') === 'endless' ? 'endless' : 'levels';
     this.themeKey = gameStorage.getItem('tilepile_theme') || 'pantry';
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedSize = urlParams.get('size') || gameStorage.getItem('tilepile_size') || 'standard';
+    this.pileSize = ['teacup', 'standard', 'bucket', 'mountain'].includes(requestedSize) ? requestedSize : 'standard';
 
     this.themes = {
       pantry: {
@@ -99,6 +102,7 @@ class TilePileGame {
       soundIconOff: document.getElementById('sound-icon-off'),
       btnSettings: document.getElementById('btn-settings'),
       settingsModal: document.getElementById('settings-modal'),
+      sizeSelect: document.getElementById('size-select'),
       themeSelect: document.getElementById('theme-select'),
       modeSelect: document.getElementById('mode-select'),
       btnCloseSettings: document.getElementById('btn-close-settings'),
@@ -160,6 +164,7 @@ class TilePileGame {
 
     // Settings modal
     this.dom.btnSettings.addEventListener('click', () => {
+      if (this.dom.sizeSelect) this.dom.sizeSelect.value = this.pileSize;
       this.dom.themeSelect.value = this.themeKey;
       this.dom.modeSelect.value = this.mode;
       this.dom.settingsModal.classList.remove('hidden');
@@ -168,6 +173,10 @@ class TilePileGame {
       this.dom.settingsModal.classList.add('hidden');
     });
     this.dom.btnApplySettings.addEventListener('click', () => {
+      if (this.dom.sizeSelect) {
+        this.pileSize = this.dom.sizeSelect.value;
+        gameStorage.setItem('tilepile_size', this.pileSize);
+      }
       this.themeKey = this.dom.themeSelect.value;
       this.mode = this.dom.modeSelect.value;
       gameStorage.setItem('tilepile_theme', this.themeKey);
@@ -223,94 +232,215 @@ class TilePileGame {
   // Generate layered pile layout where:
   // - Tiles within the SAME layer line up edge-to-edge (separated by standard gap)
   // - Higher layers sit at half-steps (50% offset), exposing the layer below cleanly
+  // - Configurable pile size: teacup (small), standard (balanced), bucket (deep pile), mountain (mega pile)
   generatePile(level) {
-    const layoutIdx = (level - 1) % 4;
+    const size = this.pileSize || 'standard';
     let slots = [];
 
-    if (layoutIdx === 0) {
-      // Level 1: 18 tiles (6 triplets) - Diamond Wings
-      // Layer 0: 12 tiles edge-to-edge
-      const layer0 = [
-        // Row 0
-        { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 },
-        // Row 1 (with free wings at gx=0 and gx=10)
-        { gx: 0, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 },
-        // Row 2
-        { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }
-      ];
-      // Layer 1: 6 tiles centered on half-steps
-      const layer1 = [
-        { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 },
-        { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }
-      ];
-      slots = [...layer0, ...layer1];
-    } else if (layoutIdx === 1) {
-      // Level 2: 24 tiles (8 triplets) - Stepped Pyramid
-      // Layer 0: 14 tiles
-      const layer0 = [
-        { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 },
-        { gx: 0, gy: 2, layer: 0 }, { gx: 2, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 8, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 },
-        { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }
-      ];
-      // Layer 1: 8 tiles
-      const layer1 = [
-        { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 },
-        { gx: 1, gy: 2, layer: 1 }, { gx: 9, gy: 2, layer: 1 },
-        { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }
-      ];
-      // Layer 2: 2 apex tiles
-      const layer2 = [
-        { gx: 4, gy: 2, layer: 2 }, { gx: 6, gy: 2, layer: 2 }
-      ];
-      slots = [...layer0, ...layer1, ...layer2];
-    } else if (layoutIdx === 2) {
-      // Level 3: 30 tiles (10 triplets) - Fortress Sanctuary
-      // Layer 0: 16 tiles
-      const layer0 = [
-        { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 }, { gx: 10, gy: 0, layer: 0 },
-        { gx: 0, gy: 2, layer: 0 }, { gx: 2, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 8, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 }, { gx: 12, gy: 2, layer: 0 },
-        { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }, { gx: 10, gy: 4, layer: 0 }
-      ];
-      // Layer 1: 10 tiles
-      const layer1 = [
-        { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 }, { gx: 9, gy: 1, layer: 1 },
-        { gx: 1, gy: 2, layer: 1 }, { gx: 11, gy: 2, layer: 1 },
-        { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }, { gx: 9, gy: 3, layer: 1 }
-      ];
-      // Layer 2: 4 apex tiles
-      const layer2 = [
-        { gx: 5, gy: 1, layer: 2 }, { gx: 7, gy: 1, layer: 2 },
-        { gx: 5, gy: 3, layer: 2 }, { gx: 7, gy: 3, layer: 2 }
-      ];
-      slots = [...layer0, ...layer1, ...layer2];
-    } else {
-      // Level 4: 36 tiles (12 triplets) - Twin Wings & Central Dome
+    if (size === 'teacup') {
+      const layoutIdx = (level - 1) % 2;
+      if (layoutIdx === 0) {
+        // 18 tiles (6 triplets)
+        const layer0 = [
+          { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 },
+          { gx: 0, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 },
+          { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }
+        ];
+        const layer1 = [
+          { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 },
+          { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }
+        ];
+        slots = [...layer0, ...layer1];
+      } else {
+        // 24 tiles (8 triplets)
+        const layer0 = [
+          { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 },
+          { gx: 0, gy: 2, layer: 0 }, { gx: 2, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 8, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 },
+          { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }
+        ];
+        const layer1 = [
+          { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 },
+          { gx: 1, gy: 2, layer: 1 }, { gx: 9, gy: 2, layer: 1 },
+          { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }
+        ];
+        const layer2 = [
+          { gx: 4, gy: 2, layer: 2 }, { gx: 6, gy: 2, layer: 2 }
+        ];
+        slots = [...layer0, ...layer1, ...layer2];
+      }
+    } else if (size === 'bucket') {
+      // 54 to 72 tiles (18 to 24 triplets) - Deep bucket of tiles to sift through
       // Layer 0: 20 tiles
-      const layer0 = [
-        { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 }, { gx: 10, gy: 0, layer: 0 }, { gx: 12, gy: 0, layer: 0 },
-        { gx: 0, gy: 2, layer: 0 }, { gx: 2, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 8, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 }, { gx: 12, gy: 2, layer: 0 }, { gx: 14, gy: 2, layer: 0 },
-        { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }, { gx: 10, gy: 4, layer: 0 }, { gx: 12, gy: 4, layer: 0 }
-      ];
-      // Layer 1: 12 tiles
-      const layer1 = [
-        { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 }, { gx: 9, gy: 1, layer: 1 }, { gx: 11, gy: 1, layer: 1 },
-        { gx: 1, gy: 2, layer: 1 }, { gx: 13, gy: 2, layer: 1 },
-        { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }, { gx: 9, gy: 3, layer: 1 }, { gx: 11, gy: 3, layer: 1 }
-      ];
-      // Layer 2: 4 apex tiles
-      const layer2 = [
-        { gx: 5, gy: 2, layer: 2 }, { gx: 7, gy: 2, layer: 2 }, { gx: 9, gy: 2, layer: 2 },
-        { gx: 7, gy: 1, layer: 2 }
-      ];
-      slots = [...layer0, ...layer1, ...layer2];
-    }
+      for (let gy = 0; gy <= 6; gy += 2) {
+        for (let gx = 1; gx <= 11; gx += 2) {
+          if ((gy === 0 || gy === 6) && (gx === 1 || gx === 11)) continue;
+          slots.push({ gx, gy, layer: 0 });
+        }
+      }
+      // Layer 1: 15 tiles
+      for (let gy = 1; gy <= 5; gy += 2) {
+        for (let gx = 2; gx <= 10; gx += 2) {
+          slots.push({ gx, gy, layer: 1 });
+        }
+      }
+      // Layer 2: 10 tiles
+      for (let gy = 2; gy <= 4; gy += 2) {
+        for (let gx = 2; gx <= 10; gx += 2) {
+          slots.push({ gx, gy, layer: 2 });
+        }
+      }
+      // Layer 3: 6 tiles
+      for (let gy = 2; gy <= 4; gy += 2) {
+        for (let gx = 4; gx <= 8; gx += 2) {
+          slots.push({ gx, gy, layer: 3 });
+        }
+      }
+      // Layer 4: 3 apex tiles
+      for (let gx = 4; gx <= 8; gx += 2) {
+        slots.push({ gx, gy: 3, layer: 4 });
+      }
+      // Extra layers scale with level progression (adds 6 tiles per level tier up to 72 tiles)
+      const extra = Math.min(3, Math.floor((level - 1) / 3));
+      for (let l = 1; l <= extra; l++) {
+        for (let gy of [2, 4]) {
+          for (let gx of [4, 6, 8]) {
+            slots.push({ gx, gy, layer: 4 + l });
+          }
+        }
+      }
+    } else if (size === 'mountain') {
+      // 84 to 108 tiles (28 to 36 triplets) - Epic mountain of tiles to dig through
+      // Layer 0: 30 tiles (6 cols x 5 rows)
+      for (let gy = 0; gy <= 8; gy += 2) {
+        for (let gx = 1; gx <= 11; gx += 2) {
+          slots.push({ gx, gy, layer: 0 });
+        }
+      }
+      // Layer 1: 20 tiles (5 cols x 4 rows)
+      for (let gy = 1; gy <= 7; gy += 2) {
+        for (let gx = 2; gx <= 10; gx += 2) {
+          slots.push({ gx, gy, layer: 1 });
+        }
+      }
+      // Layer 2: 15 tiles (5 cols x 3 rows)
+      for (let gy = 2; gy <= 6; gy += 2) {
+        for (let gx = 2; gx <= 10; gx += 2) {
+          slots.push({ gx, gy, layer: 2 });
+        }
+      }
+      // Layer 3: 8 tiles (4 cols x 2 rows)
+      for (let gy = 3; gy <= 5; gy += 2) {
+        for (let gx = 3; gx <= 9; gx += 2) {
+          slots.push({ gx, gy, layer: 3 });
+        }
+      }
+      // Layer 4: 6 tiles (3 cols x 2 rows)
+      for (let gy = 3; gy <= 5; gy += 2) {
+        for (let gx = 4; gx <= 8; gx += 2) {
+          slots.push({ gx, gy, layer: 4 });
+        }
+      }
+      // Layer 5: 5 apex tiles
+      slots.push({ gx: 4, gy: 4, layer: 5 }, { gx: 6, gy: 4, layer: 5 }, { gx: 8, gy: 4, layer: 5 });
+      slots.push({ gx: 5, gy: 3, layer: 5 }, { gx: 7, gy: 3, layer: 5 });
+      // Extra layers scale with level progression (adds 6 tiles per level tier up to 108 tiles)
+      const extra = Math.min(4, Math.floor((level - 1) / 3));
+      for (let l = 1; l <= extra; l++) {
+        for (let gy of [3, 5]) {
+          for (let gx of [5, 6, 7]) {
+            slots.push({ gx, gy, layer: 5 + l });
+          }
+        }
+      }
+    } else {
+      // Standard: 30 to 48 tiles - Original classic layouts
+      const layoutIdx = (level - 1) % 4;
 
-    // Each four-layout cycle adds another six-tile layer of dependencies.
-    const extraLayers = Math.min(4, Math.floor((level - 1) / 4));
-    const topLayer = Math.max(...slots.map(s => s.layer));
-    for (let layer = 1; layer <= extraLayers; layer++) {
-      for (const gy of [1, 3]) for (const gx of [3, 5, 7]) {
-        slots.push({ gx, gy, layer: topLayer + layer });
+      if (layoutIdx === 0) {
+        // Level 1: 18 tiles (6 triplets) - Diamond Wings
+        // Layer 0: 12 tiles edge-to-edge
+        const layer0 = [
+          // Row 0
+          { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 },
+          // Row 1 (with free wings at gx=0 and gx=10)
+          { gx: 0, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 },
+          // Row 2
+          { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }
+        ];
+        // Layer 1: 6 tiles centered on half-steps
+        const layer1 = [
+          { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 },
+          { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }
+        ];
+        slots = [...layer0, ...layer1];
+      } else if (layoutIdx === 1) {
+        // Level 2: 24 tiles (8 triplets) - Stepped Pyramid
+        // Layer 0: 14 tiles
+        const layer0 = [
+          { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 },
+          { gx: 0, gy: 2, layer: 0 }, { gx: 2, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 8, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 },
+          { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }
+        ];
+        // Layer 1: 8 tiles
+        const layer1 = [
+          { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 },
+          { gx: 1, gy: 2, layer: 1 }, { gx: 9, gy: 2, layer: 1 },
+          { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }
+        ];
+        // Layer 2: 2 apex tiles
+        const layer2 = [
+          { gx: 4, gy: 2, layer: 2 }, { gx: 6, gy: 2, layer: 2 }
+        ];
+        slots = [...layer0, ...layer1, ...layer2];
+      } else if (layoutIdx === 2) {
+        // Level 3: 30 tiles (10 triplets) - Fortress Sanctuary
+        // Layer 0: 16 tiles
+        const layer0 = [
+          { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 }, { gx: 10, gy: 0, layer: 0 },
+          { gx: 0, gy: 2, layer: 0 }, { gx: 2, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 8, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 }, { gx: 12, gy: 2, layer: 0 },
+          { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }, { gx: 10, gy: 4, layer: 0 }
+        ];
+        // Layer 1: 10 tiles
+        const layer1 = [
+          { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 }, { gx: 9, gy: 1, layer: 1 },
+          { gx: 1, gy: 2, layer: 1 }, { gx: 11, gy: 2, layer: 1 },
+          { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }, { gx: 9, gy: 3, layer: 1 }
+        ];
+        // Layer 2: 4 apex tiles
+        const layer2 = [
+          { gx: 5, gy: 1, layer: 2 }, { gx: 7, gy: 1, layer: 2 },
+          { gx: 5, gy: 3, layer: 2 }, { gx: 7, gy: 3, layer: 2 }
+        ];
+        slots = [...layer0, ...layer1, ...layer2];
+      } else {
+        // Level 4: 36 tiles (12 triplets) - Twin Wings & Central Dome
+        // Layer 0: 20 tiles
+        const layer0 = [
+          { gx: 2, gy: 0, layer: 0 }, { gx: 4, gy: 0, layer: 0 }, { gx: 6, gy: 0, layer: 0 }, { gx: 8, gy: 0, layer: 0 }, { gx: 10, gy: 0, layer: 0 }, { gx: 12, gy: 0, layer: 0 },
+          { gx: 0, gy: 2, layer: 0 }, { gx: 2, gy: 2, layer: 0 }, { gx: 4, gy: 2, layer: 0 }, { gx: 6, gy: 2, layer: 0 }, { gx: 8, gy: 2, layer: 0 }, { gx: 10, gy: 2, layer: 0 }, { gx: 12, gy: 2, layer: 0 }, { gx: 14, gy: 2, layer: 0 },
+          { gx: 2, gy: 4, layer: 0 }, { gx: 4, gy: 4, layer: 0 }, { gx: 6, gy: 4, layer: 0 }, { gx: 8, gy: 4, layer: 0 }, { gx: 10, gy: 4, layer: 0 }, { gx: 12, gy: 4, layer: 0 }
+        ];
+        // Layer 1: 12 tiles
+        const layer1 = [
+          { gx: 3, gy: 1, layer: 1 }, { gx: 5, gy: 1, layer: 1 }, { gx: 7, gy: 1, layer: 1 }, { gx: 9, gy: 1, layer: 1 }, { gx: 11, gy: 1, layer: 1 },
+          { gx: 1, gy: 2, layer: 1 }, { gx: 13, gy: 2, layer: 1 },
+          { gx: 3, gy: 3, layer: 1 }, { gx: 5, gy: 3, layer: 1 }, { gx: 7, gy: 3, layer: 1 }, { gx: 9, gy: 3, layer: 1 }, { gx: 11, gy: 3, layer: 1 }
+        ];
+        // Layer 2: 4 apex tiles
+        const layer2 = [
+          { gx: 5, gy: 2, layer: 2 }, { gx: 7, gy: 2, layer: 2 }, { gx: 9, gy: 2, layer: 2 },
+          { gx: 7, gy: 1, layer: 2 }
+        ];
+        slots = [...layer0, ...layer1, ...layer2];
+      }
+
+      // Each four-layout cycle adds another six-tile layer of dependencies.
+      const extraLayers = Math.min(4, Math.floor((level - 1) / 4));
+      const topLayer = Math.max(...slots.map(s => s.layer));
+      for (let layer = 1; layer <= extraLayers; layer++) {
+        for (const gy of [1, 3]) for (const gx of [3, 5, 7]) {
+          slots.push({ gx, gy, layer: topLayer + layer });
+        }
       }
     }
     const tripletCount = Math.floor(slots.length / 3);
@@ -428,7 +558,11 @@ class TilePileGame {
 
   renderHeader() {
     const isEndless = this.mode === 'endless';
-    this.dom.levelBadge.textContent = isEndless ? 'Endless' : `Level ${this.level}`;
+    const size = this.pileSize || 'standard';
+    const sizeName = size.charAt(0).toUpperCase() + size.slice(1);
+    this.dom.levelBadge.textContent = isEndless
+      ? (size === 'standard' ? 'Endless' : `Endless • ${sizeName}`)
+      : (size === 'standard' ? `Level ${this.level}` : `Level ${this.level} • ${sizeName}`);
   }
 
   // Match the layer/row/column order used to draw overlapping tiles.
@@ -477,7 +611,13 @@ class TilePileGame {
     const baseTileSize = isMobile ? 44 : 50;
     const maxLayer = Math.max(...this.tiles.map(t => t.layer));
     const baseWidth = (maxGx - minGx - 2) * baseStep + baseTileSize * (1 + TILE_DEPTH * (maxLayer + 1));
-    const scale = Math.min(1, Math.max(1, stageWidth - 16) / baseWidth);
+    const baseHeight = (maxGy - minGy - 2) * baseStep + baseTileSize * (1 + TILE_DEPTH * (maxLayer + 1));
+
+    // Responsive scaling based on width and max vertical allowance
+    const maxAllowedHeight = isMobile ? 380 : 440;
+    const scaleY = maxAllowedHeight > 200 ? maxAllowedHeight / baseHeight : 1;
+    const scale = Math.min(1, Math.max(1, stageWidth - 16) / baseWidth, scaleY);
+
     const stepPx = baseStep * scale;
     const tileSize = baseTileSize * scale;
     stage.style.setProperty('--pile-font-size', `${(isMobile ? 1.55 : 1.85) * scale}rem`);
@@ -489,10 +629,11 @@ class TilePileGame {
     const pileWidth = (maxGx - minGx - 2) * stepPx + tileSize + depth * (maxLayer + 1);
     const pileHeight = (maxGy - minGy - 2) * stepPx + tileSize + depth * (maxLayer + 1);
 
-    const stageHeight = stage.clientHeight || 260;
+    const targetStageHeight = Math.max(isMobile ? 260 : 310, Math.ceil(pileHeight + 20));
+    stage.style.height = `${targetStageHeight}px`;
 
     const offsetX = Math.max(8, Math.round((stageWidth - pileWidth) / 2));
-    const offsetY = Math.max(8, Math.round((stageHeight - pileHeight) / 2));
+    const offsetY = Math.max(8, Math.round((targetStageHeight - pileHeight) / 2));
 
     // Sort by layer asc, then gy asc, then gx asc; the rank is the z-index
     const sortedTiles = [...this.tiles].sort((a, b) => {

@@ -126,13 +126,17 @@ button.icon-btn svg, .icon-btn svg {
 /* Status Bar */
 .status-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
   max-width: 580px;
-  padding: 0 12px 6px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 12px;
   font-size: 0.95rem;
-  color: var(--text-muted);
+  font-weight: 600;
 }
 
 .status-bar strong {
@@ -378,12 +382,12 @@ button.icon-btn svg, .icon-btn svg {
   cursor: pointer;
 }
 
-.button.purple {
-  background: var(--purple);
+#game-app .button.purple, .modal-backdrop .button.purple {
+  background: var(--purple, #dcb0ed);
   color: #000;
 }
 
-.button.purple:hover {
+#game-app .button.purple:hover, .modal-backdrop .button.purple:hover {
   background: #cd9ce2;
 }
 

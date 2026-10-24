@@ -1,8 +1,10 @@
 <?php define("TITLE", "Conveyor Match 3"); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/moving3/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
+<section id="game-unit" class="game-unit google-anno-skip">
 <div id="game-app">
   <div class="game-header">
     <div class="title-group">
@@ -54,7 +56,7 @@
 
   <main class="conveyor-container">
     <div class="conveyor-stage" id="conveyor-stage">
-      <!-- 3 Animated Conveyor Tracks -->
+      <!-- Up to 4 animated conveyor tracks -->
       <div class="conveyor-track track-0" id="track-0">
         <div class="track-rail"></div>
         <div class="track-belt" id="belt-0"></div>
@@ -68,6 +70,11 @@
       <div class="conveyor-track track-2" id="track-2">
         <div class="track-rail"></div>
         <div class="track-belt" id="belt-2"></div>
+      </div>
+
+      <div class="conveyor-track track-3" id="track-3">
+        <div class="track-rail"></div>
+        <div class="track-belt" id="belt-3"></div>
       </div>
     </div>
   </main>
@@ -105,11 +112,18 @@
         </select>
       </div>
       <div class="setting-row">
+        <label for="track-count-select">Conveyor tracks:</label>
+        <select id="track-count-select">
+          <option value="3" selected>3 tracks</option>
+          <option value="4">4 tracks</option>
+        </select>
+      </div>
+      <div class="setting-row">
         <label for="length-select">Starting conveyor size:</label>
         <select id="length-select">
-          <option value="4">4 per track (12 boxes)</option>
-          <option value="5" selected>5 per track (15 boxes)</option>
-          <option value="6">6 per track (18 boxes)</option>
+          <option value="4">4 boxes per track</option>
+          <option value="5" selected>5 boxes per track</option>
+          <option value="6">6 boxes per track</option>
         </select>
       </div>
       <div class="setting-row">
@@ -129,6 +143,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/moving3/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/moving3/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>

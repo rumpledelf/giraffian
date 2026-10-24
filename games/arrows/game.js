@@ -14,7 +14,7 @@ class ArrowsGame {
     this.animationFrame = null;
     this.winTimer = null;
     this.isAnimating = false;
-    this.colors = ['#ec8d6f', '#f7e55f', '#589a56', '#82dee6', '#3a7ede', '#dcb0ed'];
+    this.colors = ['#ad4242', '#ec8d6f', '#f7e55f', '#589a56', '#82dee6', '#3a7ede', '#dcb0ed'];
     this.directions = { up: [-1, 0], right: [0, 1], down: [1, 0], left: [0, -1] };
     this.dom = {};
     for (const id of ['arrows-board', 'level-badge', 'paths-remaining-count', 'moves-count',

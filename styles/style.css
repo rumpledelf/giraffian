@@ -290,3 +290,9 @@ a.grey:hover {
         padding: 0px;
 	z-index: -25;
 }
+/* A complete interactive game is one indivisible, ad-free component. */
+.game-unit {
+	position: relative;
+	display: flow-root;
+	width: 100%;
+}

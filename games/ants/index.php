@@ -1,10 +1,12 @@
 <?php define("TITLE", "Pixel Ants"); ?>
 <?php define("DESCRIPTION", "Watch busy little bugs scurry through open corridors to carry away matching pixel art."); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/ants/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
-<div id="game-app" class="google-anno-skip">
+<section id="game-unit" class="game-unit google-anno-skip">
+<div id="game-app">
   <!-- Header Bar -->
   <div class="game-header">
     <div class="title-group">
@@ -50,7 +52,7 @@
   <!-- Status Bar -->
   <div class="status-bar">
     <div>Pixels Left: <strong id="items-left-count">0</strong></div>
-    <div>Speed: <strong id="btn-speed" style="cursor:pointer;">⚡ Steady</strong></div>
+    <div>Speed: <button id="btn-speed" class="speed-control" type="button">⚡ Normal</button></div>
   </div>
 
   <!-- Board and Staging Unified Wrapper (so bugs continuously scurry between bays and board) -->
@@ -151,6 +153,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/ants/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/ants/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>

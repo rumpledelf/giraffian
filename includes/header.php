@@ -18,6 +18,27 @@
 		<meta property="og:url" content="<?php echo htmlspecialchars($canonical); ?>">
 		<meta property="og:type" content="website">
 		<meta property="og:image" content="<?php echo $siteurl; ?>/android-chrome-512x512.png">
+<?php if (defined('GAME_STRUCTURED_DATA') && GAME_STRUCTURED_DATA): ?>
+<?php
+$gameStructuredData = [
+	'@context' => 'https://schema.org',
+	'@type' => ['VideoGame', 'WebApplication'],
+	'name' => defined('TITLE') ? TITLE : $pagetitle,
+	'url' => $canonical,
+	'applicationCategory' => 'GameApplication',
+	'operatingSystem' => 'Any',
+	'browserRequirements' => 'Requires JavaScript and a modern web browser',
+	'playMode' => 'SinglePlayer',
+	'offers' => [
+		'@type' => 'Offer',
+		'price' => 0,
+		'priceCurrency' => 'AUD',
+	],
+];
+if (defined('DESCRIPTION') && DESCRIPTION !== '') $gameStructuredData['description'] = DESCRIPTION;
+?>
+		<script type="application/ld+json"><?php echo json_encode($gameStructuredData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?></script>
+<?php endif; ?>
                 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">

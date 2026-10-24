@@ -1,9 +1,11 @@
 <?php define("TITLE", "Hex Sort"); ?>
 <?php define("DESCRIPTION", "Ad-free, relaxing hex stack puzzle: place layered hexagon stacks on the board, chain colour flips across neighbours, and clear stacks of 10."); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/hexsort/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
+<section id="game-unit" class="game-unit google-anno-skip">
 <div id="game-app">
   <!-- Header Bar -->
   <div class="game-header">
@@ -140,6 +142,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/hexsort/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/hexsort/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>

@@ -66,6 +66,12 @@
     <h2><a href="/games/hexsort/">Hex Sort</a></h2>
     <p>Place layered hex stacks on the board to chain colour flips and clear stacks of ten.</p>
   </div>
+
+  <div class="tile">
+    <a href="/games/colorchutes/"><img src="/images/thumb-colorchutes.svg" alt="Color Chutes preview"></a>
+    <h2><a href="/games/colorchutes/">Color Chutes</a></h2>
+    <p>Slide colorful blocks through the 1-space bottleneck and evacuate them out their perimeter chutes.</p>
+  </div>
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

@@ -1,8 +1,10 @@
 <?php define("TITLE", "Boxes of 3"); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/boxesof3/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
+<section id="game-unit" class="game-unit google-anno-skip">
 <div id="game-app">
   <div class="game-header">
     <div class="title-group">
@@ -75,6 +77,8 @@
           <option value="6">6 Boxes (2 rows of 3)</option>
           <option value="9" selected>9 Boxes (3 rows of 3)</option>
           <option value="12">12 Boxes (4 rows of 3)</option>
+          <option value="15">15 Boxes (5 rows of 3)</option>
+          <option value="18">18 Boxes (6 rows of 3)</option>
         </select>
       </div>
       <div class="setting-row">
@@ -94,6 +98,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/boxesof3/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/boxesof3/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>

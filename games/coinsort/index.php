@@ -1,8 +1,10 @@
 <?php define("TITLE", "Coin Sort"); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/coinsort/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
+<section id="game-unit" class="game-unit google-anno-skip">
 <div id="game-app">
   <!-- Header Bar -->
   <div class="game-header">
@@ -112,6 +114,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/coinsort/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/coinsort/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>

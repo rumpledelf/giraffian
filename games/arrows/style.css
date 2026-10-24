@@ -9,6 +9,7 @@
   --match-green: #589a56;
   --coral: #ec8d6f;
   --purple: #dcb0ed;
+  --logo-red: #ad4242;
 }
 
 #game-app, #game-app *, #game-app *::before, #game-app *::after,
@@ -109,13 +110,17 @@ button.icon-btn svg, .icon-btn svg {
 /* Status Bar */
 .status-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
   max-width: 540px;
-  padding: 2px 12px 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 12px;
   font-size: 0.95rem;
-  color: var(--text-muted);
+  font-weight: 600;
 }
 
 .status-bar strong {
@@ -326,6 +331,14 @@ button.icon-btn svg, .icon-btn svg {
 }
 #game-app .button.purple:hover, .modal-backdrop .button.purple:hover {
   background-color: #cd8ee5;
+}
+
+#game-app .button.red, .modal-backdrop .button.red {
+  background-color: #ad4242;
+  color: #ffffff;
+}
+#game-app .button.red:hover, .modal-backdrop .button.red:hover {
+  background-color: #8f3434;
 }
 
 /* Modals */

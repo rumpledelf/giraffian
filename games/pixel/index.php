@@ -1,9 +1,11 @@
 <?php define("TITLE", "Pixel Unravel"); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/pixel/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
-<div id="game-app" class="google-anno-skip">
+<section id="game-unit" class="game-unit google-anno-skip">
+<div id="game-app">
   <!-- Header Bar -->
   <div class="game-header">
     <div class="title-group">
@@ -152,6 +154,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/pixel/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/pixel/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>

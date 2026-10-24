@@ -112,17 +112,38 @@ button.icon-btn svg, .icon-btn svg {
 /* Status Bar */
 .status-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
   max-width: 600px;
-  padding: 2px 12px 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 12px;
   font-size: 0.95rem;
-  color: var(--text-muted);
+  font-weight: 600;
 }
 
 .status-bar strong {
   color: #000;
+}
+
+.speed-control {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #000;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.speed-control:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
 /* Wrapper encompassing the board stage and staging bays for continuous bug overlay */

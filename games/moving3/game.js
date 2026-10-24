@@ -1,6 +1,6 @@
 /**
  * Moving 3 - Conveyor Match Puzzle
- * 3 endless conveyor belts moving in alternating directions with extra off-screen boxes.
+ * 3–4 endless conveyor belts moving in alternating directions with extra off-screen boxes.
  * Seamless wrap-around belts with solvable generation.
  */
 
@@ -8,6 +8,7 @@ class MovingThreeGame {
   constructor() {
     this.speedMode = gameStorage.getItem('moving3_speed') || 'slow';
     this.boxesPerTrack = parseInt(gameStorage.getItem('moving3_boxesPerTrack') || '5', 10);
+    this.trackCount = parseInt(gameStorage.getItem('moving3_trackCount') || '3', 10);
     this.currentTheme = gameStorage.getItem('moving3_theme') || 'pantry';
     this.currentLevel = parseInt(gameStorage.getItem('moving3_level') || '1', 10);
     this.isPaused = false;
@@ -34,6 +35,10 @@ class MovingThreeGame {
         { id: 18, name: 'Peach', icon: '🍑' },
         { id: 19, name: 'Watermelon', icon: '🍉' },
         { id: 20, name: 'Grape', icon: '🍇' },
+        { id: 21, name: 'Pear', icon: '🍐' },
+        { id: 22, name: 'Lemon', icon: '🍋' },
+        { id: 23, name: 'Carrot', icon: '🥕' },
+        { id: 24, name: 'Pretzel', icon: '🥨' },
       ],
       shapes: [
         { id: 1, name: 'Diamond', icon: '💎' },
@@ -56,16 +61,21 @@ class MovingThreeGame {
         { id: 18, name: 'Hourglass', icon: '⏳' },
         { id: 19, name: 'Shield', icon: '🛡️' },
         { id: 20, name: 'Ring', icon: '💍' },
+        { id: 21, name: 'Gear', icon: '⚙️' },
+        { id: 22, name: 'Anchor', icon: '⚓' },
+        { id: 23, name: 'Rocket', icon: '🚀' },
+        { id: 24, name: 'Planet', icon: '🪐' },
       ]
     };
 
-    // Total boxes = 3 * boxesPerTrack (e.g. 15 or 18)
+    // Total boxes = trackCount * boxesPerTrack (up to 24)
     this.boxes = []; 
-    this.trackOffsets = [0, 0, 0]; // Track movement offset
+    this.trackOffsets = Array(4).fill(0); // Track movement offset
     this.trackBelts = [
       document.getElementById('belt-0'),
       document.getElementById('belt-1'),
-      document.getElementById('belt-2')
+      document.getElementById('belt-2'),
+      document.getElementById('belt-3')
     ];
 
     this.selected = null; // { boxIdx, itemIdx }
@@ -101,6 +111,7 @@ class MovingThreeGame {
       settingsModal: document.getElementById('settings-modal'),
       speedSelect: document.getElementById('speed-select'),
       lengthSelect: document.getElementById('length-select'),
+      trackCountSelect: document.getElementById('track-count-select'),
       themeSelect: document.getElementById('theme-select'),
       btnCloseSettings: document.getElementById('btn-close-settings'),
       btnApplySettings: document.getElementById('btn-apply-settings'),
@@ -131,6 +142,7 @@ class MovingThreeGame {
     this.dom.btnSettings.addEventListener('click', () => {
       this.dom.speedSelect.value = this.speedMode;
       this.dom.lengthSelect.value = Number(gameStorage.getItem('moving3_boxesPerTrack')) || 5;
+      this.dom.trackCountSelect.value = Number(gameStorage.getItem('moving3_trackCount')) || 3;
       this.dom.themeSelect.value = this.currentTheme;
       this.dom.settingsModal.classList.remove('hidden');
     });
@@ -142,10 +154,12 @@ class MovingThreeGame {
     this.dom.btnApplySettings.addEventListener('click', () => {
       this.speedMode = this.dom.speedSelect.value;
       this.boxesPerTrack = parseInt(this.dom.lengthSelect.value, 10);
+      this.trackCount = parseInt(this.dom.trackCountSelect.value, 10);
       this.currentTheme = this.dom.themeSelect.value;
 
       gameStorage.setItem('moving3_speed', this.speedMode);
       gameStorage.setItem('moving3_boxesPerTrack', this.boxesPerTrack);
+      gameStorage.setItem('moving3_trackCount', this.trackCount);
       gameStorage.setItem('moving3_theme', this.currentTheme);
 
       this.updateSpeedButton();
@@ -274,6 +288,8 @@ class MovingThreeGame {
   startNewGame() {
     const growth = gameStorage.getItem('moving3_grow') === 'false' ? 0 : Math.floor((this.currentLevel - 1) / 3);
     this.boxesPerTrack = Math.min(6, (Number(gameStorage.getItem('moving3_boxesPerTrack')) || 5) + growth);
+    const trackGrowth = gameStorage.getItem('moving3_grow') === 'false' ? 0 : Math.floor((this.currentLevel - 1) / 9);
+    this.trackCount = Math.min(4, (Number(gameStorage.getItem('moving3_trackCount')) || 3) + trackGrowth);
     this.boardVersion = (this.boardVersion || 0) + 1;
     this.dom.winModal.classList.add('hidden');
     this.clearFloatingPreview();
@@ -281,13 +297,13 @@ class MovingThreeGame {
     this.moveCount = 0;
     this.boxesPacked = 0;
     this.isLocked = false;
-    this.trackOffsets = [0, 0, 0];
+    this.trackOffsets = Array(4).fill(0);
     this.updateUndoButton();
 
     this.dom.levelBadge.textContent = `Level ${this.currentLevel}`;
 
-    const B = 3 * this.boxesPerTrack; // e.g. 15 or 18
-    const T = B - 1; // e.g. 14 or 17 triplet types, leaving 3 gaps
+    const B = this.trackCount * this.boxesPerTrack;
+    const T = B - 1;
     this.targetPackedBoxes = T;
 
     const themeList = this.themes[this.currentTheme];
@@ -417,11 +433,10 @@ class MovingThreeGame {
     const pitch = 260;
     const loopSpan = Math.max(this.boxesPerTrack * pitch, visibleSpan + pitch);
 
-    // The bottom belt moves 25% faster so it can catch up with the top belt.
-    // Track 0 moves right (+), Track 1 moves left (-), Track 2 moves right (+)
-    for (let track = 0; track < 3; track++) {
+    // Adjacent tracks move in alternating directions and slightly different speeds.
+    for (let track = 0; track < this.trackCount; track++) {
       const dir = (track % 2 === 0) ? 1 : -1;
-      const speedScale = track === 2 ? 1.25 : 1;
+      const speedScale = 1 + track * 0.1;
       this.trackOffsets[track] += speed * speedScale * dt * dir;
 
       for (let b = 0; b < this.boxesPerTrack; b++) {
@@ -454,9 +469,9 @@ class MovingThreeGame {
     const loopSpan = Math.max(this.boxesPerTrack * pitch, visibleSpan + pitch);
     const shiftDist = 75;
 
-    for (let track = 0; track < 3; track++) {
+    for (let track = 0; track < this.trackCount; track++) {
       const dir = (track % 2 === 0) ? 1 : -1;
-      const speedScale = track === 2 ? 1.25 : 1;
+      const speedScale = 1 + track * 0.1;
       this.trackOffsets[track] += shiftDist * speedScale * dir;
 
       for (let b = 0; b < this.boxesPerTrack; b++) {
@@ -478,7 +493,10 @@ class MovingThreeGame {
   /* --- Rendering --- */
 
   render() {
-    this.trackBelts.forEach(belt => belt.innerHTML = '');
+    this.trackBelts.forEach((belt, index) => {
+      belt.innerHTML = '';
+      belt.parentElement.classList.toggle('hidden', index >= this.trackCount);
+    });
     this.boxElements = [];
     const themeList = this.themes[this.currentTheme];
 
@@ -889,9 +907,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const game = window.movingGame;
   game.checkpoint = new BrowserCheckpoint(game, {
     id: 'moving3', levelKey: 'moving3_level',
-    fields: 'currentLevel boxesPerTrack currentTheme speedMode boxes initialSnapshot moveHistory moveCount boxesPacked targetPackedBoxes trackOffsets isPaused',
+    fields: 'currentLevel boxesPerTrack trackCount currentTheme speedMode boxes initialSnapshot moveHistory moveCount boxesPacked targetPackedBoxes trackOffsets isPaused',
     actions: 'startNewGame restartGame executeMove undoMove togglePause cycleSpeed shiftBeltsOnMove',
-    validate: s => s.currentLevel >= 1 && [4,5,6].includes(s.boxesPerTrack) && s.boxes.length === s.boxesPerTrack * 3 && s.boxes.every(b => b.items.length === 3 && b.items.every(i => i === null || (Number.isInteger(i) && i >= 1 && i <= 20))),
+    validate: s => s.currentLevel >= 1 && [4,5,6].includes(s.boxesPerTrack) && [3,4].includes(s.trackCount) && s.boxes.length === s.boxesPerTrack * s.trackCount && s.boxes.every(b => b.items.length === 3 && b.items.every(i => i === null || (Number.isInteger(i) && i >= 1 && i <= 24))),
     resume: g => { g.render(); g.updateUndoButton(); g.updateCounts(); g.updateSpeedButton(); g.dom.iconPause.classList.toggle('hidden', g.isPaused); g.dom.iconPlay.classList.toggle('hidden', !g.isPaused); g.dom.levelBadge.textContent = `Level ${g.currentLevel}`; if (g.boxesPacked >= g.targetPackedBoxes) g.handleWin(); },
   });
 });

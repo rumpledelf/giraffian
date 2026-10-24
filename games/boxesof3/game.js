@@ -25,6 +25,12 @@ class BoxesOfThreeGame {
         { id: 10, name: 'Orange', icon: '🍊' },
         { id: 11, name: 'Teapot', icon: '🫖' },
         { id: 12, name: 'Cookie', icon: '🍪' },
+        { id: 13, name: 'Mushroom', icon: '🍄' },
+        { id: 14, name: 'Donut', icon: '🍩' },
+        { id: 15, name: 'Cupcake', icon: '🧁' },
+        { id: 16, name: 'Pizza', icon: '🍕' },
+        { id: 17, name: 'Apple', icon: '🍎' },
+        { id: 18, name: 'Grapes', icon: '🍇' },
       ],
       shapes: [
         { id: 1, name: 'Diamond', icon: '💎' },
@@ -39,6 +45,12 @@ class BoxesOfThreeGame {
         { id: 10, name: 'Leaf', icon: '🍁' },
         { id: 11, name: 'Heart', icon: '💖' },
         { id: 12, name: 'Crown', icon: '👑' },
+        { id: 13, name: 'Flame', icon: '🔥' },
+        { id: 14, name: 'Sparkle', icon: '✨' },
+        { id: 15, name: 'Bell', icon: '🔔' },
+        { id: 16, name: 'Key', icon: '🗝️' },
+        { id: 17, name: 'Compass', icon: '🧭' },
+        { id: 18, name: 'Shield', icon: '🛡️' },
       ]
     };
 
@@ -167,7 +179,7 @@ class BoxesOfThreeGame {
 
   startNewGame() {
     const growth = gameStorage.getItem('boxesof3_grow') === 'false' ? 0 : Math.floor((this.currentLevel - 1) / 3);
-    this.totalBoxesCount = Math.min(12, (Number(gameStorage.getItem('boxes3_totalBoxes')) || 9) + growth * 3);
+    this.totalBoxesCount = Math.min(18, (Number(gameStorage.getItem('boxes3_totalBoxes')) || 9) + growth * 3);
     this.boardVersion = (this.boardVersion || 0) + 1;
     this.dom.winModal.classList.add('hidden');
     this.selected = null;
@@ -748,7 +760,7 @@ window.addEventListener('DOMContentLoaded', () => {
     id: 'boxesof3', levelKey: 'boxes3_level',
     fields: 'currentLevel totalBoxesCount currentTheme boxes initialSnapshot moveHistory moveCount boxesPacked targetPackedBoxes',
     actions: 'startNewGame restartGame executeMove undoMove',
-    validate: s => s.currentLevel >= 1 && [6,9,12].includes(s.totalBoxesCount) && s.boxes.length === s.totalBoxesCount && s.boxes.every(b => b.items.length === 3 && b.items.every(i => i === null || (Number.isInteger(i) && i >= 1 && i <= 12))),
+    validate: s => s.currentLevel >= 1 && [6,9,12,15,18].includes(s.totalBoxesCount) && s.boxes.length === s.totalBoxesCount && s.boxes.every(b => b.items.length === 3 && b.items.every(i => i === null || (Number.isInteger(i) && i >= 1 && i <= 18))),
     resume: g => { g.render(); g.updateUndoButton(); g.updateCounts(); g.updateThemeIcon(); g.dom.levelBadge.textContent = `Level ${g.currentLevel}`; if (g.boxesPacked >= g.targetPackedBoxes) g.handleWin(); },
   });
 });

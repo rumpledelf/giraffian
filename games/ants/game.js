@@ -25,6 +25,7 @@ class AntsGame {
     this.undoStack = [];
     this.snatchStreak = 0;
     this.depositStreak = 0;
+    this.isComplete = false;
 
     this.dom = {
       levelBadge: document.getElementById('level-badge'),
@@ -87,8 +88,6 @@ class AntsGame {
     this.updateSpeedButton();
     this.loadRandomPictureForSize(this.selectedSize);
     this.startAnimationLoop();
-
-    window.addEventListener('resize', () => this.updateOverlayCanvasSize());
   }
 
   /* --- 1. Pixel Art Models (from pictures.js) --- */
@@ -96,7 +95,7 @@ class AntsGame {
     if (!window.pixelPictures) return [];
     return window.pixelPictures.map(model => ({
       ...model,
-      colorCount: new Set(model.data.join('')).size
+      colorCount: new Set(model.data.join('').replaceAll('.', '')).size
     }));
   }
 
@@ -108,7 +107,7 @@ class AntsGame {
     this.dom.btnJamRescue.addEventListener('click', () => this.swapParkedNest());
     this.dom.btnSpeed.addEventListener('click', () => this.cycleSpeed());
     this.dom.btnNew.addEventListener('click', () => {
-      this.loadRandomPictureForSize(this.selectedSize);
+      this.loadRandomPictureForSize(this.selectedSize, true);
     });
 
     this.dom.btnSound.addEventListener('click', () => {
@@ -173,9 +172,11 @@ class AntsGame {
     if (this.isPaused) {
       this.dom.iconPause.classList.add('hidden');
       this.dom.iconPlay.classList.remove('hidden');
+      this.dom.btnPause.setAttribute('aria-label', 'Resume');
     } else {
       this.dom.iconPause.classList.remove('hidden');
       this.dom.iconPlay.classList.add('hidden');
+      this.dom.btnPause.setAttribute('aria-label', 'Pause');
     }
   }
 
@@ -218,7 +219,7 @@ class AntsGame {
   }
 
   /* --- 3. Level Setup & Queue Generation --- */
-  loadRandomPictureForSize(size) {
+  loadRandomPictureForSize(size, advanceCurrent = false) {
     const sizes = [12, 20, 28, 48, 100];
     const baseline = Number(gameStorage.getItem('ants_size')) || 12;
     const growth = gameStorage.getItem('ants_grow') === 'false' ? 0 : Math.floor((this.level - 1) / 3);
@@ -227,9 +228,11 @@ class AntsGame {
     let forSize = this.models.filter(m => m.size === this.selectedSize);
     if (forSize.length === 0) forSize = this.models;
 
-    // Difficulty filtering: easy prefers <= 6 colors, challenging prefers >= 6 colors
+    // Keep the actual board choices aligned with the ranges shown in Settings.
     let candidates = forSize.filter(m =>
-      this.difficulty === 'easy' ? m.colorCount <= 6 : m.colorCount >= 6
+      this.difficulty === 'easy'
+        ? m.colorCount >= 3 && m.colorCount <= 5
+        : m.colorCount >= 8 && m.colorCount <= 10
     );
     if (candidates.length === 0) candidates = forSize;
 
@@ -237,8 +240,12 @@ class AntsGame {
     const idx = (this.level - 1) % candidates.length;
     let pick = candidates[idx] || candidates[0];
 
-    // If pick matches current picture (e.g. clicking "New"), advance to the next picture
-    if (pick.id === this.currentModelId && candidates.length > 1) {
+    // "New Picture" walks through the full candidate set instead of toggling
+    // between the level's default picture and its immediate successor.
+    if (advanceCurrent && candidates.length > 1) {
+      const currentIdx = candidates.findIndex(model => model.id === this.currentModelId);
+      if (currentIdx !== -1) pick = candidates[(currentIdx + 1) % candidates.length];
+    } else if (pick.id === this.currentModelId && candidates.length > 1) {
       pick = candidates[(idx + 1) % candidates.length];
     }
 
@@ -251,6 +258,7 @@ class AntsGame {
   }
 
   loadPicture(model) {
+    this.isComplete = false;
     this.currentModelId = model.id;
     this.gridSize = model.size;
     this.cellSize = { 12: 20, 20: 16, 28: 14, 48: 10, 100: 6 }[model.size] || 6;
@@ -532,13 +540,51 @@ class AntsGame {
   }
 
   /**
+   * Capture the DOM geometry used by one path search. Keeping these layout
+   * reads outside the border-cell loop avoids hundreds of forced measurements
+   * for every ant dispatched on a large board.
+   */
+  capturePathGeometry(bayIdx) {
+    const wrapRect = this.dom.boardWrap.getBoundingClientRect();
+    const canvasRect = this.dom.pixelCanvas.getBoundingClientRect();
+    const slots = this.dom.stagingBaysGrid ? this.dom.stagingBaysGrid.children : null;
+    const slotRect = slots && slots[bayIdx] ? slots[bayIdx].getBoundingClientRect() : null;
+    const railEl = this.dom.orbitRail || this.dom.antStage;
+    const railRect = railEl ? railEl.getBoundingClientRect() : null;
+
+    const bayPos = slotRect && slotRect.width > 0 ? {
+      x: slotRect.left + slotRect.width / 2 - wrapRect.left,
+      y: slotRect.top + slotRect.height / 2 - wrapRect.top,
+      topY: slotRect.top - wrapRect.top
+    } : this.getBayCoordinates(bayIdx);
+
+    const rail = railRect ? {
+      left: railRect.left - wrapRect.left,
+      right: railRect.right - wrapRect.left,
+      top: railRect.top - wrapRect.top,
+      bottom: railRect.bottom - wrapRect.top,
+      centerX: railRect.left + railRect.width / 2 - wrapRect.left,
+      centerY: railRect.top + railRect.height / 2 - wrapRect.top
+    } : this.getRailCoordinates();
+
+    const cellCenter = canvasRect.width > 0
+      ? (r, c) => ({
+          x: canvasRect.left + (c + 0.5) * canvasRect.width / this.gridSize - wrapRect.left,
+          y: canvasRect.top + (r + 0.5) * canvasRect.height / this.gridSize - wrapRect.top
+        })
+      : (r, c) => this.getPictureCellCenter(r, c);
+
+    return { bayPos, rail, cellCenter };
+  }
+
+  /**
    * Computes waypoints and perimeter track distance from a parking bay
    * along the outer orbit rail to an entry point on the picture perimeter.
    */
-  getRailWaypointsAndDistance(bayIdx, side, r, c) {
-    const rail = this.getRailCoordinates();
-    const bayPos = this.getBayCoordinates(bayIdx);
-    const cellPos = this.getPictureCellCenter(r, c);
+  getRailWaypointsAndDistance(bayIdx, side, r, c, geometry = null) {
+    const rail = geometry ? geometry.rail : this.getRailCoordinates();
+    const bayPos = geometry ? geometry.bayPos : this.getBayCoordinates(bayIdx);
+    const cellPos = geometry ? geometry.cellCenter(r, c) : this.getPictureCellCenter(r, c);
 
     // Initial waypoints: from parked shuttle card out to the bottom track rail
     const baseWaypoints = [
@@ -596,6 +642,7 @@ class AntsGame {
   findPathFromShuttleToClosestPixel(bayIdx, targetColor) {
     const N = this.gridSize;
     const cellSize = this.cellSize;
+    const geometry = this.capturePathGeometry(bayIdx);
 
     const dist = new Float32Array(N * N).fill(Infinity);
     const parent = new Int32Array(N * N).fill(-1);
@@ -640,7 +687,7 @@ class AntsGame {
     const checkBorderCell = (side, r, c) => {
       const idx = r * N + c;
       const color = this.grid[r][c];
-      const railInfo = this.getRailWaypointsAndDistance(bayIdx, side, r, c);
+      const railInfo = this.getRailWaypointsAndDistance(bayIdx, side, r, c, geometry);
       const railDist = railInfo.railDistance;
 
       if (color === targetColor && !this.reservedPixels.has(`${r},${c}`)) {
@@ -650,7 +697,7 @@ class AntsGame {
           bestDirectTarget = {
             target: { r, c },
             cost: totalCost,
-            waypoints: [...railInfo.waypoints, this.getPictureCellCenter(r, c)]
+            waypoints: [...railInfo.waypoints, geometry.cellCenter(r, c)]
           };
         }
       } else if (color === null) {
@@ -740,12 +787,13 @@ class AntsGame {
         bayIdx,
         bestCorridorTarget.entrySide,
         bestCorridorTarget.entryR,
-        bestCorridorTarget.entryC
+        bestCorridorTarget.entryC,
+        geometry
       );
       const waypoints = [...railInfo.waypoints];
 
       for (const cp of cellPath) {
-        waypoints.push(this.getPictureCellCenter(cp.r, cp.c));
+        waypoints.push(geometry.cellCenter(cp.r, cp.c));
       }
 
       return { target: bestCorridorTarget.target, waypoints: waypoints };
@@ -1141,14 +1189,19 @@ class AntsGame {
       }
     }
 
-    if (remainingPixels === 0 && this.activeBugs.length === 0) {
-      for (let i = 0; i < 6; i++) {
-        this.stagingBays[i] = null;
-      }
-      this.renderStaging();
-      window.antsAudio.playWin();
-      this.dom.winModal.classList.remove('hidden');
+    if (remainingPixels > 0) {
+      this.isComplete = false;
+      return;
     }
+    if (this.activeBugs.length > 0 || this.isComplete) return;
+
+    this.isComplete = true;
+    for (let i = 0; i < 6; i++) {
+      this.stagingBays[i] = null;
+    }
+    this.renderStaging();
+    window.antsAudio.playWin();
+    this.dom.winModal.classList.remove('hidden');
   }
 
   checkJamCondition() {

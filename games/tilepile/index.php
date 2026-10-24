@@ -1,9 +1,11 @@
 <?php define("TITLE", "Tile Pile Match"); ?>
 <?php define("DESCRIPTION", "Relaxing, ad-free puzzle: match triplets of layered tiles into a 7-slot tray to clear the pile."); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/tilepile/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
+<section id="game-unit" class="game-unit google-anno-skip">
 <div id="game-app">
   <!-- Header Bar -->
   <div class="game-header">
@@ -104,6 +106,15 @@
   <div class="modal-card settings-card">
     <h2>Tile Pile Settings</h2>
     <div class="setting-row">
+      <label for="size-select">Pile Size:</label>
+      <select id="size-select">
+        <option value="teacup">Teacup (Small: 18–24 tiles)</option>
+        <option value="standard" selected>Standard (Medium: 18–60 tiles)</option>
+        <option value="bucket">Bucket (Large: 54–72 tiles)</option>
+        <option value="mountain">Mountain (Mega: 84–108 tiles)</option>
+      </select>
+    </div>
+    <div class="setting-row">
       <label for="theme-select">Theme:</label>
       <select id="theme-select">
         <option value="pantry" selected>Pantry (Honey, Fruit, Bakery)</option>
@@ -127,6 +138,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/tilepile/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/tilepile/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>

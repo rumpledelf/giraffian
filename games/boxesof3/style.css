@@ -89,13 +89,17 @@
 /* Status Bar */
 .status-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
-  max-width: 820px;
-  padding: 4px 16px 12px;
+  max-width: 640px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 12px;
   font-size: 0.95rem;
-  color: var(--text-muted);
+  font-weight: 600;
 }
 
 .status-bar strong {

@@ -1,8 +1,10 @@
 <?php define("TITLE", "Ball Sort"); ?>
+<?php define("GAME_STRUCTURED_DATA", true); ?>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php'; ?>
 
 <link rel="stylesheet" href="/games/sortingballs/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
+<section id="game-unit" class="game-unit google-anno-skip">
 <div id="game-app">
   <div class="game-header">
     <div class="title-group">
@@ -32,6 +34,12 @@
 
   <div class="game-instructions">
     Tap a test tube to pop up the top ball, then tap another tube to pour it. Sort all matching colours together!
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div>Tubes Sorted: <strong id="vials-completed-count">0 / 4</strong></div>
+    <div>Moves: <strong id="moves-count">0</strong></div>
   </div>
 
   <main class="game-container">
@@ -69,6 +77,14 @@
           <option value="6">6</option>
           <option value="7">7</option>
           <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
         </select>
       </div>
       <div class="setting-row">
@@ -77,6 +93,9 @@
           <option value="3">3 balls</option>
           <option value="4" selected>4 balls</option>
           <option value="5">5 balls</option>
+          <option value="6">6 balls</option>
+          <option value="7">7 balls</option>
+          <option value="8">8 balls</option>
         </select>
       </div>
       <div class="setting-row">
@@ -85,6 +104,9 @@
           <option value="1">1 spare</option>
           <option value="2" selected>2 spares</option>
           <option value="3">3 spares</option>
+          <option value="4">4 spares</option>
+          <option value="5">5 spares</option>
+          <option value="6">6 spares</option>
         </select>
       </div>
       <p><label><input type="checkbox" id="grow-difficulty" checked> Grow puzzle size as I finish levels</label></p>
@@ -97,6 +119,8 @@
     </div>
   </div>
 </div>
+
+</section>
 
 <script src="/games/sortingballs/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/sortingballs/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>
