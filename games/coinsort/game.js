@@ -17,7 +17,7 @@ class CoinSortGame {
     this.isAnimating = false;
     this.boardVersion = 0;
     this.dom = {};
-    for (const id of ['coin-board', 'level-badge', 'goal-label', 'goal-coin', 'best-coin',
+    for (const id of ['game-app', 'coin-board', 'level-badge', 'goal-label', 'goal-coin', 'best-coin',
       'btn-sound', 'sound-icon-on', 'sound-icon-off', 'btn-settings', 'settings-modal',
       'slots-select', 'mode-select', 'btn-close-settings', 'btn-apply-settings', 'btn-restart',
       'btn-undo', 'btn-new', 'btn-deal', 'win-modal', 'win-stats', 'btn-next-level',
@@ -226,18 +226,37 @@ class CoinSortGame {
     return this.dom['coin-board'].children[i];
   }
 
-  // Animate fixed-position coin clones from source rects onto freshly rendered coins
+  // Animate coins flying from source rects into their new slot positions
   async fly(flights) {
     const version = this.boardVersion;
+    const gameApp = this.dom['game-app'];
+    const gameRect = gameApp.getBoundingClientRect();
     const animations = flights.map(({ from, to, tier }, i) => {
-      const target = to.getBoundingClientRect();
+      const targetRect = to.getBoundingClientRect();
+      const target = {
+        left: targetRect.left - gameRect.left,
+        top: targetRect.top - gameRect.top,
+        width: targetRect.width,
+        height: targetRect.height
+      };
+      const fromRel = {
+        left: from.left - gameRect.left,
+        top: from.top - gameRect.top,
+        width: from.width,
+        height: from.height
+      };
       const clone = this.coinElement(tier);
       clone.classList.add('flying');
-      Object.assign(clone.style, { left: `${target.left}px`, top: `${target.top}px`, width: `${target.width}px`, maxWidth: 'none' });
-      document.body.appendChild(clone);
+      Object.assign(clone.style, {
+        left: `${target.left}px`,
+        top: `${target.top}px`,
+        width: `${target.width}px`,
+        maxWidth: 'none'
+      });
+      gameApp.appendChild(clone);
       to.style.visibility = 'hidden';
-      const dx = from.left + from.width / 2 - (target.left + target.width / 2);
-      const dy = from.top + from.height / 2 - (target.top + target.height / 2);
+      const dx = (fromRel.left + fromRel.width / 2) - (target.left + target.width / 2);
+      const dy = (fromRel.top + fromRel.height / 2) - (target.top + target.height / 2);
       const animation = clone.animate([
         { transform: `translate(${dx}px, ${dy}px)` },
         { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 24}px)`, offset: 0.5 },
@@ -322,12 +341,42 @@ class CoinSortGame {
       if (i < 0) break;
       const tier = this.slots[i][0];
       const el = this.slotElement(i);
-      [...el.children].forEach(coin => coin.classList.add('poofing'));
+      const gameApp = this.dom['game-app'];
+
+      // Brief pause so the player sees the complete 10-stack before merging starts
+      await this.sleep(220);
+      if (version !== this.boardVersion) return;
+
+      // Pop coins off sequentially from top to bottom (like Hex Sort)
+      const count = this.capacity;
+      for (let k = 0; k < count; k++) {
+        if (version !== this.boardVersion) return;
+        const topEl = el.lastElementChild;
+        if (topEl) {
+          const coinRect = topEl.getBoundingClientRect();
+          const gameRect = gameApp.getBoundingClientRect();
+          const popClone = this.coinElement(tier);
+          popClone.classList.add('flying', 'poofing');
+          Object.assign(popClone.style, {
+            left: `${coinRect.left - gameRect.left}px`,
+            top: `${coinRect.top - gameRect.top}px`,
+            width: `${coinRect.width}px`,
+            maxWidth: 'none'
+          });
+          gameApp.appendChild(popClone);
+          setTimeout(() => popClone.remove(), 280);
+          topEl.remove();
+        }
+        this.slots[i].pop();
+        this.audio.playCoinPop(k, count);
+        await this.sleep(38);
+      }
+
+      if (version !== this.boardVersion) return;
+
       const rect = el.getBoundingClientRect();
       this.spawnPuffParticles(rect.left + rect.width / 2, rect.bottom - rect.height * 0.35);
       this.audio.playMerge(tier);
-      await this.sleep(420);
-      if (version !== this.boardVersion) return;
 
       // The top colour has nowhere higher to go, so it is banked instead
       if (tier + 1 < this.tiers) {
@@ -339,7 +388,7 @@ class CoinSortGame {
       }
       this.render();
       this.slotElement(i).firstElementChild?.classList.add('popping');
-      await this.sleep(200);
+      await this.sleep(260);
       if (version !== this.boardVersion) return;
     }
     this.isAnimating = false;
@@ -389,6 +438,10 @@ class CoinSortGame {
   }
 
   spawnPuffParticles(x, y) {
+    const gameApp = this.dom['game-app'];
+    const gameRect = gameApp.getBoundingClientRect();
+    const relX = x - gameRect.left;
+    const relY = y - gameRect.top;
     const sparkles = ['✨', '⭐', '💨', '✨'];
     for (let i = 0; i < 8; i++) {
       const p = document.createElement('div');
@@ -396,11 +449,11 @@ class CoinSortGame {
       p.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
       const angle = (Math.PI * 2 / 8) * i + (Math.random() * 0.4);
       const dist = 50 + Math.random() * 40;
-      p.style.left = `${x}px`;
-      p.style.top = `${y}px`;
+      p.style.left = `${relX}px`;
+      p.style.top = `${relY}px`;
       p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
       p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
-      document.body.appendChild(p);
+      gameApp.appendChild(p);
       setTimeout(() => p.remove(), 650);
     }
   }

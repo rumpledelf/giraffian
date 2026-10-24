@@ -20,6 +20,7 @@
 }
 
 #game-app {
+  position: relative;
   width: 100%;
   margin: 0 auto;
   display: flex;
@@ -264,7 +265,7 @@ button.icon-btn svg, .icon-btn svg {
 }
 
 .hex-tile.flying {
-  position: fixed;
+  position: absolute;
   inset: auto;
   z-index: 9000;
   pointer-events: none;
@@ -348,7 +349,7 @@ button.icon-btn svg, .icon-btn svg {
 
 /* Drag Ghost */
 .drag-ghost {
-  position: fixed;
+  position: absolute;
   width: 76px;
   height: 68px;
   pointer-events: none;
@@ -358,7 +359,7 @@ button.icon-btn svg, .icon-btn svg {
 
 /* Puff Particles */
 .puff-particle {
-  position: fixed;
+  position: absolute;
   pointer-events: none;
   font-size: 1.4rem;
   z-index: 10000;

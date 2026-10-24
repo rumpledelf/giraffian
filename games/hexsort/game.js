@@ -135,6 +135,7 @@ class HexSortGame {
 
     this.dom = {};
     for (const id of [
+      'game-app',
       'hex-board', 'hex-tray', 'level-badge', 'goal-label', 'tiles-cleared',
       'tiles-target', 'target-wrap', 'stacks-cleared', 'progress-track', 'progress-fill',
       'btn-sound', 'sound-icon-on', 'sound-icon-off', 'btn-settings', 'settings-modal',
@@ -693,11 +694,12 @@ class HexSortGame {
           ghost = document.createElement('div');
           ghost.className = 'drag-ghost';
           this.renderStackElements(ghost, this.tray[slotIdx]);
-          document.body.appendChild(ghost);
+          this.dom['game-app'].appendChild(ghost);
         }
         if (dragging && ghost) {
-          ghost.style.left = `${moveEvt.clientX}px`;
-          ghost.style.top = `${moveEvt.clientY}px`;
+          const gameRect = this.dom['game-app'].getBoundingClientRect();
+          ghost.style.left = `${moveEvt.clientX - gameRect.left}px`;
+          ghost.style.top = `${moveEvt.clientY - gameRect.top}px`;
           const target = this.findEmptyCellAtPoint(moveEvt.clientX, moveEvt.clientY);
           if (hoveredCell !== target) {
             if (hoveredCell !== null) this.cellElement(hoveredCell)?.classList.remove('drag-over');
@@ -849,8 +851,22 @@ class HexSortGame {
   // If `sourceEl` is provided, it stays visible on the source stack until its stagger delay starts!
   async flyTiles(flights, duration = 460, stagger = 95) {
     const version = this.boardVersion;
+    const gameApp = this.dom['game-app'];
+    const gameRect = gameApp.getBoundingClientRect();
     const animations = flights.map(({ from, to, sourceEl, colorId, flip }, i) => {
-      const target = to.getBoundingClientRect();
+      const targetRect = to.getBoundingClientRect();
+      const target = {
+        left: targetRect.left - gameRect.left,
+        top: targetRect.top - gameRect.top,
+        width: targetRect.width,
+        height: targetRect.height
+      };
+      const fromRel = {
+        left: from.left - gameRect.left,
+        top: from.top - gameRect.top,
+        width: from.width,
+        height: from.height
+      };
       const delay = i * stagger;
       to.style.visibility = 'hidden';
 
@@ -872,10 +888,10 @@ class HexSortGame {
             width: `${target.width}px`,
             height: `${target.height}px`
           });
-          document.body.appendChild(clone);
+          gameApp.appendChild(clone);
 
-          const dx = (from.left + from.width / 2) - (target.left + target.width / 2);
-          const dy = (from.top + from.height / 2) - (target.top + target.height / 2);
+          const dx = (fromRel.left + fromRel.width / 2) - (target.left + target.width / 2);
+          const dy = (fromRel.top + fromRel.height / 2) - (target.top + target.height / 2);
           const keyframes = flip
             ? [
                 { transform: `translate(${dx}px, ${dy}px) scale(1)` },
@@ -1020,15 +1036,17 @@ class HexSortGame {
           const topEl = currStackEl.lastElementChild;
           if (topEl) {
             const tileRect = topEl.getBoundingClientRect();
+            const gameApp = this.dom['game-app'];
+            const gameRect = gameApp.getBoundingClientRect();
             const popClone = this.createHexTileElement(currColor, 0, null);
             popClone.classList.add('flying', 'poofing');
             Object.assign(popClone.style, {
-              left: `${tileRect.left}px`,
-              top: `${tileRect.top}px`,
+              left: `${tileRect.left - gameRect.left}px`,
+              top: `${tileRect.top - gameRect.top}px`,
               width: `${tileRect.width}px`,
               height: `${tileRect.height}px`
             });
-            document.body.appendChild(popClone);
+            gameApp.appendChild(popClone);
             setTimeout(() => popClone.remove(), 250);
           }
 
@@ -1132,6 +1150,10 @@ class HexSortGame {
   }
 
   spawnPuffParticles(x, y) {
+    const gameApp = this.dom['game-app'];
+    const gameRect = gameApp.getBoundingClientRect();
+    const relX = x - gameRect.left;
+    const relY = y - gameRect.top;
     const sparkles = ['✨', '⭐', '💨', '✨'];
     for (let i = 0; i < 8; i++) {
       const p = document.createElement('div');
@@ -1139,11 +1161,11 @@ class HexSortGame {
       p.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
       const angle = ((Math.PI * 2) / 8) * i + Math.random() * 0.4;
       const dist = 50 + Math.random() * 40;
-      p.style.left = `${x}px`;
-      p.style.top = `${y}px`;
+      p.style.left = `${relX}px`;
+      p.style.top = `${relY}px`;
       p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
       p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
-      document.body.appendChild(p);
+      gameApp.appendChild(p);
       setTimeout(() => p.remove(), 650);
     }
   }

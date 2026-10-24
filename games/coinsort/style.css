@@ -28,6 +28,7 @@
 }
 
 #game-app {
+  position: relative;
   width: 100%;
   margin: 0 auto;
   display: flex;
@@ -228,29 +229,30 @@ button.icon-btn svg, .icon-btn svg {
 }
 
 .coin.flying {
-  position: fixed;
+  position: absolute;
   z-index: 9000;
   margin: 0;
   pointer-events: none;
 }
 
 .coin.poofing {
-  animation: poof-out 0.45s forwards cubic-bezier(0.16, 1, 0.3, 1);
+  animation: coin-poof 0.26s forwards cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes poof-out {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.15) rotate(4deg); opacity: 0.8; }
-  100% { transform: scale(0) rotate(-10deg); opacity: 0; }
+@keyframes coin-poof {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  45% { transform: translateY(-8px) scale(1.12) rotate(3deg); opacity: 0.9; }
+  100% { transform: translateY(-16px) scale(0.2) rotate(-6deg); opacity: 0; }
 }
 
 .coin.popping {
-  animation: coin-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: coin-pop 0.38s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes coin-pop {
-  from { transform: scale(0.2); }
-  to { transform: scale(1); }
+  0% { transform: scale(0.1); opacity: 0.2; }
+  60% { transform: scale(1.22); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .coin-chip {
@@ -276,7 +278,7 @@ button.icon-btn svg, .icon-btn svg {
 
 /* Puff Particles */
 .puff-particle {
-  position: fixed;
+  position: absolute;
   pointer-events: none;
   font-size: 1.4rem;
   z-index: 10000;

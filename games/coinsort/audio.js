@@ -76,6 +76,18 @@ class CoinsortAudio {
     [0, 0.07, 0.14].forEach((delay, i) => this.blip(400 + i * 40, 220, t + delay, 0.09, 0.1, 'triangle'));
   }
 
+  // Stepped ascending blip as each coin pops off in a merge countdown
+  playCoinPop(index, total = 10) {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    const stepLift = Math.pow(2, (index / Math.max(1, total)) * 0.8);
+    const freq = 440 * stepLift;
+    this.blip(freq, freq * 1.3, t, 0.07, 0.11, 'sine');
+  }
+
   // Sparkly sweeping chord for a merge; higher coins ring higher
   playMerge(tier) {
     if (this.muted) return;
