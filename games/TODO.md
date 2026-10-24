@@ -9,7 +9,7 @@ Future game concepts, shower thoughts, and prospective 3D/logic puzzles to explo
   - **Sizing Note:** Keep at tactile sizes ($8 \times 8$ to $12 \times 12$). At 100×100 it becomes an unplayable pixel-art grout chore.
   - **Mechanic Ideas:** Score penalty for every 1×1 piece used (golf scoring: minimize filler usage).
 
-- [ ] **Color Chute Evacuation (1-Gap Slider)**
+- [x] **Color Chute Evacuation (1-Gap Slider)** — shipped as Color Chutes
   - **Concept:** A tight grid with 2 to 4 colors and matching colored exit holes/chutes along the outer perimeter.
   - **Starting State:** Solidly packed with only **one empty space** (15-puzzle style).
   - **Flow:** Shuffle tiles through the bottleneck into their matching perimeter exits. As pieces leave, more empty spaces open up, progressively easing the traffic jam from tight gridlock to a smooth endgame.

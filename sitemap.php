@@ -14,6 +14,9 @@ foreach ($walk as $file) {
 	$path = substr($file->getPath(), strlen(__DIR__)) . '/';
 	if ($path !== '/') $pages[] = $path;
 }
+// Each joke has its own page too
+include __DIR__ . '/includes/pagination.php';
+foreach (array_keys(jokeslugs(__DIR__ . '/jokes')) as $slug) $pages[] = '/jokes/' . $slug . '/';
 sort($pages);
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";

@@ -17,7 +17,7 @@
 		<meta property="og:title" content="<?php echo htmlspecialchars($pagetitle); ?>">
 		<meta property="og:url" content="<?php echo htmlspecialchars($canonical); ?>">
 		<meta property="og:type" content="website">
-		<meta property="og:image" content="<?php echo $siteurl; ?>/android-chrome-512x512.png">
+		<meta property="og:image" content="<?php echo $siteurl . (defined('OGIMAGE') ? OGIMAGE : '/android-chrome-512x512.png'); ?>">
 <?php if (defined('GAME_STRUCTURED_DATA') && GAME_STRUCTURED_DATA): ?>
 <?php
 $gameStructuredData = [
