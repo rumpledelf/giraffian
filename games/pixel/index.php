@@ -155,7 +155,7 @@
 
 <script src="/games/pixel/storage.js?v=<?= filemtime(__DIR__ . '/storage.js') ?>"></script>
 <script src="/games/pixel/audio.js?v=<?= filemtime(__DIR__ . '/audio.js') ?>"></script>
-<script src="/games/pixel/pictures.js"></script>
+<script src="/games/pixel/pictures.js?v=<?= filemtime(__DIR__ . '/pictures.js') ?>"></script>
 <script src="/games/pixel/game.js?v=<?= filemtime(__DIR__ . '/game.js') ?>"></script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>

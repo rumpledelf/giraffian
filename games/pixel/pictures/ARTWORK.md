@@ -1,6 +1,6 @@
 # Pixel picture library
 
-Twenty-four original compositions generated with the built-in imagegen tool, then reduced to 12×12, 20×20, 28×28, 48×48 and 100×100 grids. Every cell is opaque and uses one of three to ten fixed palette colours. No dithering. The PNG files are the final 100×100 artwork; pictures.js contains every playable size.
+Original compositions generated with the built-in imagegen tool and procedural generators, then reduced to 12×12, 20×20, 28×28, 48×48 and 100×100 grids. Every cell is opaque and uses one of three to ten fixed palette colours. No dithering. The PNG files are the final 100×100 artwork; pictures.js contains every playable size.
 
 ## Strawberry Patch
 
@@ -145,3 +145,33 @@ Prompt: Use case: illustration-story. Asset type: opaque square full-frame sourc
 File: birthday-party.png
 
 Prompt: Use case: illustration-story. Asset type: opaque square full-frame source art for a colour-removal pixel game. Birthday Party: one enormous simple two-layer birthday cake with broad flat icing slab at lower centre, two enormous triangular party hats beside it, and three enormous oval balloons above. No candles, strings, knots, confetti, sprinkles, lettering or small decoration. Shapes overlap and crop into edges, filling 75% of square. Use exactly 9 colours: cream #fffdf5 background and icing, coral #ec8d6f and rose #db5f96 cake layers, green #589a56 and teal #39a7a0 hats, blue #3a7ede, yellow #f7e55f, lilac #dcb0ed balloons, orange #efad48 broad tabletop. Each colour covers at least 4% of whole image in at least one big solid region. Minimum feature width 1/12 canvas, only very large simple shapes. Every component one perfectly flat uniform solid colour. Sharp hard edges, geometric cut-paper poster. Strictly no gradients, shading, shadows, texture, grain, noise, dithering, lighting, outlines, borders, text, watermarks or simulated pixel art. Full-frame opaque square.
+
+## Circle Dance
+
+File: circle-dance.png
+
+Prompt: Generated with fern-placeholder: {"family":"circles","count":8,"overlap":68,"variation":20,"width":1200,"height":1200,"seed":"pixel-circle-dance-1","finish":"flat","colors":["#ec8d6f","#3a7ede","#f7e55f","#dcb0ed","#39a7a0"]}
+
+## Circle Weave
+
+File: circle-weave.png
+
+Prompt: Generated with fern-placeholder: {"family":"circles","count":10,"overlap":65,"variation":30,"width":1200,"height":1200,"seed":"pixel-circle-weave-1","finish":"flat","colors":["#ec8d6f","#589a56","#3a7ede","#f7e55f","#dcb0ed","#fffdf5","#efad48","#39a7a0","#db5f96"]}
+
+## Ribbon Waves
+
+File: ribbon-waves.png
+
+Prompt: Generated with fern-placeholder: {"family":"waves","rows":7,"wiggle":65,"pinch":30,"width":1200,"height":1200,"seed":"pixel-ribbon-waves-1","finish":"flat","colors":["#ec8d6f","#589a56","#3a7ede","#f7e55f","#dcb0ed","#fffdf5","#efad48","#39a7a0","#db5f96"]}
+
+## Colour Mosaic
+
+File: colour-mosaic.png
+
+Prompt: Generated with fern-placeholder: {"family":"geometry","density":4,"width":1200,"height":1200,"seed":"pixel-colour-mosaic-1","finish":"flat","colors":["#ec8d6f","#589a56","#3a7ede","#f7e55f","#dcb0ed","#fffdf5","#efad48","#39a7a0","#db5f96"]}
+
+## Angled Mosaic
+
+File: angled-mosaic.png
+
+Prompt: Generated with fern-placeholder: {"family":"geometry","density":8,"width":1200,"height":1200,"seed":"pixel-angled-mosaic-1","finish":"flat","colors":["#ec8d6f","#589a56","#3a7ede","#f7e55f","#dcb0ed","#fffdf5","#efad48","#39a7a0","#db5f96"]}
