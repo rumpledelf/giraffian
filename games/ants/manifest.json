@@ -1,0 +1,9 @@
+{
+  "name": "Pixel Ants - Giraffian",
+  "short_name": "Pixel Ants",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ec8d6f",
+  "description": "Watch busy little bugs scurry through open corridors to carry away matching pixel art."
+}

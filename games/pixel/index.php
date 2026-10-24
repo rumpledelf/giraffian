@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" href="/games/pixel/style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 
-<div id="game-app">
+<div id="game-app" class="google-anno-skip">
   <!-- Header Bar -->
   <div class="game-header">
     <div class="title-group">

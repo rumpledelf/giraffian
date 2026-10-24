@@ -32,6 +32,12 @@
   </div>
 
   <div class="tile">
+    <a href="/games/ants/"><img src="/images/thumb-ants.svg" alt="Pixel Ants preview"></a>
+    <h2><a href="/games/ants/">Pixel Ants</a></h2>
+    <p>Watch busy little bugs scurry through open corridors to carry away matching pixel art.</p>
+  </div>
+
+  <div class="tile">
     <a href="/games/tapout/"><img src="/images/thumb-tapout.svg" alt="Tap Out preview"></a>
     <h2><a href="/games/tapout/">Tap Out</a></h2>
     <p>Tap blocks and cars to zoom them out along unblocked corridors.</p>
